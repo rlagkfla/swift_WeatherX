@@ -12,11 +12,11 @@ class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
     
-    let mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(mapViewItemTapped))
+    let mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: MyLocationWeatherController.self, action: #selector(mapViewItemTapped))
     
     let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
-    let menuViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(menuViewItemTapped))
+    let menuViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: MyLocationWeatherController.self, action: #selector(menuViewItemTapped))
     
     let toolbar: UIToolbar = {
         let tv = UIToolbar()
@@ -29,9 +29,20 @@ class MyLocationWeatherController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .systemIndigo
+        view.addSubview(toolbar)
+        view.backgroundColor = .white
         toolbar.items = [mapViewItem, flexibleSpace, menuViewItem]
+        toolbarLayout()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     // MARK: - Helpers
@@ -50,6 +61,14 @@ class MyLocationWeatherController: UIViewController {
         let listVC = ListViewController()
         self.navigationController?.pushViewController(listVC, animated: true)
     }
+ 
+    func toolbarLayout() {
+        NSLayoutConstraint.activate([
+            toolbar.heightAnchor.constraint(equalToConstant: 80),
+            toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])}
     
 }
 
