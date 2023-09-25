@@ -12,11 +12,11 @@ class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
     
-    let mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: MyLocationWeatherController.self, action: #selector(mapViewItemTapped))
+    lazy var mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(mapViewItemTapped))
     
     let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
-    let menuViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: MyLocationWeatherController.self, action: #selector(menuViewItemTapped))
+    lazy var menuViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(menuViewItemTapped))
     
     let toolbar: UIToolbar = {
         let tv = UIToolbar()
