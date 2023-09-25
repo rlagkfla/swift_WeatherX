@@ -19,7 +19,6 @@
 		EB2FF6882AC1593D004A3D79 /* WeatherUnitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF6872AC1593D004A3D79 /* WeatherUnitViewController.swift */; };
 		EB2FF68C2AC1598F004A3D79 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF68B2AC1598F004A3D79 /* DataManager.swift */; };
 		EB2FF68F2AC15BE2004A3D79 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EB2FF68E2AC15BE2004A3D79 /* SnapKit */; };
-		EB2FF6912AC15BE2004A3D79 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = EB2FF6902AC15BE2004A3D79 /* SnapKit-Dynamic */; };
 		EB2FF6942AC15BF2004A3D79 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EB2FF6932AC15BF2004A3D79 /* Then */; };
 		EB2FF6972AC15C3D004A3D79 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EB2FF6962AC15C3D004A3D79 /* Kingfisher */; };
 		EB2FF6992AC15E02004A3D79 /* WeatherList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF6982AC15E02004A3D79 /* WeatherList.swift */; };
@@ -56,7 +55,6 @@
 				EB2FF6972AC15C3D004A3D79 /* Kingfisher in Frameworks */,
 				EB2FF68F2AC15BE2004A3D79 /* SnapKit in Frameworks */,
 				EB2FF6942AC15BF2004A3D79 /* Then in Frameworks */,
-				EB2FF6912AC15BE2004A3D79 /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,7 +166,6 @@
 			name = "WeatherX-Project";
 			packageProductDependencies = (
 				EB2FF68E2AC15BE2004A3D79 /* SnapKit */,
-				EB2FF6902AC15BE2004A3D79 /* SnapKit-Dynamic */,
 				EB2FF6932AC15BF2004A3D79 /* Then */,
 				EB2FF6962AC15C3D004A3D79 /* Kingfisher */,
 			);
@@ -497,11 +494,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EB2FF68D2AC15BE2004A3D79 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		EB2FF6902AC15BE2004A3D79 /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EB2FF68D2AC15BE2004A3D79 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
 		};
 		EB2FF6932AC15BF2004A3D79 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;

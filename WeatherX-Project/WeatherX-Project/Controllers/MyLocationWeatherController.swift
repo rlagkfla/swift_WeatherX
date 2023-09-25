@@ -11,23 +11,27 @@ import SnapKit
 class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
-    let toolbar: UIToolbar = {
-        let tv = UIToolbar()
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        return tv
-    }()
     
     let mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(mapViewItemTapped))
     
     let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
     let menuViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(menuViewItemTapped))
+    
+    let toolbar: UIToolbar = {
+        let tv = UIToolbar()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
+    
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemIndigo
+        toolbar.items = [mapViewItem, flexibleSpace, menuViewItem]
     }
 
     // MARK: - Helpers
