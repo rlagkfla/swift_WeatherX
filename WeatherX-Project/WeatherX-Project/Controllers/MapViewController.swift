@@ -8,15 +8,27 @@
 import UIKit
 import SnapKit
 import MapKit
+import Then
 
 class MapViewController: UIViewController {
     
     private var mapView: MKMapView!
+//    private var coord: Coord!
+//    private var main: Main!
+//    private var name: String!
+    
+    lazy var button = UIButton().then {
+        $0.setTitleColor(.green, for: .normal)
+        $0.setTitle("change", for: .normal)
+        $0.addTarget(self, action: #selector(updateUserLocation), for: .touchUpInside)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupMapView()
+        configure()
+        
     }
     
 
@@ -48,15 +60,39 @@ private extension MapViewController {
         mapView.addAnnotation(annotation)
     }
     
-    func updateUserLocation(latitude: Double, longitude: Double) {
-        let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    @objc func updateUserLocation() {
+//        getWeather()
+//        let userLocation = CLLocationCoordinate2D(latitude: self.coord.lat, longitude: self.coord.long)
+//        let annotation = MKPointAnnotation()
+//        annotation.coordinate = userLocation
+//        annotation.title = self.name
+//        mapView.addAnnotation(annotation)
+//        
+//        mapView.setCenter(userLocation, animated: true)
+    }
+    
+//    func getWeather(){
+//        // data fetch
+//        WeatherService().getWeather { result in
+//            switch result {
+//            case .success(let weatherResponse):
+//                DispatchQueue.main.async {
+//                    self.coord = weatherResponse.coord
+//                    self.main = weatherResponse.main
+//                    self.name = weatherResponse.name
+//                }
+//            case .failure(_ ):
+//                print("error")
+//            }
+//        }
+//    }
+    
+    func configure() {
+        mapView.addSubview(self.button)
         
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = userLocation
-        annotation.title = "변경된 도시 이름"
-        mapView.addAnnotation(annotation)
-        
-        mapView.setCenter(userLocation, animated: true)
+        button.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
 }
 

@@ -12,6 +12,11 @@ class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
     
+    // 받아온 데이터를 저장 할 프로퍼티
+    var weather: Weather?
+    var main: Main?
+    var name: String?
+    
     lazy var mapViewItem = UIBarButtonItem(image: UIImage(systemName: "person"), style: .plain, target: self, action: #selector(mapViewItemTapped))
     
     let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -33,6 +38,8 @@ class MyLocationWeatherController: UIViewController {
         view.backgroundColor = .white
         toolbar.items = [mapViewItem, flexibleSpace, menuViewItem]
         toolbarLayout()
+        
+        getWeather()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +52,23 @@ class MyLocationWeatherController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
+    func getWeather(){
+        // data fetch
+        WeatherService().getWeather { result in
+            switch result {
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    self.weather = weatherResponse.weather.first
+                    self.main = weatherResponse.main
+                    self.name = weatherResponse.name
+                }
+            case .failure(_ ):
+                print("error")
+            }
+        }
+    }
+    
+    
     // MARK: - Helpers
     
 
