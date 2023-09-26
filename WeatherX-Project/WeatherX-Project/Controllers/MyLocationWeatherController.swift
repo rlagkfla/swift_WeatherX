@@ -12,6 +12,8 @@ class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
     
+    var networking = Networking.shared
+    
     // 받아온 데이터를 저장 할 프로퍼티
     var weather: Weather?
     var main: Main?
@@ -39,7 +41,7 @@ class MyLocationWeatherController: UIViewController {
         toolbar.items = [mapViewItem, flexibleSpace, menuViewItem]
         toolbarLayout()
         
-        getWeather()
+        networkingWeather()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,9 +54,10 @@ class MyLocationWeatherController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
-    func getWeather(){
+    private func networkingWeather(){
+       
         // data fetch
-        WeatherService().getWeather { result in
+        networking.getWeather { result in
             switch result {
             case .success(let weatherResponse):
                 DispatchQueue.main.async {
