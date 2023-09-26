@@ -17,6 +17,8 @@ import SnapKit
 
 class MyLocationWeatherController: UIViewController {
     
+    let locationImage: UIImage = UIImage(systemName: "location.fill")!
+    
     lazy var bottomView: UIView = {
             let view = UIView()
             view.addSubview(stackView)
@@ -124,6 +126,7 @@ class MyLocationWeatherController: UIViewController {
             pageControl.pageIndicatorTintColor = UIColor.lightGray
                     // 현재 페이지 표시 색상을 검정색으로 설정
                     pageControl.currentPageIndicatorTintColor = UIColor.black
+            pageControl.setIndicatorImage(locationImage, forPage: 0)
         }
         
         private func snpLayout() {
@@ -153,8 +156,8 @@ class MyLocationWeatherController: UIViewController {
             
             tableView.snp.makeConstraints {
                 $0.top.equalToSuperview()
-                $0.leading.equalTo(scrollView.snp.leading).offset(16)
-                $0.trailing.equalTo(scrollView.snp.trailing).offset(-16)
+                $0.leading.equalTo(scrollView.frameLayoutGuide.snp.leading).offset(16)
+                $0.trailing.equalTo(scrollView.frameLayoutGuide.snp.trailing).offset(-16)
                 
                 //스크롤뷰 내부 객체에 대해서는 반드시 크기 지정(스크롤 뷰가 가변적 크기이기 때문에)
                 $0.height.equalTo(350)
