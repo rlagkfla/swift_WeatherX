@@ -20,7 +20,6 @@ class WeatherBottomView: UIView {
         tableViewSetup()
         tableViewLayout()
         tableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
-        tableView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9607843137, blue: 1, alpha: 1)
         
     }
     

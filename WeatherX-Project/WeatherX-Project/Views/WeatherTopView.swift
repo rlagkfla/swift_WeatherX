@@ -10,25 +10,25 @@ import SnapKit
 
 class WeatherTopView: UIView {
 
-    // 배경
-    let gradientView: UIView = {
-        let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 390, height: 622)
-        let layer0 = CAGradientLayer()
-        layer0.colors = [
-          UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor,
-          UIColor(red: 0.721, green: 0.866, blue: 1, alpha: 1).cgColor
-        ]
-        layer0.locations = [0, 1]
-        layer0.startPoint = CGPoint(x: 0.25, y: 0.5)
-        layer0.endPoint = CGPoint(x: 0.75, y: 0.5)
-        layer0.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: 1, b: 1, c: -1, d: 0.21, tx: 0.5, ty: -0.11))
-        layer0.bounds = view.bounds.insetBy(dx: -0.5*view.bounds.size.width, dy: -0.5*view.bounds.size.height)
-        layer0.position = view.center
-        view.layer.addSublayer(layer0)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+//    // 배경
+//    let gradientView: UIView = {
+//        let view = UIView()
+//        view.frame = CGRect(x: 0, y: 0, width: 390, height: 622)
+//        let layer0 = CAGradientLayer()
+//        layer0.colors = [
+//          UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor,
+//          UIColor(red: 0.721, green: 0.866, blue: 1, alpha: 1).cgColor
+//        ]
+//        layer0.locations = [0, 1]
+//        layer0.startPoint = CGPoint(x: 0.25, y: 0.5)
+//        layer0.endPoint = CGPoint(x: 0.75, y: 0.5)
+//        layer0.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: 1, b: 1, c: -1, d: 0.21, tx: 0.5, ty: -0.11))
+//        layer0.bounds = view.bounds.insetBy(dx: -0.5*view.bounds.size.width, dy: -0.5*view.bounds.size.height)
+//        layer0.position = view.center
+//        view.layer.addSublayer(layer0)
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
     
     // 날씨 안내 멘트
     let talkLabel: UILabel = {
@@ -162,7 +162,7 @@ class WeatherTopView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(gradientView)
+//        addSubview(gradientView)
         addSubview(talkLabel)
         addSubview(dateLabel)
         addSubview(imageView)
@@ -180,7 +180,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(77)
             make.height.equalTo(86)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(94)
+            make.top.equalToSuperview().offset(54)
         }
         
         // 날짜
@@ -188,7 +188,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(114)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(180)
+            make.top.equalToSuperview().offset(140)
         }
         
         // 날씨 일러스트
@@ -204,15 +204,15 @@ class WeatherTopView: UIView {
             make.width.equalTo(188)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(507)
+            make.top.equalToSuperview().offset(457)
         }
         
         // 온도
         temperLabel.snp.makeConstraints { make in
             make.width.equalTo(135)
             make.height.equalTo(140)
-            make.trailing.equalToSuperview().offset(2)
-            make.top.equalToSuperview().offset(490)
+            make.trailing.equalToSuperview().offset(-16)
+            make.top.equalToSuperview().offset(440)
         }
         
         // 습도 제목
@@ -220,7 +220,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(54)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(547)
+            make.top.equalToSuperview().offset(497)
         }
 
         // 습도 %
@@ -228,23 +228,23 @@ class WeatherTopView: UIView {
             make.width.equalTo(42)
             make.height.equalTo(23)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(567)
+            make.top.equalToSuperview().offset(517)
         }
         
         // 배경
-        gradientView.snp.makeConstraints { make in
-            make.width.equalTo(390)
-            make.height.equalTo(622)
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
+//        gradientView.snp.makeConstraints { make in
+//            make.width.equalTo(390)
+//            make.height.equalTo(622)
+//            make.centerX.equalToSuperview()
+//            make.centerY.equalToSuperview()
+//        }
         
         // uv 라벨
         uvLabel.snp.makeConstraints { make in
             make.width.equalTo(54)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(96)
-            make.top.equalToSuperview().offset(547)
+            make.top.equalToSuperview().offset(497)
         }
 
         // uv 숫자
@@ -252,7 +252,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(10)
             make.height.equalTo(23)
             make.leading.equalToSuperview().offset(103)
-            make.top.equalToSuperview().offset(567)
+            make.top.equalToSuperview().offset(517)
         }
         
         // aq 라벨
@@ -260,7 +260,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(54)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(168)
-            make.top.equalToSuperview().offset(547)
+            make.top.equalToSuperview().offset(497)
         }
         
         // aq 숫자
@@ -268,7 +268,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(20)
             make.height.equalTo(23)
             make.leading.equalToSuperview().offset(170)
-            make.top.equalToSuperview().offset(567)
+            make.top.equalToSuperview().offset(517)
         }
     }
 
