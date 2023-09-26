@@ -27,6 +27,9 @@ class MyLocationWeatherController: UIViewController {
     var main: Main?
     var name: String?
     
+    var forecastResponse: ForecastResponse?
+//    var city:
+    
     private var scrollView = UIScrollView()
         
     let tableView = WeatherBottomView()
@@ -49,7 +52,7 @@ class MyLocationWeatherController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-               snpLayout()
+        snpLayout()
         networkingWeather()
     }
     
@@ -124,7 +127,18 @@ class MyLocationWeatherController: UIViewController {
                     self.name = weatherResponse.name
                 }
             case .failure(_ ):
-                print("error")
+                print("weatherResponse error")
+            }
+        }
+        
+        networking.getforecastWeather { result in
+            switch result {
+            case .success(let forecastResponse):
+                DispatchQueue.main.async {
+                    self.forecastResponse = forecastResponse
+                }
+            case .failure(_ ):
+                print("forecastResponse error")
             }
         }
         

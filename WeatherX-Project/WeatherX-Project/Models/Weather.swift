@@ -57,8 +57,6 @@ struct Coord: Decodable {
     let lon: Double // 경도
 }
 
-// MARK: - 5일치 3시간 간격 날씨 정보
-
 
 // MARK: - 날짜 포맷
 
