@@ -29,8 +29,9 @@ struct API {
     }
     
     static let weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather"
-    static let location = "q=busan"
+    static let location = "q=seoul"
     static let key = "appid=\(apiKey)"
+    static let unit = "units=metric"
     static let lang = "lang=kr"
     private init() {}
     

@@ -24,7 +24,7 @@ final class Networking {
     func getWeather(completion: @escaping (Result<WeatherResponse, NetworkError>) -> Void) {
         
         // API 호출을 위한 URL
-        let url = URL(string: "\(API.weatherApiUrl)?\(API.location)&\(API.key)&\(API.lang)")
+        let url = URL(string: "\(API.weatherApiUrl)?\(API.location)&\(API.key)&\(API.unit)&\(API.lang)")
         guard let url = url else {
             return completion(.failure(.badUrl))
         }

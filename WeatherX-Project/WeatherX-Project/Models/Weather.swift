@@ -15,13 +15,14 @@ struct WeatherResponse: Decodable {
     let name: String
     let wind: Wind
     let clouds: Clouds
+    let coord: Coord
 }
 
 struct Main: Decodable {
     let temp: Double // 현재 기온
     let temp_min: Double // 최저 기온
     let temp_max: Double // 최고 기온
-    let humidity: Double // 습도
+    let humidity: Double // 습도, %
 }
 
 struct Weather: Decodable {
@@ -37,6 +38,17 @@ struct Wind: Decodable {
 
 struct Clouds: Decodable {
     let all: Int // 흐림, %
+}
+
+// 추후에 추가
+//struct Rain: Decodable {
+//    let "1h": Double // 1시간 동안의 강우량 mm
+//    let "3h": Double // 3시간 동안의 강우량 mm
+//}
+
+struct Coord: Decodable {
+    let lat: Double // 위도
+    let lon: Double // 경도
 }
 
 // MARK: - 1시간 간격 날씨 정보
