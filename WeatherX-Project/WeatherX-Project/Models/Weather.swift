@@ -10,14 +10,12 @@ import Foundation
 // MARK: - 현재 날씨 정보
 
 struct WeatherResponse: Decodable {
-    let name: String
-    let coord: Coord
     let weather: [Weather]
     let main: Main
+    let name: String
     let wind: Wind
     let clouds: Clouds
-    let rain: Rain
-    let dt: Int // unix time
+    let coord: Coord
 }
 
 struct Main: Decodable {
@@ -35,29 +33,28 @@ struct Weather: Decodable {
 }
 
 struct Wind: Decodable {
-    let speed: Double? // 풍속, m/s
+    let speed: Double // 풍속, m/s
 }
 
 struct Clouds: Decodable {
-    let all: Int? // 흐림, %
+    let all: Int // 흐림, %
 }
 
-struct Rain: Decodable {
-    let oneHour: Double? // 1시간 동안의 강우량 mm
-    let threeHours: Double? // 3시간 동안의 강우량 mm
-    
-    private enum CodingKeys: String, CodingKey {
-        case oneHour = "1h"
-        case threeHours = "3h"
-    }
-}
+// 추후에 추가
+//struct Rain: Decodable {
+//    let "1h": Double // 1시간 동안의 강우량 mm
+//    let "3h": Double // 3시간 동안의 강우량 mm
+//}
 
 struct Coord: Decodable {
     let lat: Double // 위도
     let lon: Double // 경도
 }
 
-// MARK: - 5일치 3시간 간격 날씨 정보
+// MARK: - 1시간 간격 날씨 정보
+
+
+// MARK: - 5일간 날씨 정보
 
 
 // MARK: - 날짜 포맷
@@ -65,10 +62,9 @@ struct Coord: Decodable {
 struct DateFormat {
 
     static var dateString: String {
-
         let myFormatter = DateFormatter()
         myFormatter.dateFormat = "MMM dd hh:mm a"
-
+        
         // 로케일을 영어(미국)로 설정
         myFormatter.locale = Locale(identifier: "en_US")
 
@@ -80,18 +76,4 @@ struct DateFormat {
         let savedDateString = myFormatter.string(from: date)
         return savedDateString
     }
-    
-    // api 날짜 데이터(unix time) 변환 메서드 (현재 시간보다 약간 딜레이가 있어서 사용 x)
-//    static func dateString(dt: Int) -> String {
-//        let date = Date(timeIntervalSince1970: TimeInterval(dt))
-//        let myFormatter = DateFormatter()
-//        myFormatter.dateFormat = "MMM dd hh:mm a"
-//        myFormatter.locale = Locale(identifier: "en_US")
-//        myFormatter.amSymbol = "AM"
-//        myFormatter.pmSymbol = "PM"
-//
-//        let savedDateString = myFormatter.string(from: date)
-//        return savedDateString
-//    }
-    
 }
