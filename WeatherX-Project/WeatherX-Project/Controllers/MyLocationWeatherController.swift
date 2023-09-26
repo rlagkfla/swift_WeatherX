@@ -133,7 +133,6 @@ class MyLocationWeatherController: UIViewController {
     
     // MARK: - Helpers
     
-
     
     
     // MARK: - Actions
@@ -145,7 +144,7 @@ class MyLocationWeatherController: UIViewController {
     }
     
     @objc func menuViewItemTapped() {
-        let listVC = ListViewController()
+        let listVC = WeatherListViewController()
         self.navigationController?.pushViewController(listVC, animated: true)
     }
     
