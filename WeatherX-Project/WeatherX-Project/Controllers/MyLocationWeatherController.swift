@@ -22,6 +22,7 @@ class MyLocationWeatherController: UIViewController {
     var networking = Networking.shared
     
     // 받아온 데이터를 저장 할 프로퍼티
+    var weatherResponse: WeatherResponse?
     var weather: Weather?
     var main: Main?
     var name: String?
@@ -128,6 +129,7 @@ class MyLocationWeatherController: UIViewController {
             switch result {
             case .success(let weatherResponse):
                 DispatchQueue.main.async {
+                    self.weatherResponse = weatherResponse
                     self.weather = weatherResponse.weather.first
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
@@ -136,23 +138,24 @@ class MyLocationWeatherController: UIViewController {
                 print("error")
             }
         }
+        
     }
     
     
     // MARK: - Helpers
-    
-    
-    
+
+  
     
     // MARK: - Actions
     
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
+        mapVC.weatherResponse = self.weatherResponse
         self.navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @objc func menuViewItemTapped() {
-        let listVC = ListViewController()
+        let listVC = WeatherListViewController()
         self.navigationController?.pushViewController(listVC, animated: true)
     }
     
