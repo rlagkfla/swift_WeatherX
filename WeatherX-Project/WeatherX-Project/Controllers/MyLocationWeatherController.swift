@@ -50,7 +50,7 @@ class MyLocationWeatherController: UIViewController {
             sv.spacing = 30
             return sv
         }()
-        
+        //
         // MARK: - Properties
         
         var networking = Networking.shared
