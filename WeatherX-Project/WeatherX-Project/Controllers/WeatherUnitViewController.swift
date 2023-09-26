@@ -20,8 +20,6 @@ class WeatherUnitViewController: UIViewController {
         $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    
-    
     // MARK: - LifeCycle
 
     override func viewDidLoad() {
@@ -30,15 +28,11 @@ class WeatherUnitViewController: UIViewController {
         configureUI()
     }
     
-    
-    
-    
-    
     // MARK: - Helper
     
     func configureNav() {
         navigationItem.title = "단위"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(completeButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
 
         let appearance = UINavigationBarAppearance().then {
@@ -64,10 +58,12 @@ class WeatherUnitViewController: UIViewController {
         
     }
     
-    
-    
     // MARK: - Actions
     
+    @objc private func completeButtonTapped() {
+        // 섭씨, 화씨 선택된 정보를 저장하는 로직 추후 구현 예정
+        dismiss(animated: true)
+    }
     
     
 
@@ -105,7 +101,40 @@ extension WeatherUnitViewController: UITableViewDelegate, UITableViewDataSource 
             }
         } else {
             cell.accessoryType = .none
-            // 두 번째 섹션의 셀 구성 코드 나아아아아중에 작성.
+            cell.selectionStyle = .none
+            let unitLabel = UILabel()
+            let valueLabel = UILabel().then {
+                $0.textColor = .lightGray
+                $0.font = UIFont.systemFont(ofSize: 14)
+            }
+            cell.contentView.addSubview(unitLabel)
+            cell.contentView.addSubview(valueLabel)
+            
+            unitLabel.snp.makeConstraints {
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerY.equalToSuperview()
+            }
+            valueLabel.snp.makeConstraints {
+                $0.trailing.equalToSuperview().offset(-16)
+                $0.centerY.equalToSuperview()
+            }
+            
+            switch indexPath.row {
+            case 0:
+                unitLabel.text = "바람"
+                valueLabel.text = "m/s"
+            case 1:
+                unitLabel.text = "강수량"
+                valueLabel.text = "mm"
+            case 2:
+                unitLabel.text = "습도"
+                valueLabel.text = "%"
+            case 3:
+                unitLabel.text = "흐림"
+                valueLabel.text = "%"
+            default:
+                break
+            }
         }
 
         return cell
