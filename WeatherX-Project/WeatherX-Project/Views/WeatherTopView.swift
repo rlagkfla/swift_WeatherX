@@ -86,29 +86,17 @@ class WeatherTopView: UIView {
     // 온도
     let temperLabel: UILabel = {
         let label = UILabel()
-        label.text = "21"
+        label.text = "21º"
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 110, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 100, weight: .thin)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.75
         label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "21", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        label.attributedText = NSMutableAttributedString(string: "21º", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    // 온도 기호
-    let signView: UIView = {
-        let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
-        let radius = min(view.frame.width, view.frame.height) / 2.0
-        view.layer.cornerRadius = radius
-        view.layer.borderWidth = 4
-        view.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
+        
     // 습도 라벨
     let rainLabel: UILabel = {
         let label = UILabel()
@@ -180,7 +168,6 @@ class WeatherTopView: UIView {
         addSubview(imageView)
         addSubview(locateLabel)
         addSubview(temperLabel)
-        addSubview(signView)
         addSubview(rainLabel)
         addSubview(rain2Label)
         addSubview(uvLabel)
@@ -201,7 +188,7 @@ class WeatherTopView: UIView {
             make.width.equalTo(114)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(188)
+            make.top.equalToSuperview().offset(180)
         }
         
         // 날씨 일러스트
@@ -222,20 +209,12 @@ class WeatherTopView: UIView {
         
         // 온도
         temperLabel.snp.makeConstraints { make in
-            make.width.equalTo(115)
-            make.height.equalTo(120)
-            make.trailing.equalToSuperview().offset(-26)
-            make.top.equalToSuperview().offset(494)
+            make.width.equalTo(135)
+            make.height.equalTo(140)
+            make.trailing.equalToSuperview().offset(2)
+            make.top.equalToSuperview().offset(490)
         }
         
-        // 온도 기호
-        signView.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(22)
-            make.trailing.equalToSuperview().offset(-16)
-            make.top.equalToSuperview().offset(500)
-        }
-             
         // 습도 제목
         rainLabel.snp.makeConstraints { make in
             make.width.equalTo(54)
