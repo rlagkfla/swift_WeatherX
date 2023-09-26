@@ -8,15 +8,35 @@
 import UIKit
 import SnapKit
 import MapKit
+import Then
 
 class MapViewController: UIViewController {
     
     private var mapView: MKMapView!
+    private var coord: Coord?
+    private var main: Main?
+    private var name: String?
+    
+    lazy var button = UIButton().then {
+        $0.setTitleColor(.green, for: .normal)
+        $0.setTitle("change", for: .normal)
+        $0.addTarget(self, action: #selector(updateUserLocation), for: .touchUpInside)
+    }
+    
+    var networking = Networking.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupMapView()
+        configure()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        networkingWeather()
     }
     
 
@@ -39,24 +59,52 @@ private extension MapViewController {
         mapView.delegate = self
         view.addSubview(mapView)
         
-        let initialLocation = CLLocationCoordinate2D(latitude: 37.566535, longitude: 126.9779692)
-        mapView.setCenter(initialLocation, animated: true)
-        
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = initialLocation
-        annotation.title = "서울"
-        mapView.addAnnotation(annotation)
+//        let initialLocation = CLLocationCoordinate2D(latitude: 37.566535, longitude: 126.9779692)
+//        mapView.setCenter(initialLocation, animated: true)
+//        
+//        let annotation = MKPointAnnotation()
+//        annotation.coordinate = initialLocation
+//        annotation.title = "서울"
+//        mapView.addAnnotation(annotation)
     }
     
-    func updateUserLocation(latitude: Double, longitude: Double) {
-        let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    @objc func updateUserLocation() {
+        if let latitude = self.coord?.lat, let longitude = self.coord?.lon {
+            let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = userLocation
+            annotation.title = self.name
+            mapView.addAnnotation(annotation)
+            
+            mapView.setCenter(userLocation, animated: true)
+        } else {
+            print("coord가 nil입니다.")
+        }
+    }
+    
+    func networkingWeather() {
         
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = userLocation
-        annotation.title = "변경된 도시 이름"
-        mapView.addAnnotation(annotation)
+        // data fetch
+        networking.getWeather { result in
+            switch result {
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    self.coord = weatherResponse.coord
+                    self.main = weatherResponse.main
+                    self.name = weatherResponse.name
+                }
+            case .failure(_ ):
+                print("error")
+            }
+        }
+    }
+    
+    func configure() {
+        mapView.addSubview(self.button)
         
-        mapView.setCenter(userLocation, animated: true)
+        button.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
 }
 
@@ -67,7 +115,9 @@ extension MapViewController: MKMapViewDelegate {
         }
         
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "CustomMarker")
-        annotationView.glyphText = "24°"
+        if let temp = self.main?.temp {
+            annotationView.glyphText = "\(temp)°"
+        }
         
         return annotationView
     }
