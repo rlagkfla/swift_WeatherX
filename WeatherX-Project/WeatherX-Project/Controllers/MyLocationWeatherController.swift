@@ -111,6 +111,16 @@ class MyLocationWeatherController: UIViewController {
             make.width.equalTo(365)
         }
         
+        let middleView = WeatherMiddleView()
+        scrollView.addSubview(middleView)
+        middleView.snp.makeConstraints { make in
+          make.top.equalTo(topView.snp.top).offset(-60)
+          make.leading.equalTo(scrollView.snp.leading)
+          make.trailing.equalTo(scrollView.snp.trailing)
+          make.height.equalTo(450)
+          make.width.equalTo(365)
+        }
+        
         tableView.snp.makeConstraints {
             $0.top.equalTo(topView.snp.bottom).offset(50)
             $0.leading.equalTo(scrollView.snp.leading).offset(16)
