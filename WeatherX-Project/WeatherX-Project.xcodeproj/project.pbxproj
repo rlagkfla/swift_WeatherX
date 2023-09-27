@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B3FC7D5E2AC1B8850025B034 /* WeatherTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FC7D5D2AC1B8850025B034 /* WeatherTopView.swift */; };
+		C39418182AC2B824000066DE /* Forecast5days.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39418172AC2B824000066DE /* Forecast5days.swift */; };
 		C3F9E5E12AC19B5500B39E7E /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F9E5E02AC19B5500B39E7E /* Weather.swift */; };
 		C3F9E5E72AC1AF7600B39E7E /* APIString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F9E5E62AC1AF7600B39E7E /* APIString.swift */; };
 		D191C9AF2AC2E03800241366 /* Extensions+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = D191C9AE2AC2E03800241366 /* Extensions+Double.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		B3FC7D5D2AC1B8850025B034 /* WeatherTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTopView.swift; sourceTree = "<group>"; };
+		C39418172AC2B824000066DE /* Forecast5days.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forecast5days.swift; sourceTree = "<group>"; };
 		C3F9E5E02AC19B5500B39E7E /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		C3F9E5E62AC1AF7600B39E7E /* APIString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIString.swift; sourceTree = "<group>"; };
 		D191C9AE2AC2E03800241366 /* Extensions+Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Double.swift"; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				EB2FF6812AC157B4004A3D79 /* Networking.swift */,
 				EB2FF68B2AC1598F004A3D79 /* DataManager.swift */,
 				C3F9E5E02AC19B5500B39E7E /* Weather.swift */,
+				C39418172AC2B824000066DE /* Forecast5days.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				EB2FF6842AC1587D004A3D79 /* MapViewController.swift in Sources */,
 				EB2FF6822AC157B4004A3D79 /* Networking.swift in Sources */,
 				C3F9E5E72AC1AF7600B39E7E /* APIString.swift in Sources */,
+				C39418182AC2B824000066DE /* Forecast5days.swift in Sources */,
 				EB2FF69B2AC15FF8004A3D79 /* WeatherListCell.swift in Sources */,
 				C3F9E5E12AC19B5500B39E7E /* Weather.swift in Sources */,
 				EB2FF6672AC156F3004A3D79 /* AppDelegate.swift in Sources */,

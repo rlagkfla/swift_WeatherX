@@ -28,11 +28,17 @@ struct API {
         }
     }
     
+    // 현재 날씨 api url 정보
     static let weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather"
-    static let location = "q=seoul"
+    // 5일치 3시간 간격 날씨 api url 정보
+    static let forecastApiUrl = "https://api.openweathermap.org/data/2.5/forecast"
+    
+    static let location = "q=Seoul" // Gangneung, Seoul
     static let key = "appid=\(apiKey)"
     static let unit = "units=metric"
     static let lang = "lang=kr"
+    
+    
     private init() {}
     
 }
