@@ -18,11 +18,6 @@ enum DependingLoaction {
 class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
-    
-    let topView = WeatherTopView()
-    let middleView = WeatherMiddleView()
-    let tableView = WeatherBottomView()
-    
     var networking = Networking.shared
     
     // 받아온 데이터를 저장 할 프로퍼티
@@ -32,19 +27,11 @@ class MyLocationWeatherController: UIViewController {
     var name: String?
     //    var city:
     var forecastResponse: ForecastResponse?
-    
-    private var scrollView = UIScrollView().then {
-        $0.isDirectionalLockEnabled = true
-        $0.alwaysBounceHorizontal = false
-        $0.alwaysBounceVertical = true
-        $0.backgroundColor = .clear
-    }
-    
-    //        private let mainWeatherView = MainWeatherViewController()
+    private let mainWeatherView = MainWeatherViewController().view
     private var dependingLocation: DependingLoaction = .myLocation
 
     // 뷰컨 배열 모음 MainWeatherViewController
-    lazy var viewArray: [UIScrollView] = [scrollView]
+    lazy var viewArray: [UIView?] = [mainWeatherView]
     
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
@@ -83,9 +70,9 @@ class MyLocationWeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        snpLayout()
         networkingWeather()
         pageControllerSetup()
+        setLayout()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,39 +86,18 @@ class MyLocationWeatherController: UIViewController {
     }
     
     // MARK: - Helpers
-    
-    private func snpLayout() {
-        //            view.addSubview(mainWeatherView.view)
-        view.addSubviews(scrollView, bottomView)
-        scrollView.addSubviews(topView, middleView, tableView)
-        
-        scrollView.delegate = self
+   
+    private func setLayout() {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-        tableView.clipsToBounds = true
-        tableView.layer.cornerRadius = 20
+        guard let mainWeatherView = mainWeatherView else { return }
+        view.addSubview(mainWeatherView)
+        view.addSubview(bottomView)
         
-        scrollView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+        mainWeatherView.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
-            $0.width.equalToSuperview()
-        }
-        
-        topView.snp.makeConstraints {
-            $0.top.equalTo(scrollView.snp.top)
-            $0.leading.equalTo(scrollView.snp.leading)
-            $0.trailing.equalTo(scrollView.snp.trailing)
-            $0.height.equalTo(650)
-            $0.width.equalTo(365)
-        }
-        
-        middleView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.top).offset(-60)
-            $0.leading.equalTo(scrollView.snp.leading)
-            $0.trailing.equalTo(scrollView.snp.trailing)
-            $0.height.equalTo(450)
-            $0.width.equalTo(365)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
         
         bottomView.snp.makeConstraints {
@@ -147,18 +113,6 @@ class MyLocationWeatherController: UIViewController {
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
-        
-        tableView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.bottom).offset(50)
-            $0.leading.equalTo(scrollView.snp.leading).offset(16)
-            $0.trailing.equalTo(scrollView.snp.trailing).offset(-16)
-            $0.bottom.equalTo(scrollView.snp_bottomMargin).offset(-30)
-            
-            // 스크롤뷰 내부 객체에 대해서는 반드시 크기 지정(스크롤 뷰가 가변적 크기이기 때문에)
-            $0.height.equalTo(350)
-            $0.width.equalTo(365)
-        }
-        scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2000)
     }
     
     private func pageControllerSetup() {
@@ -211,12 +165,3 @@ class MyLocationWeatherController: UIViewController {
     }
 }
     
-// MARK: - UIScrollViewDelegate
-
-extension MyLocationWeatherController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.x != 0 {
-            scrollView.contentOffset.x = 0
-        }
-    }
-}

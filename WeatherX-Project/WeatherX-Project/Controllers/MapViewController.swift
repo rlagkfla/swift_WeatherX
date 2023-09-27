@@ -64,6 +64,7 @@ private extension MapViewController {
         rightBarButton.menu = createMenu()
         rightBarButton.tintColor = .black
         navigationItem.rightBarButtonItem = rightBarButton
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     @objc func doneButtonTapped() {
