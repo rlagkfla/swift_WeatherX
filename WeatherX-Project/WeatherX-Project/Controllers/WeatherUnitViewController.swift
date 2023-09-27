@@ -20,8 +20,6 @@ class WeatherUnitViewController: UIViewController {
         $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    
-    
     // MARK: - LifeCycle
 
     override func viewDidLoad() {
@@ -30,15 +28,11 @@ class WeatherUnitViewController: UIViewController {
         configureUI()
     }
     
-    
-    
-    
-    
     // MARK: - Helper
     
     func configureNav() {
         navigationItem.title = "단위"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(completeButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
 
         let appearance = UINavigationBarAppearance().then {
@@ -64,10 +58,12 @@ class WeatherUnitViewController: UIViewController {
         
     }
     
-    
-    
     // MARK: - Actions
     
+    @objc private func completeButtonTapped() {
+        // 섭씨, 화씨 선택된 정보를 저장하는 로직 추후 구현 예정
+        dismiss(animated: true)
+    }
     
     
 
@@ -90,22 +86,53 @@ extension WeatherUnitViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+
+        for view in cell.contentView.subviews {
+            view.removeFromSuperview()
+        }
+        cell.accessoryType = .none
+        cell.textLabel?.text = ""
         
         if indexPath.section == 0 {
             if indexPath.row == selectedRow {
                 cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
             }
-
-            if indexPath.row == 0 {
-                cell.textLabel?.text = "섭씨 (°C)"
-            } else {
-                cell.textLabel?.text = "화씨 (℉)"
-            }
+            cell.textLabel?.text = indexPath.row == 0 ? "섭씨 (°C)" : "화씨 (℉)"
         } else {
-            cell.accessoryType = .none
-            // 두 번째 섹션의 셀 구성 코드 나아아아아중에 작성.
+            cell.selectionStyle = .none
+            let unitLabel = UILabel()
+            let valueLabel = UILabel().then {
+                $0.textColor = .lightGray
+                $0.font = UIFont.systemFont(ofSize: 14)
+            }
+            cell.contentView.addSubview(unitLabel)
+            cell.contentView.addSubview(valueLabel)
+            
+            unitLabel.snp.makeConstraints {
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerY.equalToSuperview()
+            }
+            valueLabel.snp.makeConstraints {
+                $0.trailing.equalToSuperview().offset(-16)
+                $0.centerY.equalToSuperview()
+            }
+            
+            switch indexPath.row {
+            case 0:
+                unitLabel.text = "바람"
+                valueLabel.text = "m/s"
+            case 1:
+                unitLabel.text = "강수량"
+                valueLabel.text = "mm"
+            case 2:
+                unitLabel.text = "습도"
+                valueLabel.text = "%"
+            case 3:
+                unitLabel.text = "흐림"
+                valueLabel.text = "%"
+            default:
+                break
+            }
         }
 
         return cell
