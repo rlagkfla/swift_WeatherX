@@ -85,6 +85,13 @@ private extension MapViewController {
             self?.handleWind()
         })
         
+        let precipitation = UIAction(title: "강수량",
+                                     image: UIImage(systemName: "umbrella"),
+                                     state: selectedAction == "강수량" ? .on : .off,
+                                     handler: { [weak self] _ in
+            self?.handlePrecipitation()
+        })
+        
         return UIMenu(title: "", children: [tempAction, windAction])
     }
     
@@ -96,6 +103,12 @@ private extension MapViewController {
     
     func handleWind() {
         selectedAction = "바람"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
+    }
+    
+    func handlePrecipitation() {
+        selectedAction = "강수량"
         rightBarButton.menu = createMenu()
         updateAnnotationViews()
     }
@@ -127,6 +140,13 @@ extension MapViewController: MKMapViewDelegate {
                 annotationView.glyphText = "\(windSpeed) m/s"
             } else {
                 print("windspeed is nil")
+            }
+        case "강수량":
+            if let main = self.weatherResponse?.weather.first?.main {
+//                switch main {
+//                case "Clear":
+//                    annotationView.glyphImage = UIImage(named: "sunny")
+//                }
             }
         default:
             break
