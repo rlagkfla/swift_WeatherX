@@ -16,25 +16,13 @@ class MapViewController: UIViewController {
     private var main: Main?
     private var name: String?
     private var selectedAction: String = "기온" // 기본값
+    private var rightBarButton: UIBarButtonItem!
     
     var weatherResponse: WeatherResponse?
     
-    private lazy var menu: UIMenu = {
-        let tempAction = UIAction(title: "기온", image: UIImage(systemName: "thermometer.medium"), handler: { [weak self] _ in
-            self?.handleTemperature()
-        })
-
-        let windAction = UIAction(title: "바람", image: UIImage(systemName: "wind"), handler: { [weak self] _ in
-            self?.handleWind()
-        })
-
-        let menu = UIMenu(title: "", children: [tempAction, windAction])
-        return menu
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupMapView()
         configureNav()
         updateUserLocation()
@@ -72,8 +60,8 @@ private extension MapViewController {
         doneButton.tintColor = .black
         navigationItem.leftBarButtonItem = doneButton
         
-        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "square.3.stack.3d"), style: .plain, target: nil, action: nil)
-        rightBarButton.menu = menu
+        rightBarButton = UIBarButtonItem(image: UIImage(systemName: "square.3.stack.3d"), style: .plain, target: nil, action: nil)
+        rightBarButton.menu = createMenu()
         rightBarButton.tintColor = .black
         navigationItem.rightBarButtonItem = rightBarButton
     }
@@ -82,12 +70,40 @@ private extension MapViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    func createMenu() -> UIMenu {
+        let tempAction = UIAction(title: "기온",
+                                  image: UIImage(systemName: "thermometer.medium"),
+                                  state: selectedAction == "기온" ? .on : .off,
+                                  handler: { [weak self] _ in
+            self?.handleTemperature()
+        })
+        
+        let windAction = UIAction(title: "바람",
+                                  image: UIImage(systemName: "wind"),
+                                  state: selectedAction == "바람" ? .on : .off,
+                                  handler: { [weak self] _ in
+            self?.handleWind()
+        })
+        
+        return UIMenu(title: "", children: [tempAction, windAction])
+    }
+    
     func handleTemperature() {
         selectedAction = "기온"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
     }
     
     func handleWind() {
         selectedAction = "바람"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
+    }
+    
+    func updateAnnotationViews() {
+        mapView.removeAnnotations(mapView.annotations)
+        updateUserLocation()
+        mapView.setNeedsDisplay()
     }
 }
 
@@ -115,9 +131,6 @@ extension MapViewController: MKMapViewDelegate {
         default:
             break
         }
-//        if let temp = self.weatherResponse?.main.temp {
-//            annotationView.glyphText = "\(temp)°"
-//        }
         
         return annotationView
     }
