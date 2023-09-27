@@ -27,6 +27,7 @@
 		EB2FF69B2AC15FF8004A3D79 /* WeatherListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF69A2AC15FF8004A3D79 /* WeatherListCell.swift */; };
 		EB2FF69D2AC1600A004A3D79 /* WeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF69C2AC1600A004A3D79 /* WeatherTableViewCell.swift */; };
 		EB2FF69F2AC1601D004A3D79 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2FF69E2AC1601D004A3D79 /* WeatherCollectionViewCell.swift */; };
+		F92CFEBE2AC313DE002B1428 /* MainWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92CFEBD2AC313DE002B1428 /* MainWeatherViewController.swift */; };
 		F9DD0F982AC29E930032B4B8 /* WeatherBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DD0F972AC29E930032B4B8 /* WeatherBottomView.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		EB2FF69A2AC15FF8004A3D79 /* WeatherListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherListCell.swift; sourceTree = "<group>"; };
 		EB2FF69C2AC1600A004A3D79 /* WeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTableViewCell.swift; sourceTree = "<group>"; };
 		EB2FF69E2AC1601D004A3D79 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
+		F92CFEBD2AC313DE002B1428 /* MainWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWeatherViewController.swift; sourceTree = "<group>"; };
 		F9DD0F972AC29E930032B4B8 /* WeatherBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherBottomView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,6 +122,7 @@
 		EB2FF67C2AC1574D004A3D79 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F92CFEBD2AC313DE002B1428 /* MainWeatherViewController.swift */,
 				EB2FF66A2AC156F3004A3D79 /* MyLocationWeatherController.swift */,
 				EB2FF6832AC1587D004A3D79 /* MapViewController.swift */,
 				EB2FF6852AC15899004A3D79 /* ListViewController.swift */,
@@ -246,6 +249,7 @@
 				C3F9E5E72AC1AF7600B39E7E /* APIString.swift in Sources */,
 				EB2FF69B2AC15FF8004A3D79 /* WeatherListCell.swift in Sources */,
 				C3F9E5E12AC19B5500B39E7E /* Weather.swift in Sources */,
+				F92CFEBE2AC313DE002B1428 /* MainWeatherViewController.swift in Sources */,
 				EB2FF6672AC156F3004A3D79 /* AppDelegate.swift in Sources */,
 				EB2FF6692AC156F3004A3D79 /* SceneDelegate.swift in Sources */,
 				EB2FF6992AC15E02004A3D79 /* WeatherList.swift in Sources */,

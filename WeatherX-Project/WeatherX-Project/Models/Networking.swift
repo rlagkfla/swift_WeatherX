@@ -46,7 +46,5 @@ final class Networking {
             }
         }.resume() // 이 dataTask 시작
     }
-    
-    
-    
+
 }

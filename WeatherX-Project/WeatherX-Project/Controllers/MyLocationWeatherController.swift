@@ -52,7 +52,7 @@ class MyLocationWeatherController: UIViewController {
             sv.spacing = 30
             return sv
         }()
-        //
+        
         // MARK: - Properties
         
         var networking = Networking.shared
@@ -64,6 +64,7 @@ class MyLocationWeatherController: UIViewController {
         
         private var scrollView = UIScrollView()
         
+//        private let mainWeatherView = MainWeatherViewController()
         let tableView = WeatherBottomView()
         private var dependingLocation: DependingLoaction = .myLocation
         
@@ -75,7 +76,7 @@ class MyLocationWeatherController: UIViewController {
             menuViewButton.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
         }
         
-        //뷰 배열 모음
+        //뷰컨 배열 모음 MainWeatherViewController
         lazy var viewArray: [UIScrollView] = [scrollView]
         
         
@@ -104,7 +105,7 @@ class MyLocationWeatherController: UIViewController {
         }
         
         private func setup() {
-
+//            view.addSubview(mainWeatherView.view)
             view.addSubview(bottomView)
             view.addSubview(scrollView)
             scrollView.addSubview(tableView)
@@ -174,9 +175,9 @@ class MyLocationWeatherController: UIViewController {
                 switch result {
                 case .success(let weatherResponse):
                     DispatchQueue.main.async {
-                        self.weather = weatherResponse.weather.first
-                        self.main = weatherResponse.main
-                        self.name = weatherResponse.name
+                        self.weather = weatherResponse.weather.first //전체정보
+                        self.main = weatherResponse.main  // 온도,압력,습도 등
+                        self.name = weatherResponse.name  //
                     }
                 case .failure(_ ):
                     print("error")
