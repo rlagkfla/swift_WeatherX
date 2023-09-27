@@ -14,7 +14,6 @@ struct WeatherResponse: Codable {
     let coord: Coord
     let weather: [Weather]
     let main: Main
-    let name: String
     let wind: Wind
     let clouds: Clouds
     let rain: Rain?
