@@ -34,10 +34,7 @@ class WeatherListViewController: UIViewController {
 
     private func configureNav() {
         navigationItem.title = "날씨"
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.hidesBackButton = true
-
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 
@@ -61,7 +58,12 @@ class WeatherListViewController: UIViewController {
             $0.titleTextAttributes = [.foregroundColor: UIColor.label]
             $0.shadowColor = nil
         }
-
+        
+        // backbutton 임시로 배치
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = .black
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.standardAppearance = scrollAppearance
         navigationController?.navigationBar.compactAppearance = scrollAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
