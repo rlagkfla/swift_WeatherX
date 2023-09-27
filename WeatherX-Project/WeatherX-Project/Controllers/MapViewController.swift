@@ -92,7 +92,7 @@ private extension MapViewController {
             self?.handlePrecipitation()
         })
         
-        return UIMenu(title: "", children: [tempAction, windAction])
+        return UIMenu(title: "", children: [tempAction, windAction, precipitation])
     }
     
     func handleTemperature() {
@@ -132,26 +132,44 @@ extension MapViewController: MKMapViewDelegate {
         case "기온":
             if let temp = self.weatherResponse?.main.temp {
                 annotationView.glyphText = "\(temp)°"
-            } else {
-                print("temp is nil")
             }
         case "바람":
             if let windSpeed = self.weatherResponse?.wind.speed {
                 annotationView.glyphText = "\(windSpeed) m/s"
-            } else {
-                print("windspeed is nil")
             }
         case "강수량":
-            if let main = self.weatherResponse?.weather.first?.main {
-//                switch main {
-//                case "Clear":
-//                    annotationView.glyphImage = UIImage(named: "sunny")
-//                }
+            if let icon = self.weatherResponse?.weather.first?.icon,
+               let iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png") {
+                downloadImage(fromURL: iconURL) { image in
+                    DispatchQueue.main.async {
+                        annotationView.glyphImage = image
+                    }
+                }
+                annotationView.glyphImage = UIImage()
             }
         default:
             break
         }
         
         return annotationView
+    }
+}
+
+// 이미지 다운로드
+private extension MapViewController {
+    func downloadImage(fromURL url: URL, completion: @escaping (UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                print("Error downloading image: \(error)")
+                completion(nil)
+                return
+            }
+            
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }.resume()
     }
 }
