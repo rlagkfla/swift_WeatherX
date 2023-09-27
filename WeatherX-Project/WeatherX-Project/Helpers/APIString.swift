@@ -25,7 +25,7 @@ struct API {
                 fatalError("Couldn't find key 'OPENWEATHERMAP_KEY' in 'KeyList.plist'.")
             }
             return value
-        }
+        } //
     }
     
     // 현재 날씨 api url 정보

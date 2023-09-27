@@ -63,10 +63,9 @@ struct Coord: Codable {
 struct DateFormat {
 
     static var dateString: String {
-
         let myFormatter = DateFormatter()
         myFormatter.dateFormat = "MMM dd hh:mm a"
-
+        
         // 로케일을 영어(미국)로 설정
         myFormatter.locale = Locale(identifier: "en_US")
 
@@ -78,18 +77,4 @@ struct DateFormat {
         let savedDateString = myFormatter.string(from: date)
         return savedDateString
     }
-    
-    // api 날짜 데이터(unix time) 변환 메서드 (현재 시간보다 약간 딜레이가 있어서 사용 x)
-//    static func dateString(dt: Int) -> String {
-//        let date = Date(timeIntervalSince1970: TimeInterval(dt))
-//        let myFormatter = DateFormatter()
-//        myFormatter.dateFormat = "MMM dd hh:mm a"
-//        myFormatter.locale = Locale(identifier: "en_US")
-//        myFormatter.amSymbol = "AM"
-//        myFormatter.pmSymbol = "PM"
-//
-//        let savedDateString = myFormatter.string(from: date)
-//        return savedDateString
-//    }
-    
 }
