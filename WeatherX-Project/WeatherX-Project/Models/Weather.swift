@@ -9,55 +9,53 @@ import Foundation
 
 // MARK: - 현재 날씨 정보
 
-struct WeatherResponse: Decodable {
+struct WeatherResponse: Codable {
     let name: String
     let coord: Coord
     let weather: [Weather]
     let main: Main
     let wind: Wind
     let clouds: Clouds
-    let rain: Rain
+    let rain: Rain?
     let dt: Int // unix time
 }
 
-struct Main: Decodable {
+struct Main: Codable {
     let temp: Double // 현재 기온
     let temp_min: Double // 최저 기온
     let temp_max: Double // 최고 기온
     let humidity: Double // 습도, %
 }
 
-struct Weather: Decodable {
+struct Weather: Codable {
     let id: Int // 기상 조건 ID
     let main: String // 날씨 매개변수 그룹(비, 눈, 구름 ​​등)
     let description: String // 그룹 내 날씨 상태
     let icon: String // 날씨 아이콘 ID
 }
 
-struct Wind: Decodable {
+struct Wind: Codable {
     let speed: Double? // 풍속, m/s
 }
 
-struct Clouds: Decodable {
+struct Clouds: Codable {
     let all: Int? // 흐림, %
 }
 
-struct Rain: Decodable {
+struct Rain: Codable {
     let oneHour: Double? // 1시간 동안의 강우량 mm
     let threeHours: Double? // 3시간 동안의 강우량 mm
-    
+
     private enum CodingKeys: String, CodingKey {
         case oneHour = "1h"
         case threeHours = "3h"
     }
 }
 
-struct Coord: Decodable {
+struct Coord: Codable {
     let lat: Double // 위도
     let lon: Double // 경도
 }
-
-// MARK: - 5일치 3시간 간격 날씨 정보
 
 
 // MARK: - 날짜 포맷
