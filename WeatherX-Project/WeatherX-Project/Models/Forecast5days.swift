@@ -11,39 +11,79 @@ import Foundation
 
 // 필요한 정보
 // 1일치(오늘) 3시간 간격 날씨 정보
-// 온도, 강수확률, 시간, 아이콘, 날짜(현재날짜)?
+// 온도, 강수확률, 시간, 아이콘, 날짜(현재날짜)
 // 5일치 날씨 정보
 // 날짜(일자/요일), 아이콘, 강수확률, 최저 온도, 최고 온도
 // list.dt, list.dt_txt, list.weather.icon, list.pop, list.main.temp_min, list.main.temp_max
 
-struct ForecastResponse: Decodable {
+struct ForecastResponse: Codable {
+    let cod: String
     let city: City
-    let list: [List]
+    let list: [Lists]
 }
 
-struct City: Decodable {
+// MARK: - City
+struct City: Codable {
+    let id: Int
     let name: String
     let coord: Coordi
 }
 
-struct List: Decodable {
+// MARK: - Coord
+struct Coordi: Codable {
+    let lat, lon: Double // 위도, 경도
+}
+
+// MARK: - List
+struct Lists: Codable {
+    let weather: [Forecast]
     let dt: Int // unix time
-    let dt_txt: String? // 날짜 텍스트
-    let pop: Double? // 강수 확률, %
-    let weather: Icon
-    let main: Temp
+    let dtTxt: String // 날짜 텍스트
+    let main: MainClass
+    let pop: Double // 강수 확률, %
+    let rain: Rainy?
+    
+    enum CodingKeys: String, CodingKey {
+        case dt, main, weather, pop, rain
+        case dtTxt = "dt_txt"
+    }
 }
 
-struct Icon: Decodable {
+
+// MARK: - MainClass
+struct MainClass: Codable {
+    let temp, tempMin, tempMax: Double
+    let humidity: Int
+
+    enum CodingKeys: String, CodingKey {
+        case temp // 온도, 섭씨
+        case tempMin = "temp_min" // 최저 기온
+        case tempMax = "temp_max" // 최고 기온
+        case humidity // 습도, %
+    }
+}
+
+// MARK: - Rain
+struct Rainy: Codable {
+    let the3H: Double // 강수량, mm
+
+    enum CodingKeys: String, CodingKey {
+        case the3H = "3h"
+    }
+}
+
+// MARK: - Weather
+struct Forecast: Codable {
+    let id: Int
+//    let main: MainEnum
     let icon: String // 날씨 아이콘 ID
+    
 }
 
-struct Temp: Decodable {
-    let temp_min: Double // 최저 기온
-    let temp_max: Double // 최고 기온
-}
+//enum MainEnum: String, Codable {
+//    case clear = "Clear"
+//    case clouds = "Clouds"
+//    case rain = "Rain"
+//}
 
-struct Coordi: Decodable {
-    let lat: Double // 위도
-    let lon: Double // 경도
-}
+
