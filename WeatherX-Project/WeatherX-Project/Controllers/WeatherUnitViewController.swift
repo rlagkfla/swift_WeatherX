@@ -86,21 +86,19 @@ extension WeatherUnitViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+
+        for view in cell.contentView.subviews {
+            view.removeFromSuperview()
+        }
+        cell.accessoryType = .none
+        cell.textLabel?.text = ""
         
         if indexPath.section == 0 {
             if indexPath.row == selectedRow {
                 cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
             }
-
-            if indexPath.row == 0 {
-                cell.textLabel?.text = "섭씨 (°C)"
-            } else {
-                cell.textLabel?.text = "화씨 (℉)"
-            }
+            cell.textLabel?.text = indexPath.row == 0 ? "섭씨 (°C)" : "화씨 (℉)"
         } else {
-            cell.accessoryType = .none
             cell.selectionStyle = .none
             let unitLabel = UILabel()
             let valueLabel = UILabel().then {

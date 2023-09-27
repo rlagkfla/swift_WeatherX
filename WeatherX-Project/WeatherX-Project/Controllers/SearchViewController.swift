@@ -2,93 +2,76 @@
 //  SearchViewController.swift
 //  WeatherX-Project
 //
-//  Created by Insu on 2023/09/26.
+//  Created by Insu on 9/27/23.
 //
 
 import UIKit
 import Then
 import SnapKit
-import CoreLocation
 
-class SearchViewController: UIViewController {
+protocol SearchViewControllerDelegate: AnyObject {
+    func didAddCity(_ city: String)
+}
+
+class SearchViewController: UISearchController, UISearchResultsUpdating {
     
     // MARK: - Properties
     
-    private lazy var searchBar = UISearchBar().then {
-        $0.placeholder = "지역 검색하기"
-        $0.backgroundColor = .white
-        $0.searchBarStyle = .minimal
+    weak var searchDelegate: SearchViewControllerDelegate?
+    var searchResults: [String] = [] // 도시 이름 저장
+    
+    var citySearchTableView = UITableView().then {
+        $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
-    
-    private lazy var searchListTableView = UITableView(frame: self.view.frame).then {
-        $0.backgroundColor = .white
-        $0.rowHeight = 60
-    }
-    
-    
     
     // MARK: - LifeCycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        configureNav()
         configureUI()
+        searchResultsUpdater = self
+        obscuresBackgroundDuringPresentation = false
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.async {
-            self.searchBar.becomeFirstResponder() // 서치바 키보드 작업이 메인 스레드에 잘 실행이 안되어서 비동기 처리
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchBar.placeholder = "도시 검색"
     }
     
-    
-    // MARK: - Helper
-    
-    private func configureNav() {
-        navigationItem.title = "도시 검색"
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.largeTitleDisplayMode = .never
-        
-        let appearance = UINavigationBarAppearance().then {
-            $0.configureWithOpaqueBackground()
-            $0.titleTextAttributes = [.foregroundColor: UIColor.label]
-            $0.shadowColor = nil
-        }
-        
-        navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    }
+    // MARK: - Helpers
     
     private func configureUI() {
-        view.addSubview(searchBar)
-        searchBar.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.left.right.equalToSuperview()
-        }
         
-        view.addSubview(searchListTableView)
-        searchListTableView.snp.makeConstraints {
-            $0.top.equalTo(searchBar.snp.bottom)
-            $0.left.right.bottom.equalToSuperview()
+        citySearchTableView.delegate = self
+        citySearchTableView.dataSource = self
+        
+        view.addSubview(citySearchTableView)
+        citySearchTableView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        // 검색 로직 구현
     }
 }
 
+// MARK: - UITableViewDelegate, UITableViewDataSource
 
-
-
-
-
-
-
-//MARK: - UISearchBarDelegate
-
-extension SearchViewController: UISearchBarDelegate {
-
+extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = searchResults[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedCity = searchResults[indexPath.row]
+        searchDelegate?.didAddCity(selectedCity)
+        dismiss(animated: true, completion: nil)
+    }
 }
