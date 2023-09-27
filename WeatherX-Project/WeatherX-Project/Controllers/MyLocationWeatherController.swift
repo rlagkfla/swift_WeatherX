@@ -70,9 +70,6 @@ class MyLocationWeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let mainWeatherView = mainWeatherView else { return }
-        view.addSubview(mainWeatherView)
-        view.addSubview(bottomView)
         networkingWeather()
         pageControllerSetup()
         setLayout()
@@ -91,7 +88,10 @@ class MyLocationWeatherController: UIViewController {
     // MARK: - Helpers
    
     private func setLayout() {
+        view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
         guard let mainWeatherView = mainWeatherView else { return }
+        view.addSubview(mainWeatherView)
+        view.addSubview(bottomView)
         
         mainWeatherView.snp.makeConstraints {
             $0.leading.equalToSuperview()
