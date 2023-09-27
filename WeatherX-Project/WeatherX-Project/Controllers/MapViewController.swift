@@ -16,20 +16,17 @@ class MapViewController: UIViewController {
     private var coord: Coord?
     private var main: Main?
     private var name: String?
+    private var selectedAction: String = "기온" // 기본값
+    private var rightBarButton: UIBarButtonItem!
     
-    lazy var button = UIButton().then {
-        $0.setTitleColor(.green, for: .normal)
-        $0.setTitle("change", for: .normal)
-        $0.addTarget(self, action: #selector(updateUserLocation), for: .touchUpInside)
-    }
+    var weatherResponse: WeatherResponse?
     
-    var networking = Networking.shared
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupMapView()
-        configure()
+        configureNav()
+        updateUserLocation()
         
     }
     
@@ -82,29 +79,58 @@ private extension MapViewController {
         }
     }
     
-    func networkingWeather() {
+    func configureNav() {
+        let doneButton = UIBarButtonItem(title: "완료",
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(doneButtonTapped))
+        doneButton.tintColor = .black
+        navigationItem.leftBarButtonItem = doneButton
         
-        // data fetch
-        networking.getWeather { result in
-            switch result {
-            case .success(let weatherResponse):
-                DispatchQueue.main.async {
-                    self.coord = weatherResponse.coord
-                    self.main = weatherResponse.main
-                    self.name = weatherResponse.name
-                }
-            case .failure(_ ):
-                print("error")
-            }
-        }
+        rightBarButton = UIBarButtonItem(image: UIImage(systemName: "square.3.stack.3d"), style: .plain, target: nil, action: nil)
+        rightBarButton.menu = createMenu()
+        rightBarButton.tintColor = .black
+        navigationItem.rightBarButtonItem = rightBarButton
     }
     
-    func configure() {
-        mapView.addSubview(self.button)
+    @objc func doneButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func createMenu() -> UIMenu {
+        let tempAction = UIAction(title: "기온",
+                                  image: UIImage(systemName: "thermometer.medium"),
+                                  state: selectedAction == "기온" ? .on : .off,
+                                  handler: { [weak self] _ in
+            self?.handleTemperature()
+        })
         
-        button.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
+        let windAction = UIAction(title: "바람",
+                                  image: UIImage(systemName: "wind"),
+                                  state: selectedAction == "바람" ? .on : .off,
+                                  handler: { [weak self] _ in
+            self?.handleWind()
+        })
+        
+        return UIMenu(title: "", children: [tempAction, windAction])
+    }
+    
+    func handleTemperature() {
+        selectedAction = "기온"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
+    }
+    
+    func handleWind() {
+        selectedAction = "바람"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
+    }
+    
+    func updateAnnotationViews() {
+        mapView.removeAnnotations(mapView.annotations)
+        updateUserLocation()
+        mapView.setNeedsDisplay()
     }
 }
 
@@ -115,8 +141,22 @@ extension MapViewController: MKMapViewDelegate {
         }
         
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "CustomMarker")
-        if let temp = self.main?.temp {
-            annotationView.glyphText = "\(temp)°"
+        
+        switch selectedAction {
+        case "기온":
+            if let temp = self.weatherResponse?.main.temp {
+                annotationView.glyphText = "\(temp)°"
+            } else {
+                print("temp is nil")
+            }
+        case "바람":
+            if let windSpeed = self.weatherResponse?.wind.speed {
+                annotationView.glyphText = "\(windSpeed) m/s"
+            } else {
+                print("windspeed is nil")
+            }
+        default:
+            break
         }
         
         return annotationView

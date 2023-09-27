@@ -19,6 +19,7 @@ class MyLocationWeatherController: UIViewController {
     
     let locationImage: UIImage = UIImage(systemName: "location.fill")!
     
+
     lazy var bottomView: UIView = {
             let view = UIView()
             view.addSubview(stackView)
@@ -55,12 +56,15 @@ class MyLocationWeatherController: UIViewController {
         
         // MARK: - Properties
         
-        var networking = Networking.shared
-        
-        // 받아온 데이터를 저장 할 프로퍼티
-        var weather: Weather?
-        var main: Main?
-        var name: String?
+         var networking = Networking.shared
+    
+    // 받아온 데이터를 저장 할 프로퍼티
+    var weatherResponse: WeatherResponse?
+    var weather: Weather?
+    var main: Main?
+    var name: String?
+    //    var city:
+    var forecastResponse: ForecastResponse?
         
         private var scrollView = UIScrollView()
         
@@ -130,58 +134,87 @@ class MyLocationWeatherController: UIViewController {
             pageControl.setIndicatorImage(locationImage, forPage: 0)
         }
         
-        private func snpLayout() {
-            
-            bottomView.snp.makeConstraints {
-                $0.bottom.equalToSuperview()
-                $0.leading.equalToSuperview()
-                $0.trailing.equalToSuperview()
-                $0.height.equalTo(60)
-            }
-            
-            stackView.snp.makeConstraints {
-                $0.leading.equalToSuperview()
-                $0.trailing.equalToSuperview()
-                $0.top.equalToSuperview()
-                $0.bottom.equalToSuperview()
-            }
-            
-            scrollView.snp.makeConstraints {
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                $0.leading.equalToSuperview()
-                $0.trailing.equalToSuperview()
-                //            $0.bottom.equalTo(toolbar.snp.top)
-                $0.bottom.equalTo(bottomView.snp.top)
-                $0.width.equalToSuperview()
-            }
-            
-            tableView.snp.makeConstraints {
-                $0.top.equalToSuperview()
-                $0.leading.equalTo(scrollView.frameLayoutGuide.snp.leading).offset(16)
-                $0.trailing.equalTo(scrollView.frameLayoutGuide.snp.trailing).offset(-16)
-                
-                //스크롤뷰 내부 객체에 대해서는 반드시 크기 지정(스크롤 뷰가 가변적 크기이기 때문에)
-                $0.height.equalTo(350)
-                $0.width.equalTo(365)
-            }
-            //scrollView의 사이즈는 꼭꼭 반드시 레이아웃을 잡고 프레임 잡을 것
-            scrollView.contentSize = CGSize(width: view.frame.size.width, height: 1000)
+          private func snpLayout() {
+        
+        toolbar.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
+            $0.height.equalTo(60)
         }
         
-        private func networkingWeather(){
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
+            $0.bottom.equalTo(toolbar.snp.top)
+            $0.width.equalToSuperview()
+        }
+        
+        
+        let topView = WeatherTopView()
+        scrollView.addSubview(topView)
+        
+        topView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.snp.top)
+            make.leading.equalTo(scrollView.snp.leading)
+            make.trailing.equalTo(scrollView.snp.trailing)
+            make.height.equalTo(650)
+            make.width.equalTo(365)
+        }
+        
+        let middleView = WeatherMiddleView()
+        scrollView.addSubview(middleView)
+        middleView.snp.makeConstraints { make in
+          make.top.equalTo(topView.snp.top).offset(-60)
+          make.leading.equalTo(scrollView.snp.leading)
+          make.trailing.equalTo(scrollView.snp.trailing)
+          make.height.equalTo(450)
+          make.width.equalTo(365)
+        }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(topView.snp.bottom).offset(50)
+            $0.leading.equalTo(scrollView.snp.leading).offset(16)
+            $0.trailing.equalTo(scrollView.snp.trailing).offset(-16)
+            $0.bottom.equalTo(scrollView.snp_bottomMargin).offset(-30)
             
-            // data fetch
-            networking.getWeather { result in
-                switch result {
-                case .success(let weatherResponse):
-                    DispatchQueue.main.async {
-                        self.weather = weatherResponse.weather.first //전체정보
-                        self.main = weatherResponse.main  // 온도,압력,습도 등
-                        self.name = weatherResponse.name  //
-                    }
-                case .failure(_ ):
-                    print("error")
+            //스크롤뷰 내부 객체에 대해서는 반드시 크기 지정(스크롤 뷰가 가변적 크기이기 때문에)
+            $0.height.equalTo(350)
+            $0.width.equalTo(365)
+        }
+        scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2000)
+    }
+    
+        
+         private func networkingWeather(){
+        
+        // data fetch
+        networking.getWeather { result in
+            switch result {
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    self.weatherResponse = weatherResponse
+                    self.weather = weatherResponse.weather.first
+                    self.main = weatherResponse.main
+                    self.name = weatherResponse.name
                 }
+            case .failure(_ ):
+                print("weatherResponse error")
+            }
+        }
+        
+        networking.getforecastWeather { result in
+            switch result {
+            case .success(let forecastResponse):
+                DispatchQueue.main.async {
+                    self.forecastResponse = forecastResponse
+                }
+            case .failure(_ ):
+                print("forecastResponse error")
+
+   
+
             }
         }
         
