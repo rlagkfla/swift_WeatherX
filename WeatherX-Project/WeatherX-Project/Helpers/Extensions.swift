@@ -7,7 +7,26 @@
 
 import UIKit
 
-//유저디폴트 익스텐션 매서드 추가
+// MARK: - View
+
+extension UIView {
+    func addSubviews(_ views: UIView...) {
+        for view in views {
+            addSubview(view)
+        }
+    }
+}
+
+extension UIStackView {
+    func addArrangedSubviews(_ views: UIView...) {
+        for view in views {
+            addArrangedSubview(view)
+        }
+    }
+}
+
+// MARK: - UserDefaults
+
 extension UserDefaults {
     func setJSON<T: Encodable>(_ value: T, forKey key: String) {
         do {
