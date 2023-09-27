@@ -85,7 +85,14 @@ private extension MapViewController {
             self?.handleWind()
         })
         
-        return UIMenu(title: "", children: [tempAction, windAction])
+        let precipitation = UIAction(title: "강수량",
+                                     image: UIImage(systemName: "umbrella"),
+                                     state: selectedAction == "강수량" ? .on : .off,
+                                     handler: { [weak self] _ in
+            self?.handlePrecipitation()
+        })
+        
+        return UIMenu(title: "", children: [tempAction, windAction, precipitation])
     }
     
     func handleTemperature() {
@@ -96,6 +103,12 @@ private extension MapViewController {
     
     func handleWind() {
         selectedAction = "바람"
+        rightBarButton.menu = createMenu()
+        updateAnnotationViews()
+    }
+    
+    func handlePrecipitation() {
+        selectedAction = "강수량"
         rightBarButton.menu = createMenu()
         updateAnnotationViews()
     }
@@ -119,19 +132,44 @@ extension MapViewController: MKMapViewDelegate {
         case "기온":
             if let temp = self.weatherResponse?.main.temp {
                 annotationView.glyphText = "\(temp)°"
-            } else {
-                print("temp is nil")
             }
         case "바람":
             if let windSpeed = self.weatherResponse?.wind.speed {
                 annotationView.glyphText = "\(windSpeed) m/s"
-            } else {
-                print("windspeed is nil")
+            }
+        case "강수량":
+            if let icon = self.weatherResponse?.weather.first?.icon,
+               let iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png") {
+                downloadImage(fromURL: iconURL) { image in
+                    DispatchQueue.main.async {
+                        annotationView.glyphImage = image
+                    }
+                }
+                annotationView.glyphImage = UIImage()
             }
         default:
             break
         }
         
         return annotationView
+    }
+}
+
+// 이미지 다운로드
+private extension MapViewController {
+    func downloadImage(fromURL url: URL, completion: @escaping (UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                print("Error downloading image: \(error)")
+                completion(nil)
+                return
+            }
+            
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }.resume()
     }
 }
