@@ -20,6 +20,7 @@ class WeatherListViewController: UIViewController {
 
     private let weatherListTableView = UITableView().then {
         $0.backgroundColor = .white
+        $0.register(WeatherListCell.self, forCellReuseIdentifier: "WeatherListCell")
     }
 
     // MARK: - LifeCycle
@@ -28,6 +29,7 @@ class WeatherListViewController: UIViewController {
         super.viewDidLoad()
         configureNav()
         configureUI()
+        cities = ["서울"]
     }
 
     // MARK: - Helpers
@@ -122,9 +124,13 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = cities[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
+        cell.cityLabel.text = cities[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 }
 
