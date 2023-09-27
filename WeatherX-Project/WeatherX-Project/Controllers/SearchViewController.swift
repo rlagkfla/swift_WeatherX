@@ -14,12 +14,17 @@ protocol SearchViewControllerDelegate: AnyObject {
     func didAddCity(_ city: String)
 }
 
+protocol LocationSelectionDelegate: AnyObject {
+    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
+}
+
 class SearchViewController: UISearchController {
     
     // MARK: - Properties
     
     weak var searchDelegate: SearchViewControllerDelegate?
 //    var searchResults: [String] = [] // 도시 이름 저장
+    weak var selectLocationDelegate: LocationSelectionDelegate?
     
     var citySearchTableView = UITableView().then {
         $0.register(SearchListTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -70,9 +75,13 @@ class SearchViewController: UISearchController {
             if error != nil {
                 print("requestFailed")
             }
-//            let coordinate = response?.mapItems.first?.placemark.coordinate
+            
+            let coordinate = response?.mapItems.first?.placemark.coordinate
+            guard let coordinate else { return }
+            self.selectLocationDelegate?.didSelectLocation(coordinate)
+            
             let name = response?.mapItems.first?.name
-            guard let name = name else { return }
+            guard let name else { return }
             self.searchDelegate?.didAddCity(name)
             
             self.dismiss(animated: true, completion: nil)
