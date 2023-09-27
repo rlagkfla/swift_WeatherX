@@ -124,7 +124,9 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         cell.textLabel?.text = cities[indexPath.row]
         return cell
     }
-    
+}
+
+extension WeatherListViewController: SearchViewControllerDelegate {
     func didAddCity(_ city: String) {
         cities.append(city)
         weatherListTableView.reloadData()
