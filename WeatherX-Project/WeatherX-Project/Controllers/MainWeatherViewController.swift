@@ -68,7 +68,7 @@ class MainWeatherViewController: UIViewController {
         }
         
         bottomView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.bottom).offset(50)
+            $0.top.equalTo(topView.snp.bottom).offset(80)
             $0.leading.equalTo(scrollView.snp.leading).offset(16)
             $0.trailing.equalTo(scrollView.snp.trailing).offset(-16)
             $0.bottom.equalTo(scrollView.snp_bottomMargin).offset(-30)

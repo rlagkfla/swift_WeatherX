@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
+
 enum DependingLoaction {
     case myLocation
     case saveLocation
@@ -27,13 +28,14 @@ class MyLocationWeatherController: UIViewController {
     var name: String?
     //    var city:
     var forecastResponse: ForecastResponse?
-    private let mainWeatherView = MainWeatherViewController().view
+    private let mainWeatherView = MainWeatherViewController()
     private var dependingLocation: DependingLoaction = .myLocation
-
+    
     // 뷰컨 배열 모음 MainWeatherViewController
-    lazy var viewArray: [UIView?] = [mainWeatherView]
+    lazy var viewArray: [UIViewController] = [mainWeatherView]
     
     let locationImage: UIImage = .init(systemName: "location.fill")!
+    
     
     lazy var bottomView = UIView().then {
         $0.addSubview(stackView)
@@ -47,7 +49,7 @@ class MyLocationWeatherController: UIViewController {
         $0.tintColor = .black
         $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
     }
-
+    
     private let pageControl = UIPageControl()
     
     lazy var menuViewButton = UIButton(type: .custom).then {
@@ -73,6 +75,7 @@ class MyLocationWeatherController: UIViewController {
         networkingWeather()
         pageControllerSetup()
         setLayout()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,10 +89,10 @@ class MyLocationWeatherController: UIViewController {
     }
     
     // MARK: - Helpers
-   
+    
     private func setLayout() {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-        guard let mainWeatherView = mainWeatherView else { return }
+        guard let mainWeatherView = mainWeatherView.view else { return }
         view.addSubview(mainWeatherView)
         view.addSubview(bottomView)
         
@@ -127,41 +130,85 @@ class MyLocationWeatherController: UIViewController {
         // data fetch
         networking.getWeather { result in
             switch result {
-                case .success(let weatherResponse):
-                    DispatchQueue.main.async {
-                        self.weatherResponse = weatherResponse
-                        self.weather = weatherResponse.weather.first
-                        self.main = weatherResponse.main
-                        self.name = weatherResponse.name
-                    }
-                case .failure:
-                    print("weatherResponse error")
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    self.weatherResponse = weatherResponse
+                    self.weather = weatherResponse.weather.first
+                    self.main = weatherResponse.main
+                    self.name = weatherResponse.name
+                    self.weatherDataBiding(weatherResponse: weatherResponse)
+                    self.loadImage(weatherResponse: weatherResponse)
+                    
+                }
+            case .failure:
+                print("weatherResponse error")
             }
         }
         
         networking.getforecastWeather { result in
             switch result {
-                case .success(let forecastResponse):
-                    DispatchQueue.main.async {
-                        self.forecastResponse = forecastResponse
-                    }
-                case .failure:
-                    print("forecastResponse error")
+            case .success(let forecastResponse):
+                DispatchQueue.main.async {
+                    self.forecastResponse = forecastResponse
+                    self.forecastDataBidning(forecastResponse: forecastResponse)
+                    print(forecastResponse)
+                }
+            case .failure:
+                print("forecastResponse error")
             }
         }
     }
-        
+    
     // MARK: - Actions
-        
+    
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
         mapVC.weatherResponse = self.weatherResponse
         navigationController?.pushViewController(mapVC, animated: true)
     }
-        
+    
     @objc func menuViewItemTapped() {
         let listVC = WeatherListViewController()
         navigationController?.pushViewController(listVC, animated: true)
     }
-}
     
+    //데이터 바인딩
+    func weatherDataBiding(weatherResponse: WeatherResponse) {
+        let weatherResponse = weatherResponse
+        let main = weatherResponse.main
+        let name = weatherResponse.name
+        
+        let topView = mainWeatherView.topView
+        topView.talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
+        topView.dateLabel.text = DateFormat.dateString
+        topView.locateLabel.text = name
+        topView.temperLabel.text = String(main.temp)
+        topView.rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
+        topView.numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
+        topView.number2Label.text = String(main.humidity)
+    }
+    
+    func forecastDataBidning(forecastResponse:ForecastResponse) {
+        let middelView = mainWeatherView.middleView
+        let bottomView = mainWeatherView.bottomView
+        
+    }
+    
+    func loadImage(weatherResponse: WeatherResponse) {
+        let topView = mainWeatherView.topView
+        guard let weather = weatherResponse.weather.first else { return }
+        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(weather.icon)@2x.png")
+        guard  let url = imageUrl else { return }
+        DispatchQueue.global().async {
+            
+            guard let data = try? Data(contentsOf: url) else { return }
+            
+            DispatchQueue.main.async {
+                topView.imageView.image = UIImage(data: data)
+                
+            }
+        }
+        
+    }
+}
+
