@@ -10,23 +10,18 @@ import SnapKit
 
 class WeatherMiddleView: UIView {
     
-    // 배경 uiview
-//    let backgroundView = UIView().then {
-//        $0.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
-//        $0.layer.cornerRadius = 10
-//    }
-    
     // 컬렉션뷰
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
+        layout.minimumLineSpacing = 10
         layout.scrollDirection = .horizontal
-        layout.sectionInset = .zero
+//        layout.sectionInset = .zero
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
         cv.layer.cornerRadius = 10
-//        cv.isScrollEnabled = true
+        cv.isScrollEnabled = true
         
         return cv
     }()
@@ -77,7 +72,6 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as! WeatherCollectionViewCell
         
-//        cell.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
         
         return cell
     }
