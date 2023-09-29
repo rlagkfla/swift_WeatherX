@@ -23,11 +23,12 @@ class WeatherMiddleView: UIView {
         layout.scrollDirection = .horizontal
         layout.sectionInset = .zero
         
+        
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
         cv.layer.cornerRadius = 10
-//        cv.isScrollEnabled = true
-        
+        cv.isScrollEnabled = true
+        cv.collectionViewLayout = layout
         return cv
     }()
     
