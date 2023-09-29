@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 // 에러 정의
 enum NetworkError: Error {
@@ -18,6 +19,8 @@ final class Networking {
     
     // singleton
     static let shared = Networking()
+    var lat: Double = 37.5683
+    var lon: Double = 126.9778
     
     private init(){}
     
@@ -25,7 +28,8 @@ final class Networking {
     func getWeather(completion: @escaping (Result<WeatherResponse, NetworkError>) -> Void) {
         
         // API 호출을 위한 URL
-        let url = URL(string: "\(API.weatherApiUrl)?\(API.location)&\(API.key)&\(API.unit)&\(API.lang)")
+//        let url = URL(string: "\(API.weatherApiUrl)?\(API.location)&\(API.key)&\(API.unit)&\(API.lang)")
+        let url = URL(string: "\(API.weatherApiUrl)?lat=\(lat)&lon=\(lon)&\(API.key)&\(API.unit)&\(API.lang)")
         guard let url = url else {
             return completion(.failure(.badUrl))
         }
@@ -74,5 +78,12 @@ final class Networking {
                 completion(.failure(.decodingError))
             }
         }.resume() // 이 dataTask 시작
+    }
+}
+
+extension Networking: LocationSelectionDelegate {
+    func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
+        lat = coordinate.latitude
+        lon = coordinate.longitude
     }
 }
