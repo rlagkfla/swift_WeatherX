@@ -19,11 +19,14 @@ class WeatherMiddleView: UIView {
     // 컬렉션뷰
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
         layout.scrollDirection = .horizontal
+        layout.sectionInset = .zero
+        
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
         cv.layer.cornerRadius = 10
-        cv.isScrollEnabled = true
+//        cv.isScrollEnabled = true
         
         return cv
     }()
@@ -35,42 +38,6 @@ class WeatherMiddleView: UIView {
         
         setUpLayout()
 
-//        let timetemper1 = UILabel()
-//        timetemper1.textColor = UIColor(red: 0.179, green: 0.179, blue: 0.179, alpha: 1)
-//        timetemper1.font = UIFont.systemFont(ofSize: 26, weight: .bold)
-//        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.lineHeightMultiple = 0.73
-//        timetemper1.attributedText = NSMutableAttributedString(string: "21º", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-//        addSubview(timetemper1)
-//        timetemper1.snp.makeConstraints { make in
-//            make.width.equalTo(40)
-//            make.height.equalTo(44)
-//            make.leading.equalToSuperview().offset(56)
-//            make.top.equalToSuperview().offset(638)
-//        }
-
-//        let imageView = UIImageView(image: UIImage(named: "darkcloud"))
-//        addSubview(imageView)
-//        imageView.snp.makeConstraints { make in
-//            make.width.equalTo(40)
-//            make.height.equalTo(32)
-//            make.leading.equalToSuperview().offset(50)
-//            make.top.equalTo(timetemper1.snp.bottom).offset(4)
-//        }
-
-//        let timeLabel = UILabel()
-//        timeLabel.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-//        timeLabel.font = UIFont.systemFont(ofSize: 18)
-//        let timeParagraphStyle = NSMutableParagraphStyle()
-//        timeParagraphStyle.lineHeightMultiple = 1.14
-//        timeLabel.attributedText = NSMutableAttributedString(string: "9 AM", attributes: [NSAttributedString.Key.paragraphStyle: timeParagraphStyle])
-//        addSubview(timeLabel)
-//        timeLabel.snp.makeConstraints { make in
-//            make.width.equalTo(44)
-//            make.height.equalTo(22)
-//            make.centerX.equalTo(imageView)
-//            make.top.equalTo(imageView.snp.bottom).offset(12)
-//        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -78,7 +45,7 @@ class WeatherMiddleView: UIView {
     }
     
     private func collectionViewSetUp(){
-        collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCollectionViewCell")
+        collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
         // 컬렉션 뷰의 기능을 누가 사용하지는지 ? 👉 self 즉, 나 자신 클래스인 MainViewController
         collectionView.delegate = self
         //  컬렉션 뷰의 데이타 제공자는 ? 👉  self 즉, 나 자신 클래스인 MainViewController
@@ -108,9 +75,9 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCollectionViewCell", for: indexPath) as! WeatherCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as! WeatherCollectionViewCell
         
-        cell.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+//        cell.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
         
         return cell
     }
@@ -121,7 +88,7 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
           layout collectionViewLayout: UICollectionViewLayout,
           sizeForItemAt indexPath: IndexPath
      ) -> CGSize {
-          return CGSize(width: 50, height: 100)
+          return CGSize(width: 60, height: 100)
      }
 }
 
@@ -133,17 +100,17 @@ extension WeatherMiddleView: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         minimumLineSpacingForSectionAt section: Int
         ) -> CGFloat {
-        return 15
+        return 10
     }
 
     // 옆 간격
-    func collectionView(
-      _ collectionView: UICollectionView,
-      layout collectionViewLayout: UICollectionViewLayout,
-      minimumInteritemSpacingForSectionAt section: Int
-      ) -> CGFloat {
-          return 10
-      }
+//    func collectionView(
+//      _ collectionView: UICollectionView,
+//      layout collectionViewLayout: UICollectionViewLayout,
+//      minimumInteritemSpacingForSectionAt section: Int
+//      ) -> CGFloat {
+//          return 10
+//      }
 
     // cell 사이즈( 옆 라인을 고려하여 설정 )
 //    func collectionView(
