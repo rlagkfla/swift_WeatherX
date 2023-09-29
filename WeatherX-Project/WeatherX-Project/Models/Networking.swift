@@ -44,7 +44,7 @@ final class Networking {
 
             // 성공
             if let weatherResponse = weatherResponse {
-                print("weather : \(weatherResponse)")
+//                print("weather : \(weatherResponse)")
 //                print("date: \(DateFormat.dateString(dt: weatherResponse.dt))") 
                 completion(.success(weatherResponse)) // 성공한 데이터 저장
             } else {
@@ -72,7 +72,7 @@ final class Networking {
 
             // 성공
             if let forecastResponse = forecastResponse {
-                print("forecast : \(forecastResponse)")
+//                print("forecast : \(forecastResponse)")
                 completion(.success(forecastResponse)) // 성공한 데이터 저장
             } else {
                 completion(.failure(.decodingError))

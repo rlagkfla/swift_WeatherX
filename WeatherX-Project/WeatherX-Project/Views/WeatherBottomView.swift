@@ -12,7 +12,8 @@ import SnapKit
 class WeatherBottomView: UIView {
     
     let tableView = UITableView()
-    
+  
+    var tableViewTitle = ""
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -20,7 +21,6 @@ class WeatherBottomView: UIView {
         tableViewSetup()
         tableViewLayout()
         tableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
-        
     }
     
     required init?(coder: NSCoder) {
@@ -55,6 +55,7 @@ extension WeatherBottomView: UITableViewDataSource {
         
         cell.selectionStyle = .none
         cell.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9607843137, blue: 1, alpha: 1)
+        
         return cell
     }
     
@@ -71,7 +72,7 @@ extension WeatherBottomView: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "5일 날씨 정보"
+        return tableViewTitle
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
