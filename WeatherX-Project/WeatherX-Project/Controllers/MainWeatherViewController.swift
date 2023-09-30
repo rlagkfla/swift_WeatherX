@@ -60,7 +60,7 @@ class MainWeatherViewController: UIViewController {
         }
         
         middleView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.top).offset(-60)
+            $0.top.equalTo(topView.snp.top).offset(-20)
             $0.leading.equalTo(scrollView.snp.leading)
             $0.trailing.equalTo(scrollView.snp.trailing)
             $0.height.equalTo(450)
@@ -68,9 +68,9 @@ class MainWeatherViewController: UIViewController {
         }
         
         bottomView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.bottom).offset(80)
+            $0.top.equalToSuperview().offset(555)
             $0.leading.equalTo(scrollView.snp.leading).offset(16)
-            $0.trailing.equalTo(scrollView.snp.trailing).offset(-16)
+            $0.trailing.equalTo(scrollView.snp.trailing).offset(12)
             $0.bottom.equalTo(scrollView.snp_bottomMargin).offset(-30)
             // 스크롤뷰 내부 객체에 대해서는 반드시 크기 지정(스크롤 뷰가 가변적 크기이기 때문에)
             $0.height.equalTo(350)

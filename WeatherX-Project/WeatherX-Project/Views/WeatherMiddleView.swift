@@ -38,7 +38,7 @@ class WeatherMiddleView: UIView {
         collectionViewSetUp()
         
         setUpLayout()
-
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -59,9 +59,9 @@ class WeatherMiddleView: UIView {
         collectionView.snp.makeConstraints {
 //            $0.width.equalTo(342)
             $0.height.equalTo(147)
-            $0.leading.equalToSuperview().offset(24)
-            $0.trailing.equalToSuperview().offset(-24)
-            $0.top.equalToSuperview().offset(624)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(12)
+            $0.top.equalToSuperview().offset(400)
         }
         
         

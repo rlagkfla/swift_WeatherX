@@ -10,25 +10,6 @@ import SnapKit
 
 class WeatherTopView: UIView {
 
-//    // 배경
-//    let gradientView: UIView = {
-//        let view = UIView()
-//        view.frame = CGRect(x: 0, y: 0, width: 390, height: 622)
-//        let layer0 = CAGradientLayer()
-//        layer0.colors = [
-//          UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor,
-//          UIColor(red: 0.721, green: 0.866, blue: 1, alpha: 1).cgColor
-//        ]
-//        layer0.locations = [0, 1]
-//        layer0.startPoint = CGPoint(x: 0.25, y: 0.5)
-//        layer0.endPoint = CGPoint(x: 0.75, y: 0.5)
-//        layer0.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: 1, b: 1, c: -1, d: 0.21, tx: 0.5, ty: -0.11))
-//        layer0.bounds = view.bounds.insetBy(dx: -0.5*view.bounds.size.width, dy: -0.5*view.bounds.size.height)
-//        layer0.position = view.center
-//        view.layer.addSublayer(layer0)
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
     
     // 날씨 안내 멘트
     let talkLabel: UILabel = {
@@ -63,7 +44,7 @@ class WeatherTopView: UIView {
     // 날씨 일러스트
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "darkcloud") // 이미지 이름에 따라 수정
+        imageView.image = UIImage(named: "") // 이미지 이름에 따라 수정
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -71,14 +52,14 @@ class WeatherTopView: UIView {
     // 위치
     let locateLabel: UILabel = {
         let label = UILabel()
-        label.text = "서울특별시 동대문구"
+        label.text = ""
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
         label.numberOfLines = 1 // 여러 줄이 아닌 한 줄에 표시
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.9
-        label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "서울특별시 동대문구", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        label.textAlignment = .left
+        label.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -86,13 +67,13 @@ class WeatherTopView: UIView {
     // 온도
     let temperLabel: UILabel = {
         let label = UILabel()
-        label.text = "21º"
+        label.text = ""
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 100, weight: .thin)
+        label.font = UIFont.systemFont(ofSize: 60, weight: .thin)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.75
         label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "21º", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        label.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -102,7 +83,7 @@ class WeatherTopView: UIView {
         let label = UILabel()
         label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "RAIN"
+        label.text = "강수량"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -123,7 +104,7 @@ class WeatherTopView: UIView {
         let label = UILabel()
         label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "UV"
+        label.text = "풍속"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -144,7 +125,7 @@ class WeatherTopView: UIView {
         let label = UILabel()
         label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "AQ"
+        label.text = "습도"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -162,7 +143,6 @@ class WeatherTopView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        addSubview(gradientView)
         addSubview(talkLabel)
         addSubview(dateLabel)
         addSubview(imageView)
@@ -177,7 +157,7 @@ class WeatherTopView: UIView {
         
         // 날씨 안내 멘트
         talkLabel.snp.makeConstraints { make in
-            make.width.equalTo(77)
+            make.width.equalTo(177)
             make.height.equalTo(86)
             make.leading.equalToSuperview().offset(16)
             make.top.equalToSuperview().offset(54)
@@ -188,15 +168,15 @@ class WeatherTopView: UIView {
             make.width.equalTo(114)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(140)
+            make.top.equalToSuperview().offset(124)
         }
         
         // 날씨 일러스트
         imageView.snp.makeConstraints { make in
-            make.width.equalTo(480)
-            make.height.equalTo(360)
-            make.leading.equalToSuperview().offset(54)
-            make.top.equalToSuperview().offset(51)
+            make.width.equalTo(140)
+            make.height.equalTo(130)
+            make.trailing.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(182)
         }
         
         // 위치
@@ -204,71 +184,63 @@ class WeatherTopView: UIView {
             make.width.equalTo(188)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(457)
+            make.top.equalToSuperview().offset(250)
         }
         
         // 온도
         temperLabel.snp.makeConstraints { make in
-            make.width.equalTo(135)
-            make.height.equalTo(140)
-            make.trailing.equalToSuperview().offset(-16)
-            make.top.equalToSuperview().offset(440)
+            make.width.equalTo(150)
+            make.height.equalTo(60)
+            make.trailing.equalToSuperview().offset(14)
+            make.top.equalToSuperview().offset(286)
         }
         
-        // 습도 제목
+        // 강수량 라벨
         rainLabel.snp.makeConstraints { make in
-            make.width.equalTo(54)
+            make.width.equalTo(44)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(497)
+            make.top.equalToSuperview().offset(297)
         }
 
-        // 습도 %
+        // 강수량
         rain2Label.snp.makeConstraints { make in
             make.width.equalTo(42)
             make.height.equalTo(23)
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(517)
+            make.top.equalToSuperview().offset(320)
         }
         
-        // 배경
-//        gradientView.snp.makeConstraints { make in
-//            make.width.equalTo(390)
-//            make.height.equalTo(622)
-//            make.centerX.equalToSuperview()
-//            make.centerY.equalToSuperview()
-//        }
-        
-        // uv 라벨
+        // 풍속 라벨
         uvLabel.snp.makeConstraints { make in
-            make.width.equalTo(54)
+            make.width.equalTo(44)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(96)
-            make.top.equalToSuperview().offset(497)
+            make.top.equalToSuperview().offset(297)
         }
 
-        // uv 숫자
+        // 풍속
         numberLabel.snp.makeConstraints { make in
             make.width.equalTo(10)
             make.height.equalTo(23)
             make.leading.equalToSuperview().offset(103)
-            make.top.equalToSuperview().offset(517)
+            make.top.equalToSuperview().offset(320)
         }
         
-        // aq 라벨
+        // 습도 라벨
         aqLabel.snp.makeConstraints { make in
-            make.width.equalTo(54)
+            make.width.equalTo(44)
             make.height.equalTo(18)
             make.leading.equalToSuperview().offset(168)
-            make.top.equalToSuperview().offset(497)
+            make.top.equalToSuperview().offset(297)
         }
         
-        // aq 숫자
+        // 습도
         number2Label.snp.makeConstraints { make in
-            make.width.equalTo(20)
+            make.width.equalTo(40)
             make.height.equalTo(23)
-            make.leading.equalToSuperview().offset(170)
-            make.top.equalToSuperview().offset(517)
+            make.leading.equalToSuperview().offset(162)
+            make.top.equalToSuperview().offset(320)
         }
     }
 
