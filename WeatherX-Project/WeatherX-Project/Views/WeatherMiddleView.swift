@@ -11,20 +11,23 @@ import SnapKit
 class WeatherMiddleView: UIView {
     
     // 컬렉션뷰
-    let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.scrollDirection = .horizontal
-//        layout.sectionInset = .zero
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
-        
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
-        cv.layer.cornerRadius = 10
-        cv.isScrollEnabled = true
-        
-        return cv
-    }()
+    lazy var collectionView = UICollectionView()
+    let layout = UICollectionViewFlowLayout()
+    
+//    let collectionView1: UICollectionView = {
+//        let layout = UICollectionViewFlowLayout()
+//        layout.minimumLineSpacing = 10
+//        layout.scrollDirection = .horizontal
+////        layout.sectionInset = .zero
+//        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
+//        
+//        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        cv.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
+//        cv.layer.cornerRadius = 10
+//        cv.isScrollEnabled = true
+//        
+//        return cv
+//    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,25 +43,45 @@ class WeatherMiddleView: UIView {
     }
     
     private func collectionViewSetUp(){
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        addSubview(collectionView)
+        
         collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
-        // 컬렉션 뷰의 기능을 누가 사용하지는지 ? 👉 self 즉, 나 자신 클래스인 MainViewController
         collectionView.delegate = self
-        //  컬렉션 뷰의 데이타 제공자는 ? 👉  self 즉, 나 자신 클래스인 MainViewController
         collectionView.dataSource = self
-        self.addSubview(collectionView)
+        
+        collectionView.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
+        collectionView.layer.cornerRadius = 10
+        collectionView.isScrollEnabled = true
+        
+        layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
+//        layout.sectionInset = .zero
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
+        collectionView.collectionViewLayout = layout
+
     }
     
     private func setUpLayout(){
         
+//        collectionView.snp.makeConstraints {
+////            $0.width.equalTo(342)
+//            $0.height.equalTo(147)
+//            $0.leading.equalToSuperview().offset(24)
+//            $0.trailing.equalToSuperview().offset(-24)
+//            $0.top.equalToSuperview().offset(624)
+//        }
+        
         collectionView.snp.makeConstraints {
-//            $0.width.equalTo(342)
             $0.height.equalTo(147)
             $0.leading.equalToSuperview().offset(24)
             $0.trailing.equalToSuperview().offset(-24)
             $0.top.equalToSuperview().offset(624)
         }
-        
-        
+        // collectionView의 가로 크기를 설정합니다.
+        collectionView.snp.makeConstraints {
+            $0.width.equalToSuperview()
+        }
         
     }
 }
