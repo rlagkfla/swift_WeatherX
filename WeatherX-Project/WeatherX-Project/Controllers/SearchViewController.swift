@@ -117,7 +117,21 @@ extension SearchViewController: UISearchBarDelegate {
 
 extension SearchViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        searchResults = completer.results
+        self.searchResults = completer.results.filter { result in
+            
+            let title = result.title
+            
+            if title.contains("시") &&
+                !(title.contains("구") || title.contains("동") || title.contains("면") || title.contains("리") || title.contains("로")) {
+                return true
+            }
+            
+            if !title.contains(",") || result.title.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
+                return false
+            }
+            
+            return true
+        }
     }
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
