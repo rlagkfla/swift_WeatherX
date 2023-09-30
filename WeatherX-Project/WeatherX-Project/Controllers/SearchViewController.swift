@@ -11,7 +11,7 @@ import SnapKit
 import MapKit
 
 protocol SearchViewControllerDelegate: AnyObject {
-    func didAddCity(_ city: String)
+    func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D)
 }
 
 protocol LocationSelectionDelegate: AnyObject {
@@ -23,15 +23,14 @@ class SearchViewController: UISearchController {
     // MARK: - Properties
     
     weak var searchDelegate: SearchViewControllerDelegate?
-//    var searchResults: [String] = [] // 도시 이름 저장
     weak var selectLocationDelegate: LocationSelectionDelegate?
     
     var citySearchTableView = UITableView().then {
         $0.register(SearchListTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    private var searchCompleter: MKLocalSearchCompleter = MKLocalSearchCompleter()
-    private var searchResults: [MKLocalSearchCompletion] = [MKLocalSearchCompletion]() {
+    private var searchCompleter: MKLocalSearchCompleter = .init()
+    private var searchResults: [MKLocalSearchCompletion] = .init() {
         didSet {
             DispatchQueue.main.async {
                 self.citySearchTableView.reloadData()
@@ -71,19 +70,15 @@ class SearchViewController: UISearchController {
         // 검색 로직 구현
         let searchRequest = MKLocalSearch.Request(completion: selected)
         let search = MKLocalSearch(request: searchRequest)
-        search.start { (response, error) in
+        search.start { response, error in
             if error != nil {
                 print("requestFailed")
             }
             
             let coordinate = response?.mapItems.first?.placemark.coordinate
-            guard let coordinate else { return }
-            self.selectLocationDelegate?.didSelectLocation(coordinate)
-            
             let name = response?.mapItems.first?.name
-            guard let name else { return }
-            self.searchDelegate?.didAddCity(name)
-            
+            guard let coordinate = coordinate, let name = name else { return }
+            self.searchDelegate?.didAddCity(name, coordinate: coordinate)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -110,7 +105,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let searchText = searchBar.text,
-              searchText.count > 0 else {
+              searchText.count > 0
+        else {
             searchResults.removeAll()
             return
         }

@@ -8,15 +8,16 @@
 import UIKit
 import Then
 import SnapKit
+import CoreLocation
 
 class WeatherListViewController: UIViewController {
 
     // MARK: - Properties
-    
+
     private var temperatureUnit = "섭씨"
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
-    var cities: [String] = []
+    var weatherData: [WeatherResponse] = []
 
     private let weatherListTableView = UITableView().then {
         $0.backgroundColor = .white
@@ -29,7 +30,6 @@ class WeatherListViewController: UIViewController {
         super.viewDidLoad()
         configureNav()
         configureUI()
-        cities = ["서울"]
     }
 
     // MARK: - Helpers
@@ -55,16 +55,16 @@ class WeatherListViewController: UIViewController {
 
         let scrollAppearance = UINavigationBarAppearance().then {
             $0.configureWithOpaqueBackground()
-            $0.backgroundColor = .clear
+            $0.backgroundColor = .white
             $0.largeTitleTextAttributes = [.foregroundColor: UIColor.label]
             $0.titleTextAttributes = [.foregroundColor: UIColor.label]
             $0.shadowColor = nil
         }
-        
+
         // backbutton 임시로 배치
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .black
-        
+
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.standardAppearance = scrollAppearance
         navigationController?.navigationBar.compactAppearance = scrollAppearance
@@ -72,6 +72,7 @@ class WeatherListViewController: UIViewController {
     }
 
     private func configureUI() {
+        searchController.searchDelegate = self
         weatherListTableView.delegate = self
         weatherListTableView.dataSource = self
 
@@ -80,7 +81,7 @@ class WeatherListViewController: UIViewController {
             $0.edges.equalToSuperview()
         }
     }
-    
+
     private func createMenu() -> UIMenu {
         let editAction = UIAction(title: "목록 편집", image: UIImage(systemName: "pencil"), handler: handleEditAction(_:))
         let tempAction = UIMenu(title: "", options: .displayInline, children: [
@@ -100,19 +101,19 @@ class WeatherListViewController: UIViewController {
     private func handleCelsiusAction(_ action: UIAction) {
         temperatureUnit = "섭씨"
         rightBarButton.menu = createMenu()
-        // 추가된 날씨 테이블뷰 셀의 온도가 섭씨 기준으로 바뀌는 로직 구현 예정
+        weatherListTableView.reloadData()
     }
 
     private func handleFahrenheitAction(_ action: UIAction) {
         temperatureUnit = "화씨"
         rightBarButton.menu = createMenu()
-        // 추가된 날씨 테이블뷰 셀의 온도가 화씨 기준으로 바뀌는 로직 구현 예정
+        weatherListTableView.reloadData()
     }
 
     private func handleUnitAction(_ action: UIAction) {
         let weatherUnitViewController = WeatherUnitViewController()
         let navController = UINavigationController(rootViewController: weatherUnitViewController)
-        self.present(navController, animated: true, completion: nil)
+        present(navController, animated: true, completion: nil)
     }
 }
 
@@ -120,23 +121,44 @@ class WeatherListViewController: UIViewController {
 
 extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities.count
+        return weatherData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
-        cell.cityLabel.text = cities[indexPath.row]
+        let weatherInfo = weatherData[indexPath.row]
+        cell.cityLabel.text = weatherInfo.name
+        let temperature = weatherInfo.main.temp
+        if temperatureUnit == "섭씨" {
+            cell.temperatureLabel.text = "\(Int(temperature))°C"
+        } else {
+            cell.temperatureLabel.text = "\(Int(temperature * 9 / 5 + 32))°F"
+        }
+        cell.weatherDescriptionLabel.text = weatherInfo.weather.first?.description
+        // cell.weatherImageView.image = ... // 여기다가 날씨 이미지 설정하면 되는데... 고민중..
+        cell.timeLabel.text = DateFormat.dateString
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
 }
 
 extension WeatherListViewController: SearchViewControllerDelegate {
-    func didAddCity(_ city: String) {
-        cities.append(city)
-        weatherListTableView.reloadData()
+    func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D) {
+        Networking.shared.lat = coordinate.latitude
+        Networking.shared.lon = coordinate.longitude
+        Networking.shared.getWeather { result in
+            switch result {
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    self.weatherData.append(weatherResponse)
+                    self.weatherListTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }
