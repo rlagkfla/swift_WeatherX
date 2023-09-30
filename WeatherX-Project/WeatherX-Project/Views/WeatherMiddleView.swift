@@ -51,14 +51,48 @@ class WeatherMiddleView: UIView {
 
         }
     }
+    
+    func convertDateString(_ inputDateString: String, to outputFormat: String) -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        if let date = dateFormatter.date(from: inputDateString) {
+            dateFormatter.dateFormat = outputFormat
+            return dateFormatter.string(from: date)
+        }
+        
+        return nil
+    }
+    
+    func loadImage(icon: String, cell: WeatherCollectionViewCell) {
+        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
+        guard  let url = imageUrl else { return }
+        DispatchQueue.global().async {
+            
+            guard let data = try? Data(contentsOf: url) else { return }
+            
+            DispatchQueue.main.async {
+                cell.imageView.image = UIImage(data: data)
+                
+            }
+        }
+    }
 }
 
 extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return 16
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as! WeatherCollectionViewCell
+        guard let forecastResponse = forecastResponse else { return cell }
+        
+        cell.timetemper.text = String(forecastResponse.list[indexPath.row].main.temp)
+        
+        cell.timeLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "HH 시")
+        
+        loadImage(icon: forecastResponse.list[indexPath.row].weather[0].icon, cell: cell)
+        
         return cell
     }
     // 컬렉션 뷰 사이즈

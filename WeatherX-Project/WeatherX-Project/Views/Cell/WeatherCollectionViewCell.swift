@@ -27,7 +27,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     let imageView: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "darkcloud")
+//        img.image = UIImage(named: "darkcloud")
         
         return img
     }()
