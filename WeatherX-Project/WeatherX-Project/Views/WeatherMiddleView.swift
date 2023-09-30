@@ -5,12 +5,6 @@
 //  Created by Insu on 9/27/23.
 //
 
-//
-// WeatherMiddleView.swift
-// WeatherX-Project
-//
-// Created by Insu on 9/27/23.
-//
 import UIKit
 import SnapKit
 class WeatherMiddleView: UIView {
