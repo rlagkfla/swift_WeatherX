@@ -42,7 +42,6 @@ class WeatherTableViewCell: UITableViewCell {
     
     let weatherImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "sunny")
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = imageView.frame.height / 2
         return imageView
