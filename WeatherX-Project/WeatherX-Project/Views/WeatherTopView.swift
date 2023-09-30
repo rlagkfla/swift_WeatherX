@@ -40,7 +40,7 @@ class WeatherTopView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     // 날씨 일러스트
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -141,6 +141,34 @@ class WeatherTopView: UIView {
         return label
     }()
     
+    let rainStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
+        stackView.alignment = .center
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let uvStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    let aqStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(talkLabel)
@@ -173,10 +201,10 @@ class WeatherTopView: UIView {
         
         // 날씨 일러스트
         imageView.snp.makeConstraints { make in
-            make.width.equalTo(140)
-            make.height.equalTo(130)
-            make.trailing.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(182)
+            make.width.equalTo(150)
+            make.height.equalTo(150)
+            make.trailing.equalToSuperview().offset(30)
+            make.top.equalToSuperview().offset(100)
         }
         
         // 위치
@@ -193,56 +221,70 @@ class WeatherTopView: UIView {
             make.height.equalTo(60)
             make.trailing.equalToSuperview().offset(14)
             make.top.equalToSuperview().offset(286)
+            
         }
         
         // 강수량 라벨
         rainLabel.snp.makeConstraints { make in
-            make.width.equalTo(44)
             make.height.equalTo(18)
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(297)
         }
 
         // 강수량
         rain2Label.snp.makeConstraints { make in
-            make.width.equalTo(42)
             make.height.equalTo(23)
+        }
+        
+        rainStackView.addArrangedSubview(rainLabel)
+        rainStackView.addArrangedSubview(rain2Label)
+
+        self.addSubview(rainStackView)
+
+        rainStackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(320)
+            make.top.equalToSuperview().offset(297)
         }
         
         // 풍속 라벨
         uvLabel.snp.makeConstraints { make in
-            make.width.equalTo(44)
             make.height.equalTo(18)
-            make.leading.equalToSuperview().offset(96)
-            make.top.equalToSuperview().offset(297)
         }
 
         // 풍속
         numberLabel.snp.makeConstraints { make in
-            make.width.equalTo(10)
             make.height.equalTo(23)
-            make.leading.equalToSuperview().offset(103)
-            make.top.equalToSuperview().offset(320)
+        }
+        
+        uvStackView.addArrangedSubview(uvLabel)
+        uvStackView.addArrangedSubview(numberLabel)
+
+        self.addSubview(uvStackView)
+
+        uvStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(96)
+            make.top.equalToSuperview().offset(297)
         }
         
         // 습도 라벨
         aqLabel.snp.makeConstraints { make in
-            make.width.equalTo(44)
             make.height.equalTo(18)
-            make.leading.equalToSuperview().offset(168)
-            make.top.equalToSuperview().offset(297)
         }
         
         // 습도
         number2Label.snp.makeConstraints { make in
-            make.width.equalTo(40)
             make.height.equalTo(23)
-            make.leading.equalToSuperview().offset(162)
-            make.top.equalToSuperview().offset(320)
+        }
+        
+        aqStackView.addArrangedSubview(aqLabel)
+        aqStackView.addArrangedSubview(number2Label)
+
+        self.addSubview(aqStackView)
+
+        aqStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(168)
+            make.top.equalToSuperview().offset(297)
         }
     }
+    
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

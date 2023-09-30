@@ -43,11 +43,11 @@ class WeatherMiddleView: UIView {
     private func setUpLayout(){
         // collectionView의 세로 크기를 설정합니다.
         collectionView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.height.equalTo(147)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(12)
-            $0.top.equalToSuperview().offset(400)
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
+
         }
     }
 }

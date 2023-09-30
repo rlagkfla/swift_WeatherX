@@ -49,7 +49,8 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         sv.axis = .vertical
         sv.distribution = .fill
         sv.alignment = .fill
-        sv.spacing = 5
+        sv.spacing = 10
+        sv.alignment = .center
         return sv
     }()
     
