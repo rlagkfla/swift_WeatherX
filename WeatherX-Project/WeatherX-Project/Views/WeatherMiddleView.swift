@@ -8,17 +8,23 @@
 import UIKit
 import SnapKit
 class WeatherMiddleView: UIView {
+    
+    var forecastResponse: ForecastResponse?
+    
     // 컬렉션뷰
     lazy var collectionView = UICollectionView()
     let layout = UICollectionViewFlowLayout()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         collectionViewSetUp()
         setUpLayout()
     }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     private func collectionViewSetUp(){
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         addSubview(collectionView)
@@ -34,6 +40,7 @@ class WeatherMiddleView: UIView {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
         collectionView.collectionViewLayout = layout
     }
+    
     private func setUpLayout(){
         // collectionView의 세로 크기를 설정합니다.
         collectionView.snp.makeConstraints {
@@ -45,6 +52,7 @@ class WeatherMiddleView: UIView {
         }
     }
 }
+
 extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 7
@@ -62,6 +70,7 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
         return CGSize(width: 60, height: 100)
     }
 }
+
 extension WeatherMiddleView: UICollectionViewDelegateFlowLayout {
     // 위 아래 간격
     func collectionView(
