@@ -27,7 +27,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     let imageView: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "darkcloud")
+//        img.image = UIImage(named: "darkcloud")
         
         return img
     }()
@@ -90,6 +90,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         stackView.snp.makeConstraints {
             $0.width.equalToSuperview()
             $0.height.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
     }
    

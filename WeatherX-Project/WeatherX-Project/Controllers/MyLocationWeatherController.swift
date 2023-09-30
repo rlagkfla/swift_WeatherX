@@ -190,8 +190,8 @@ class MyLocationWeatherController: UIViewController {
     
     func forecastDataBidning(forecastResponse:ForecastResponse) {
         let middelView = mainWeatherView.middleView
-        
-        
+        middelView.forecastResponse = forecastResponse
+        middelView.collectionView.reloadData()
         
         
         let bottomView = mainWeatherView.bottomView
