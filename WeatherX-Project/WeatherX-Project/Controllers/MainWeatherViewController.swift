@@ -55,20 +55,20 @@ class MainWeatherViewController: UIViewController {
             $0.top.equalTo(scrollView.snp.top)
             $0.leading.equalTo(scrollView.snp.leading)
             $0.trailing.equalTo(scrollView.snp.trailing)
-            $0.height.equalTo(650)
+            $0.height.equalTo(350)
             $0.width.equalTo(365)
         }
         
         middleView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.top).offset(-20)
-            $0.leading.equalTo(scrollView.snp.leading)
-            $0.trailing.equalTo(scrollView.snp.trailing)
-            $0.height.equalTo(450)
+            $0.top.equalTo(topView.snp.bottom).offset(10)
+            $0.leading.equalTo(scrollView.snp.leading).offset(16)
+            $0.trailing.equalTo(scrollView.snp.trailing).offset(12)
+            $0.height.equalTo(150)
             $0.width.equalTo(365)
         }
         
         bottomView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(555)
+            $0.top.equalTo(middleView.snp.bottom).offset(10)
             $0.leading.equalTo(scrollView.snp.leading).offset(16)
             $0.trailing.equalTo(scrollView.snp.trailing).offset(12)
             $0.bottom.equalTo(scrollView.snp_bottomMargin).offset(-30)
