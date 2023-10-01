@@ -119,9 +119,8 @@ extension WeatherBottomView: UITableViewDataSource {
         cell.dateNumberLabel.text = data.date
         cell.dateTextLabel.text = data.dayOfWeek
         loadImage(icon: data.icon, cell: cell)
-        cell.lowTemperTextLabel.text = data.minTemp.makeRounded()
-        cell.hightTemperTextLabel.text = data.maxTemp.makeRounded()
-        cell.hightTemperTextLabel.text = data.maxTemp.makeRounded()
+        cell.lowTemperTextLabel.text = data.minTemp.makeRounded() + "º"
+        cell.hightTemperTextLabel.text = data.maxTemp.makeRounded() + "º"
         
         if data.rainValue?.the3H != nil {
             cell.percentTextLabel.isHidden = false
