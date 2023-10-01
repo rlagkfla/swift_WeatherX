@@ -19,4 +19,8 @@ extension Double {
         let argue = (self * 9/5) - 459.67
         return String(format: "%.0f", arguments: [argue])
     }
+    
+    func makeRounded() -> String {
+        return String(format: "%.0f", self)
+    }
 }
