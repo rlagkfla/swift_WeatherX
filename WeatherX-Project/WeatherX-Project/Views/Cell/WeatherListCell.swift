@@ -14,29 +14,24 @@ class WeatherListCell: UITableViewCell {
     // MARK: - Properties
     
     let cityLabel = UILabel().then {
-        $0.text = "서울"
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
     let weatherDescriptionLabel = UILabel().then {
-        $0.text = "날씨가 추워요"
         $0.font = UIFont.systemFont(ofSize: 14)
         $0.textColor = .gray
     }
     
     let temperatureLabel = UILabel().then {
-        $0.text = "20°"
         $0.font = UIFont.systemFont(ofSize: 22, weight: .medium)
     }
     
     let timeLabel = UILabel().then {
-        $0.text = "12:00 PM"
         $0.font = UIFont.systemFont(ofSize: 12)
         $0.textColor = .gray
     }
     
     let weatherImageView = UIImageView().then {
-        $0.image = UIImage(named: "darkcloud")
         $0.contentMode = .scaleAspectFit
     }
     
