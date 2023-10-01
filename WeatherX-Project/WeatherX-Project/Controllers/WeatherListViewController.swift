@@ -96,7 +96,19 @@ class WeatherListViewController: UIViewController {
     // MARK: - Actions
 
     private func handleEditAction(_ action: UIAction) {
-        weatherListTableView.setEditing(!weatherListTableView.isEditing, animated: true)
+        if !weatherListTableView.isEditing {
+            weatherListTableView.setEditing(true, animated: true)
+            let doneButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(doneButtonTapped(_:)))
+            rightBarButton.image = nil
+            navigationItem.rightBarButtonItem = doneButton
+        }
+    }
+    
+    @objc private func doneButtonTapped(_ sender: UIBarButtonItem) {
+        weatherListTableView.setEditing(false, animated: true)
+        rightBarButton.image = UIImage(systemName: "ellipsis.circle")
+        rightBarButton.menu = createMenu()
+        navigationItem.rightBarButtonItem = rightBarButton
     }
 
     private func handleCelsiusAction(_ action: UIAction) {
