@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import Kingfisher
 import CoreLocation
 
 class WeatherListViewController: UIViewController {
@@ -95,7 +96,7 @@ class WeatherListViewController: UIViewController {
     // MARK: - Actions
 
     private func handleEditAction(_ action: UIAction) {
-        // 추가된 셀 지우는 기능 추가
+        weatherListTableView.setEditing(!weatherListTableView.isEditing, animated: true)
     }
 
     private func handleCelsiusAction(_ action: UIAction) {
@@ -129,19 +130,33 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         let weatherInfo = weatherData[indexPath.row]
         cell.cityLabel.text = weatherInfo.name
         let temperature = weatherInfo.main.temp
+        
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = "\(Int(temperature))°C"
         } else {
             cell.temperatureLabel.text = "\(Int(temperature * 9 / 5 + 32))°F"
         }
+        
         cell.weatherDescriptionLabel.text = weatherInfo.weather.first?.description
-        // cell.weatherImageView.image = ... // 여기다가 날씨 이미지 설정하면 되는데... 고민중..
+        
+        if let icon = weatherInfo.weather.first?.icon {
+            let iconUrl = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
+            cell.weatherImageView.kf.setImage(with: iconUrl)
+        }
+        
         cell.timeLabel.text = DateFormat.dateString
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            weatherData.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }
 
