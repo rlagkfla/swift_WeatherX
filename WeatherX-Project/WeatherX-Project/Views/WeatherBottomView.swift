@@ -12,8 +12,14 @@ import SnapKit
 class WeatherBottomView: UIView {
     
     let tableView = UITableView()
-  
-    var forecastResponse: ForecastResponse?
+    
+    var forecastResponse: ForecastResponse? {
+        didSet{
+            groupDataByDateAndDayOfWeek()
+        }
+    }
+    
+    var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Rainy?)] = []
     
     var tableViewTitle = "5일간의 일기예보"
     override init(frame: CGRect) {
@@ -42,7 +48,6 @@ class WeatherBottomView: UIView {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
         }
-        
     }
     
     func convertDateString(_ inputDateString: String, to outputFormat: String) -> String? {
@@ -61,47 +66,77 @@ class WeatherBottomView: UIView {
         let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
         guard  let url = imageUrl else { return }
         DispatchQueue.global().async {
-            
             guard let data = try? Data(contentsOf: url) else { return }
-            
             DispatchQueue.main.async {
                 cell.weatherImageView.image = UIImage(data: data)
-                
             }
         }
     }
-    
+    private func groupDataByDateAndDayOfWeek() {
+        guard let response = forecastResponse else { return }
+        
+        var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Rainy?)] = []
+        var currentDate = ""
+        var currentDayOfWeek = ""
+        var maxTempOfDay = -100.0
+        var minTempOfDay = 100.0
+        
+        for data in response.list {
+            guard let dateText = convertDateString(data.dtTxt, to: "dd") else { return }
+            guard let dayOfWeek = convertDateString(data.dtTxt, to: "EE") else { return }
+            let rainValue = data.rain
+            if dateText != currentDate || dayOfWeek != currentDayOfWeek {
+                if let iconName = data.weather.first?.icon {
+                    groupedData.append((date: dateText, dayOfWeek: dayOfWeek, icon: iconName, maxTemp: maxTempOfDay, minTemp: minTempOfDay, rainValue: rainValue))
+                }
+                
+                currentDate = dateText
+                currentDayOfWeek = dayOfWeek
+            } else {
+                if data.main.temp > groupedData.last?.maxTemp ?? -100.0 {
+                    groupedData[groupedData.count - 1].maxTemp = data.main.temp
+                }
+                if data.main.temp < groupedData.last?.minTemp ?? 100.0 {
+                    groupedData[groupedData.count - 1].minTemp = data.main.temp
+                }
+            }
+            
+            
+        }
+        self.groupedData = groupedData
+    }
 }
 
 extension WeatherBottomView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return groupedData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell", for: indexPath) as! WeatherTableViewCell
-        guard let forecastResponse = forecastResponse else { return cell }
-        cell.dateNumberLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "dd")
-        cell.dateTextLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "EE")
-        cell.lowTemperTextLabel.text = String(forecastResponse.list[indexPath.row].main.tempMin)
-        cell.hightTemperTextLabel.text = String(forecastResponse.list[indexPath.row].main.tempMax)
+        let data = groupedData[indexPath.row]
         
+        cell.dateNumberLabel.text = data.date
+        cell.dateTextLabel.text = data.dayOfWeek
+        loadImage(icon: data.icon, cell: cell)
+        cell.lowTemperTextLabel.text = data.minTemp.makeRounded()
+        cell.hightTemperTextLabel.text = data.maxTemp.makeRounded()
+        cell.hightTemperTextLabel.text = data.maxTemp.makeRounded()
         
-        loadImage(icon: forecastResponse.list[0].weather[0].icon, cell: cell)
+        if data.rainValue?.the3H != nil {
+            cell.percentTextLabel.isHidden = false
+            cell.percentTextLabel.text = data.rainValue?.the3H.makeRounded()
+        } else {
+            cell.percentTextLabel.isHidden = true
+        }
         cell.selectionStyle = .none
         cell.backgroundColor = #colorLiteral(red: 0.9260787368, green: 0.9659976363, blue: 0.9996650815, alpha: 1)
         
         return cell
     }
-    
-    
 }
 
 extension WeatherBottomView: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 7.0
-//    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -114,4 +149,7 @@ extension WeatherBottomView: UITableViewDelegate {
         return 20.0
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(groupedData[indexPath.row])
+    }
 }
