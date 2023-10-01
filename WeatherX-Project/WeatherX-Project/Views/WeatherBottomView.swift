@@ -83,8 +83,8 @@ extension WeatherBottomView: UITableViewDataSource {
         guard let forecastResponse = forecastResponse else { return cell }
         cell.dateNumberLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "dd")
         cell.dateTextLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "EE")
-        cell.lowTemperTextLabel.text = String(forecastResponse.list[indexPath.row].main.tempMin)
-        cell.hightTemperTextLabel.text = String(forecastResponse.list[indexPath.row].main.tempMax)
+        cell.lowTemperTextLabel.text = formattedString(number: forecastResponse.list[indexPath.row].main.tempMin)
+        cell.hightTemperTextLabel.text = formattedString(number: forecastResponse.list[indexPath.row].main.tempMax)
         
         
         loadImage(icon: forecastResponse.list[0].weather[0].icon, cell: cell)
@@ -94,6 +94,10 @@ extension WeatherBottomView: UITableViewDataSource {
         return cell
     }
     
+    private func formattedString(number: Double) -> String {
+        let formattedString = String(format: "%.1f", number)
+        return "\(formattedString)℃"
+    }
     
 }
 
