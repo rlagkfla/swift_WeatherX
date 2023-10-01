@@ -87,7 +87,8 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as! WeatherCollectionViewCell
         guard let forecastResponse = forecastResponse else { return cell }
         
-        cell.timetemper.text = String(forecastResponse.list[indexPath.row].main.temp)
+//        cell.timetemper.text = String(forecastResponse.list[indexPath.row].main.temp)
+        cell.timetemper.text = forecastResponse.list[indexPath.row].main.temp.makeRounded() + "º"
         
         cell.timeLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "HH 시")
         
@@ -101,7 +102,7 @@ extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegat
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: 60, height: 100)
+        return CGSize(width: 60, height: 110)
     }
 }
 
