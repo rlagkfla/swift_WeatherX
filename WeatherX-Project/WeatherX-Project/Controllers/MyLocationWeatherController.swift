@@ -10,6 +10,9 @@ import SnapKit
 import Then
 import CoreLocation
 
+protocol myLocationViewBinding: AnyObject {
+    func myLocationAppend(vc: MainWeatherViewController)
+}
 
 class MyLocationWeatherController: UIViewController {
     
@@ -28,7 +31,7 @@ class MyLocationWeatherController: UIViewController {
  
     
     // 뷰컨 배열 모음 MainWeatherViewController
-    lazy var viewArray: [UIViewController] = [mainWeatherView]
+    lazy var viewArray: [MainWeatherViewController] = [mainWeatherView]
     
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
@@ -72,7 +75,7 @@ class MyLocationWeatherController: UIViewController {
         pageControllerSetup()
         setLayout()
         setupLocationManager()
-       
+        mainWeatherView.myLocationView = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -227,5 +230,11 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("location request failed")
+    }
+}
+
+extension MyLocationWeatherController: myLocationViewBinding {
+    func myLocationAppend(vc: MainWeatherViewController) {
+        self.viewArray.append(vc)
     }
 }
