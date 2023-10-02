@@ -69,7 +69,6 @@ class WeatherTopView: UIView {
         let label = UILabel()
         label.text = ""
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 60, weight: .thin)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.75
         label.textAlignment = .center
@@ -209,7 +208,6 @@ class WeatherTopView: UIView {
         
         // 위치
         locateLabel.snp.makeConstraints { make in
-            make.width.equalTo(188)
             make.height.equalTo(24)
             make.leading.equalToSuperview().offset(16)
             make.top.equalToSuperview().offset(250)
@@ -219,9 +217,6 @@ class WeatherTopView: UIView {
         temperLabel.snp.makeConstraints { make in
             make.width.equalTo(150)
             make.height.equalTo(60)
-            make.trailing.equalToSuperview().offset(14)
-            make.top.equalToSuperview().offset(286)
-            
         }
         
         // 강수량 라벨
