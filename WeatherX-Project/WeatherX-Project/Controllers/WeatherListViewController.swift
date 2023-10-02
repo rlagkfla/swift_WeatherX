@@ -20,8 +20,9 @@ class WeatherListViewController: UIViewController {
     private let searchController = SearchViewController(searchResultsController: nil)
     var weatherData: [WeatherResponse] = []
 
-    private let weatherListTableView = UITableView().then {
+    private let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
         $0.backgroundColor = .white
+        $0.separatorStyle = .none
         $0.register(WeatherListCell.self, forCellReuseIdentifier: "WeatherListCell")
     }
 
@@ -144,9 +145,9 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         let temperature = weatherInfo.main.temp
         
         if temperatureUnit == "섭씨" {
-            cell.temperatureLabel.text = "\(Int(temperature))°C"
+            cell.temperatureLabel.text = "\(Int(temperature))°"
         } else {
-            cell.temperatureLabel.text = "\(Int(temperature * 9 / 5 + 32))°F"
+            cell.temperatureLabel.text = "\(Int(temperature * 9 / 5 + 32))°"
         }
         
         cell.weatherDescriptionLabel.text = weatherInfo.weather.first?.description
@@ -161,7 +162,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 95
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -170,7 +171,13 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
+    
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
 }
+
+// MARK: - SearchViewControllerDelegate
 
 extension WeatherListViewController: SearchViewControllerDelegate {
     func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D) {
