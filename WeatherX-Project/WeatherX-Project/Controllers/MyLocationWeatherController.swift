@@ -182,7 +182,7 @@ class MyLocationWeatherController: UIViewController {
         topView.talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
         topView.dateLabel.text = DateFormat.dateString
         topView.locateLabel.text = name
-        topView.temperLabel.text = String(main.temp)
+        topView.temperLabel.text = "\(Int(main.temp))º"
         topView.rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
         topView.numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
         topView.number2Label.text = String(main.humidity)
