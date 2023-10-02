@@ -18,10 +18,10 @@ class WeatherListViewController: UIViewController {
     private var temperatureUnit = "섭씨"
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
-    var weatherData: [WeatherResponse] = []
+    var weatherData: [MainWeatherViewController] = []
     var cities: [String] = []
 
-    private let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
+    let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
         $0.backgroundColor = .white
         $0.separatorStyle = .none
         $0.register(WeatherListCell.self, forCellReuseIdentifier: "WeatherListCell")
@@ -105,7 +105,7 @@ class WeatherListViewController: UIViewController {
             navigationItem.rightBarButtonItem = doneButton
         }
     }
-    
+
     @objc private func doneButtonTapped(_ sender: UIBarButtonItem) {
         weatherListTableView.setEditing(false, animated: true)
         rightBarButton.image = UIImage(systemName: "ellipsis.circle")
@@ -143,21 +143,19 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
         cell.cityLabel.text = cities[indexPath.row]
-        let temperature = weatherInfo.main.temp
-        
+        let temperature = weatherInfo.topView.temperLabel
+        guard let data = weatherInfo.topView.weatherResponse else { return cell }
+
         if temperatureUnit == "섭씨" {
-            cell.temperatureLabel.text = "\(Int(temperature))°"
+            cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
         } else {
-            cell.temperatureLabel.text = "\(Int(temperature * 9 / 5 + 32))°"
+            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º" // "\(Int(temperature * 9 / 5 + 32))°"
         }
-        
-        cell.weatherDescriptionLabel.text = weatherInfo.weather.first?.description
-        
-        if let icon = weatherInfo.weather.first?.icon {
-            let iconUrl = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
-            cell.weatherImageView.kf.setImage(with: iconUrl)
-        }
-        
+
+        cell.weatherDescriptionLabel.text = data.weather[0].description
+
+        cell.weatherImageView.image = weatherInfo.topView.imageView.image
+
         cell.timeLabel.text = DateFormat.dateString
         return cell
     }
@@ -165,7 +163,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 95
     }
-    
+
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
@@ -173,7 +171,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-    
+
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -183,19 +181,37 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
 
 extension WeatherListViewController: SearchViewControllerDelegate {
     func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D) {
+        let mainWeatherVC = MainWeatherViewController()
+
         Networking.shared.lat = coordinate.latitude
         Networking.shared.lon = coordinate.longitude
         Networking.shared.getWeather { result in
             switch result {
             case .success(let weatherResponse):
                 DispatchQueue.main.async {
-                    self.weatherData.append(weatherResponse)
-                    self.weatherListTableView.reloadData()
+                    let topView = mainWeatherVC.topView
+                    topView.weatherResponse = weatherResponse
+                    mainWeatherVC.dependingLocation = .addLocation
                 }
             case .failure(let error):
                 print(error)
             }
         }
-        self.cities.append(city)
+        Networking.shared.getforecastWeather { result in
+            switch result {
+            case .success(let weatherResponse):
+                DispatchQueue.main.async {
+                    let middleView = mainWeatherVC.middleView
+                    let bottomView = mainWeatherVC.bottomView
+                    middleView.forecastResponse = weatherResponse
+                    bottomView.forecastResponse = weatherResponse
+                    mainWeatherVC.dependingLocation = .addLocation
+                    self.present(mainWeatherVC, animated: true)
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+        cities.append(city)
     }
 }

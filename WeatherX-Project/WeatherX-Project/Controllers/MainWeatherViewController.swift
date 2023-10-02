@@ -156,8 +156,10 @@ class MainWeatherViewController: UIViewController {
     @objc func addButtonAction() {
         let locaionVC = MyLocationWeatherController()
         locaionVC.viewArray.append(self)
+        
         let weatherVC = WeatherListViewController()
-//        weatherVC.weatherData.append(self)
+        weatherVC.weatherData.append(self)
+        weatherVC.weatherListTableView.reloadData()
         self.dismiss(animated: true)
     }
 }
