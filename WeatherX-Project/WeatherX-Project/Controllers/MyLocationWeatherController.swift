@@ -248,6 +248,7 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
             networking.lat = location.coordinate.latitude
             networking.lon = location.coordinate.longitude
         }
+        networkingWeather()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
