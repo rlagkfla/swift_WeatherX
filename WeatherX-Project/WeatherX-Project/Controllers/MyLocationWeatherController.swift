@@ -134,7 +134,6 @@ class MyLocationWeatherController: UIViewController {
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
                     self.weatherDataBiding(weatherResponse: weatherResponse)
-                    self.loadImage(weatherResponse: weatherResponse)
                     
                 }
             case .failure:
@@ -181,18 +180,8 @@ class MyLocationWeatherController: UIViewController {
     
     //데이터 바인딩
     func weatherDataBiding(weatherResponse: WeatherResponse) {
-        let weatherResponse = weatherResponse
-        let main = weatherResponse.main
-        let name = weatherResponse.name
-        
         let topView = mainWeatherView.topView
-        topView.talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
-        topView.dateLabel.text = DateFormat.dateString
-        topView.locateLabel.text = name
-        topView.temperLabel.text = main.temp.makeRounded() + "º"
-        topView.rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
-        topView.numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
-        topView.number2Label.text = String(main.humidity)
+        topView.weatherResponse = weatherResponse
     }
     
     func forecastDataBidning(forecastResponse:ForecastResponse) {
@@ -206,22 +195,7 @@ class MyLocationWeatherController: UIViewController {
         bottomView.tableView.reloadData()
     }
     
-    func loadImage(weatherResponse: WeatherResponse) {
-        let topView = mainWeatherView.topView
-        guard let weather = weatherResponse.weather.first else { return }
-        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(weather.icon)@2x.png")
-        guard  let url = imageUrl else { return }
-        DispatchQueue.global().async {
-            
-            guard let data = try? Data(contentsOf: url) else { return }
-            
-            DispatchQueue.main.async {
-                topView.imageView.image = UIImage(data: data)
-                
-            }
-        }
-    }
-    
+ 
     
 }
 
