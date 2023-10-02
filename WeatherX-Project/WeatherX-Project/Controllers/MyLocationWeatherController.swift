@@ -11,12 +11,6 @@ import Then
 import CoreLocation
 
 
-enum DependingLoaction {
-    case myLocation
-    case saveLocation
-    case addLocation
-}
-
 class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
@@ -31,7 +25,7 @@ class MyLocationWeatherController: UIViewController {
     //    var city:
     var forecastResponse: ForecastResponse?
     private let mainWeatherView = MainWeatherViewController()
-    private var dependingLocation: DependingLoaction = .myLocation
+ 
     
     // 뷰컨 배열 모음 MainWeatherViewController
     lazy var viewArray: [UIViewController] = [mainWeatherView]
@@ -78,6 +72,7 @@ class MyLocationWeatherController: UIViewController {
         pageControllerSetup()
         setLayout()
         setupLocationManager()
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -166,6 +161,8 @@ class MyLocationWeatherController: UIViewController {
         locationManager.delegate = self
     }
     
+   
+   
     // MARK: - Actions
     
     @objc func mapViewItemTapped() {
@@ -178,6 +175,9 @@ class MyLocationWeatherController: UIViewController {
         let listVC = WeatherListViewController()
         navigationController?.pushViewController(listVC, animated: true)
     }
+    
+ 
+ 
     
     //데이터 바인딩
     func weatherDataBiding(weatherResponse: WeatherResponse) {
