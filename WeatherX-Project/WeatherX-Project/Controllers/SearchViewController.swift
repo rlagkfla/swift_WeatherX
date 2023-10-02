@@ -14,16 +14,11 @@ protocol SearchViewControllerDelegate: AnyObject {
     func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D)
 }
 
-protocol LocationSelectionDelegate: AnyObject {
-    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
-}
-
 class SearchViewController: UISearchController {
     
     // MARK: - Properties
     
     weak var searchDelegate: SearchViewControllerDelegate?
-    weak var selectLocationDelegate: LocationSelectionDelegate?
     
     var citySearchTableView = UITableView().then {
         $0.register(SearchListTableViewCell.self, forCellReuseIdentifier: "cell")
