@@ -144,7 +144,7 @@ class MainWeatherViewController: UIViewController {
     }
     
     private func addButtonTapped() {
-        cancelButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
     }
     
     
@@ -153,15 +153,15 @@ class MainWeatherViewController: UIViewController {
         self.dismiss(animated: true)
     }
     
+    var myLocationView: myLocationViewBinding?
+    var weatherListView: weatherListViewBinding?
+    
     @objc func addButtonAction() {
-        let locaionVC = MyLocationWeatherController()
-        locaionVC.viewArray.append(self)
-        
-        let weatherVC = WeatherListViewController()
-        weatherVC.weatherData.append(self)
-        weatherVC.weatherListTableView.reloadData()
+        myLocationView?.myLocationAppend(vc: self)
+        weatherListView?.weatherListAppend(vc: self)
         self.dismiss(animated: true)
     }
+    deinit {print("해제")}
 }
 
 

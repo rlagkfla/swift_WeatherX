@@ -11,6 +11,10 @@ import SnapKit
 import Kingfisher
 import CoreLocation
 
+protocol weatherListViewBinding: AnyObject {
+    func weatherListAppend(vc: MainWeatherViewController)
+}
+
 class WeatherListViewController: UIViewController {
 
     // MARK: - Properties
@@ -35,6 +39,9 @@ class WeatherListViewController: UIViewController {
         configureUI()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        print(weatherData.count)
+    }
     // MARK: - Helpers
 
     private func configureNav() {
@@ -182,7 +189,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
 extension WeatherListViewController: SearchViewControllerDelegate {
     func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D) {
         let mainWeatherVC = MainWeatherViewController()
-
+        mainWeatherVC.weatherListView = self
         Networking.shared.lat = coordinate.latitude
         Networking.shared.lon = coordinate.longitude
         Networking.shared.getWeather { result in
@@ -214,4 +221,13 @@ extension WeatherListViewController: SearchViewControllerDelegate {
         }
         cities.append(city)
     }
+}
+
+extension WeatherListViewController: weatherListViewBinding {
+    func weatherListAppend(vc: MainWeatherViewController) {
+        self.weatherData.append(vc)
+        weatherListTableView.reloadData()
+    }
+    
+    
 }
