@@ -115,9 +115,9 @@ extension SearchViewController: MKLocalSearchCompleterDelegate {
         self.searchResults = completer.results.filter { result in
             
             let title = result.title
-            
-            if title.contains("시") &&
-                !(title.contains("구") || title.contains("동") || title.contains("면") || title.contains("리") || title.contains("로")) {
+
+            if (title.contains("시") || title.contains("구")) &&
+                !(title.contains("동") || title.contains("면") || title.contains("리") || title.contains("로")) {
                 return true
             }
             
