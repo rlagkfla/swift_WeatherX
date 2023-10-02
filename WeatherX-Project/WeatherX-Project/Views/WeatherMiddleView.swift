@@ -28,16 +28,18 @@ class WeatherMiddleView: UIView {
     private func collectionViewSetUp(){
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         addSubview(collectionView)
+        
         collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         collectionView.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
         collectionView.layer.cornerRadius = 10
         collectionView.isScrollEnabled = true
         layout.minimumLineSpacing = 10
         layout.scrollDirection = .horizontal
         //    layout.sectionInset = .zero
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24) // 좌우 여백 조정
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10) // 좌우 여백 조정
         collectionView.collectionViewLayout = layout
     }
     
@@ -51,19 +53,7 @@ class WeatherMiddleView: UIView {
 
         }
     }
-    
-    func convertDateString(_ inputDateString: String, to outputFormat: String) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        if let date = dateFormatter.date(from: inputDateString) {
-            dateFormatter.dateFormat = outputFormat
-            return dateFormatter.string(from: date)
-        }
-        
-        return nil
-    }
-    
+
     func loadImage(icon: String, cell: WeatherCollectionViewCell) {
         let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
         guard  let url = imageUrl else { return }
@@ -77,23 +67,37 @@ class WeatherMiddleView: UIView {
             }
         }
     }
+
+    
 }
 
 extension WeatherMiddleView: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 16
     }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as! WeatherCollectionViewCell
         guard let forecastResponse = forecastResponse else { return cell }
         
-//        cell.timetemper.text = String(forecastResponse.list[indexPath.row].main.temp)
-        cell.timetemper.text = forecastResponse.list[indexPath.row].main.temp.makeRounded() + "º"
+        let unixDt = forecastResponse.list[indexPath.row].dt
+        let dates = Date(timeIntervalSince1970: TimeInterval(unixDt))
+        let dateFormatter = DateFormatter()
         
-        cell.timeLabel.text = convertDateString(forecastResponse.list[indexPath.row].dtTxt, to: "HH 시")
+        // 시간 형식 설정
+        dateFormatter.dateFormat = "a h시" // "h"는 12 시간 형식, "a"는 AM/PM
+        
+        // 오전/오후 표시를 위한 로케일 설정 (옵션)
+        dateFormatter.locale = Locale(identifier: "ko_KR") // 한국 로케일 설정 (예: 오후)
+        
+        let formattedDate = dateFormatter.string(from: dates)
+        
+        cell.timetemper.text = forecastResponse.list[indexPath.row].main.temp.makeRounded() + "º"
+
+        cell.timeLabel.text = formattedDate
         
         loadImage(icon: forecastResponse.list[indexPath.row].weather[0].icon, cell: cell)
-        
+
         return cell
     }
     // 컬렉션 뷰 사이즈
@@ -115,21 +119,5 @@ extension WeatherMiddleView: UICollectionViewDelegateFlowLayout {
     ) -> CGFloat {
         return 10
     }
-    // 옆 간격
-    //  func collectionView(
-    //   _ collectionView: UICollectionView,
-    //   layout collectionViewLayout: UICollectionViewLayout,
-    //   minimumInteritemSpacingForSectionAt section: Int
-    //   ) -> CGFloat {
-    //     return 10
-    //   }
-    // cell 사이즈( 옆 라인을 고려하여 설정 )
-    //  func collectionView(
-    //   _ collectionView: UICollectionView,
-    //   layout collectionViewLayout: UICollectionViewLayout,
-    //   sizeForItemAt indexPath: IndexPath
-    //   ) -> CGSize {
-    //
-    //    return size
-    //  }
+
 }
