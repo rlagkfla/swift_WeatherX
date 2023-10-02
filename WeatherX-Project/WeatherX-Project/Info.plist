@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 	<key>OPENWEATHERMAP_KEY</key>
 	<string>0b4d154da573e1fcf7127d64233a81e3</string>
 	<key>UIApplicationSceneManifest</key>
