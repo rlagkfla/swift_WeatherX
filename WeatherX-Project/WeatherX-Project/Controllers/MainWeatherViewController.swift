@@ -13,14 +13,14 @@ class MainWeatherViewController: UIViewController {
     let topView = WeatherTopView()
     let middleView = WeatherMiddleView()
     let bottomView = WeatherBottomView()
-    
+        
     private var scrollView = UIScrollView().then {
         $0.isDirectionalLockEnabled = true
         $0.alwaysBounceHorizontal = false
         $0.alwaysBounceVertical = true
         $0.backgroundColor = .clear
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -28,18 +28,18 @@ class MainWeatherViewController: UIViewController {
     }
     
     private func setup() {
-        view.addSubview(scrollView)
-        scrollView.addSubviews(topView, middleView, bottomView)
-        scrollView.delegate = self
-        scrollView.isDirectionalLockEnabled = true
-        scrollView.alwaysBounceHorizontal = false
-        scrollView.alwaysBounceVertical = true
-        scrollView.backgroundColor = .clear
-        view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-        bottomView.clipsToBounds = true
-        bottomView.layer.cornerRadius = 20
-        
-    }
+            view.addSubview(scrollView)
+            view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
+            scrollView.addSubviews(topView, middleView, bottomView)
+            scrollView.delegate = self
+            scrollView.isDirectionalLockEnabled = true
+            scrollView.alwaysBounceHorizontal = false
+            scrollView.alwaysBounceVertical = true
+            scrollView.backgroundColor = .clear
+            bottomView.clipsToBounds = true
+            bottomView.layer.cornerRadius = 20
+            
+        }
     
     
     private func snpLayout() {
@@ -76,6 +76,7 @@ class MainWeatherViewController: UIViewController {
             $0.height.equalTo(350)
             $0.width.equalTo(365)
         }
+
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2000)
     }
 }

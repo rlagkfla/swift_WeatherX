@@ -129,7 +129,7 @@ extension WeatherBottomView: UITableViewDataSource {
             cell.percentTextLabel.isHidden = true
         }
         cell.selectionStyle = .none
-        cell.backgroundColor = #colorLiteral(red: 0.9260787368, green: 0.9659976363, blue: 0.9996650815, alpha: 1)
+        cell.backgroundColor = #colorLiteral(red: 0.9260787368, green: 0.9659976363, blue: 0.9996650815, alpha: 0.316571469)
         
         return cell
     }

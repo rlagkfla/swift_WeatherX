@@ -25,7 +25,7 @@ struct Main: Codable {
     let temp_min: Double // 최저 기온
     let temp_max: Double // 최고 기온
     let humidity: Double // 습도, %
-
+    
 }
 
 struct Weather: Codable {

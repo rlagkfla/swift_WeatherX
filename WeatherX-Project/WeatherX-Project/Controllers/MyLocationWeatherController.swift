@@ -38,7 +38,6 @@ class MyLocationWeatherController: UIViewController {
     
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
-    
     lazy var bottomView = UIView().then {
         $0.addSubview(stackView)
         $0.backgroundColor = .white
@@ -184,7 +183,7 @@ class MyLocationWeatherController: UIViewController {
         let weatherResponse = weatherResponse
         let main = weatherResponse.main
         let name = weatherResponse.name
-        
+
         let topView = mainWeatherView.topView
         topView.talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
         topView.dateLabel.text = DateFormat.dateString
