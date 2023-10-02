@@ -19,6 +19,7 @@ class WeatherListViewController: UIViewController {
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
     var weatherData: [WeatherResponse] = []
+    var cities: [String] = []
 
     private let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
         $0.backgroundColor = .white
@@ -141,7 +142,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
-        cell.cityLabel.text = weatherInfo.name
+        cell.cityLabel.text = cities[indexPath.row]
         let temperature = weatherInfo.main.temp
         
         if temperatureUnit == "섭씨" {
@@ -168,6 +169,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
+            cities.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -194,5 +196,6 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                 print(error)
             }
         }
+        self.cities.append(city)
     }
 }
