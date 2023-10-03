@@ -193,14 +193,13 @@ class WeatherListViewController: UIViewController {
 
 extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weatherData.count
+        return weatherResponseArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
-//        cell.cityLabel.text = cities[indexPath.row]
-        let temperature = weatherInfo.topView.temperLabel
+        cell.cityLabel.text = cities[indexPath.row]
         guard let data = weatherInfo.topView.weatherResponse else { return cell }
 
         if temperatureUnit == "섭씨" {
