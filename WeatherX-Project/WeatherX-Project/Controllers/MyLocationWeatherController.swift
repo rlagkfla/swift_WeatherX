@@ -36,7 +36,6 @@ class MyLocationWeatherController: UIViewController {
 
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
-    
     lazy var bottomView = UIView().then {
         $0.addSubview(stackView)
         $0.backgroundColor = .white
@@ -194,7 +193,7 @@ class MyLocationWeatherController: UIViewController {
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
                     self.weatherDataBiding(weatherResponse: weatherResponse)
-                    
+
                 }
             case .failure:
                 print("weatherResponse error")
@@ -271,8 +270,59 @@ class MyLocationWeatherController: UIViewController {
         bottomView.forecastResponse = forecastResponse
         bottomView.tableView.reloadData()
     }
-    
- 
+
+    func setWeatherIcon(weatherIcon: String) {
+        var imageName: String
+
+        let topView = mainWeatherView.topView
+        
+        switch weatherIcon {
+        case "01d":
+            imageName = "sunny"
+        case "02d":
+            imageName = "darkcloud"
+        case "03d":
+            imageName = "darkcloud"
+        case "04d":
+            imageName = "darkcloud"
+        case "09d":
+            imageName = "rain"
+        case "10d":
+            imageName = "sunshower"
+        case "11d":
+            imageName = "thunder"
+        case "13d":
+            imageName = "snow"
+        case "50d":
+            imageName = "wind"
+        case "01n":
+            imageName = "sunny"
+        case "02n":
+            imageName = "darkcloud"
+        case "03n":
+            imageName = "darkcloud"
+        case "04n":
+            imageName = "darkcloud"
+        case "09n":
+            imageName = "rain"
+        case "10n":
+            imageName = "sunshower"
+        case "11n":
+            imageName = "thunder"
+        case "13n":
+            imageName = "snow"
+        case "50n":
+            imageName = "wind"
+        default:
+            imageName = "unknown"
+        }
+        print("Setting icon with value: \(weatherIcon)")
+        if let image = UIImage(named: imageName) {
+            topView.imageView.image = image
+        } else {
+            topView.imageView.image = UIImage(named: "default")
+        }
+    }
     
 }
 

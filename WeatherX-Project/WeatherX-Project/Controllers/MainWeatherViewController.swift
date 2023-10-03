@@ -20,8 +20,10 @@ class MainWeatherViewController: UIViewController{
     let topView = WeatherTopView()
     let middleView = WeatherMiddleView()
     let bottomView = WeatherBottomView()
+
     var dependingLocation: DependingLoaction = .myLocation
     
+
     private var scrollView = UIScrollView().then {
         $0.isDirectionalLockEnabled = true
         $0.alwaysBounceHorizontal = false
@@ -137,6 +139,7 @@ class MainWeatherViewController: UIViewController{
             $0.height.equalTo(350)
             $0.width.equalTo(365)
         }
+
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2000)
     }
     
