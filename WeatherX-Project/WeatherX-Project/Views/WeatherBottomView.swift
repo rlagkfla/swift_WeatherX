@@ -19,7 +19,7 @@ class WeatherBottomView: UIView {
         }
     }
     
-    var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Rainy?)] = []
+    var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Double?)] = []
     
     var tableViewTitle = "5일간의 일기예보"
     override init(frame: CGRect) {
@@ -75,7 +75,7 @@ class WeatherBottomView: UIView {
     private func groupDataByDateAndDayOfWeek() {
         guard let response = forecastResponse else { return }
         
-        var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Rainy?)] = []
+        var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Double?)] = []
         var currentDate = ""
         var currentDayOfWeek = ""
         let maxTempOfDay = -100.0
@@ -84,7 +84,7 @@ class WeatherBottomView: UIView {
         for data in response.list {
             guard let dateText = convertDateString(data.dtTxt, to: "dd") else { return }
             guard let dayOfWeek = convertDateString(data.dtTxt, to: "EE") else { return }
-            let rainValue = data.rain
+            let rainValue = data.pop
             if dateText != currentDate || dayOfWeek != currentDayOfWeek {
                 if let iconName = data.weather.first?.icon {
                     groupedData.append((date: dateText, dayOfWeek: dayOfWeek, icon: iconName, maxTemp: maxTempOfDay, minTemp: minTempOfDay, rainValue: rainValue))
@@ -122,9 +122,9 @@ extension WeatherBottomView: UITableViewDataSource {
         cell.lowTemperTextLabel.text = data.minTemp.makeRounded() + "º"
         cell.hightTemperTextLabel.text = data.maxTemp.makeRounded() + "º"
         
-        if data.rainValue?.the3H != nil {
+        if data.rainValue != 0 {
             cell.percentTextLabel.isHidden = false
-            cell.percentTextLabel.text = data.rainValue?.the3H.makeRounded()
+            cell.percentTextLabel.text = cell.percentTextLabel.text! + (data.rainValue! * 100).makeRounded() + "%"
         } else {
             cell.percentTextLabel.isHidden = true
         }
