@@ -204,7 +204,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
         } else {
-            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º" // "\(Int(temperature * 9 / 5 + 32))°"
+            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º"
         }
 
         cell.weatherDescriptionLabel.text = data.weather[0].description
