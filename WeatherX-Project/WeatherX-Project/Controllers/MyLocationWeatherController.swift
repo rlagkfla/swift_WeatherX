@@ -193,6 +193,7 @@ class MyLocationWeatherController: UIViewController {
         
         if let weatherIcon = weatherResponse.weather.first?.icon {
             setWeatherIcon(weatherIcon: weatherIcon)
+           
         }
     }
     
@@ -213,28 +214,46 @@ class MyLocationWeatherController: UIViewController {
         let topView = mainWeatherView.topView
         
         switch weatherIcon {
-        case "01n.png":
+        case "01d":
             imageName = "sunny"
-        case "02n.png":
+        case "02d":
             imageName = "darkcloud"
-        case "03n.png":
+        case "03d":
             imageName = "darkcloud"
-        case "04n.png":
+        case "04d":
             imageName = "darkcloud"
-        case "09n.png":
+        case "09d":
             imageName = "rain"
-        case "10n.png":
+        case "10d":
             imageName = "sunshower"
-        case "11n.png":
+        case "11d":
             imageName = "thunder"
-        case "13n.png":
+        case "13d":
             imageName = "snow"
-        case "50n.png":
+        case "50d":
+            imageName = "wind"
+        case "01n":
+            imageName = "sunny"
+        case "02n":
+            imageName = "darkcloud"
+        case "03n":
+            imageName = "darkcloud"
+        case "04n":
+            imageName = "darkcloud"
+        case "09n":
+            imageName = "rain"
+        case "10n":
+            imageName = "sunshower"
+        case "11n":
+            imageName = "thunder"
+        case "13n":
+            imageName = "snow"
+        case "50n":
             imageName = "wind"
         default:
             imageName = "unknown"
         }
-
+        print("Setting icon with value: \(weatherIcon)")
         if let image = UIImage(named: imageName) {
             topView.imageView.image = image
         } else {

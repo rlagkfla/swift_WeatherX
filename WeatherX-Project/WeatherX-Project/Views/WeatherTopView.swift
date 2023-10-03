@@ -44,7 +44,7 @@ class WeatherTopView: UIView {
     // 날씨 일러스트
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "") // 이미지 이름에 따라 수정
+        imageView.image = UIImage() // 이미지 이름에 따라 수정
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -201,10 +201,10 @@ class WeatherTopView: UIView {
         
         // 날씨 일러스트
         imageView.snp.makeConstraints { make in
-            make.width.equalTo(150)
-            make.height.equalTo(150)
-            make.trailing.equalToSuperview().offset(30)
-            make.top.equalToSuperview().offset(100)
+            make.width.equalTo(170)
+            make.height.equalTo(170)
+            make.trailing.equalToSuperview().offset(40)
+            make.top.equalToSuperview().offset(40)
         }
         
         // 위치
