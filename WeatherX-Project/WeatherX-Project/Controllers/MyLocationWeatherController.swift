@@ -78,18 +78,18 @@ class MyLocationWeatherController: UIViewController {
         setLayout()
         setupLocationManager()
         pageControlAction()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
             self.weatherResponseArray = data
         }
        if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
             self.forcastResponseArray = data
         }
-       
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        makeViewArray()
         print(viewArray.count)
         print(viewArray)
         print(weatherResponseArray.count)
@@ -97,7 +97,6 @@ class MyLocationWeatherController: UIViewController {
        
         print(viewArray.count)
         
-        makeViewArray()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -221,18 +220,16 @@ class MyLocationWeatherController: UIViewController {
     }
     
     private func makeViewArray() {
+        var dataArray:[MainWeatherViewController] = [viewArray[0]]
         if weatherResponseArray.count > 0 {
-            let weatherData = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather")
-
-            let forcastData = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast")
-            
             for i in 0..<weatherResponseArray.count {
-                
                 let mainVC = MainWeatherViewController()
                 mainVC.topView.weatherResponse = weatherResponseArray[i]
                 mainVC.middleView.forecastResponse = forcastResponseArray[i]
                 mainVC.bottomView.forecastResponse = forcastResponseArray[i]
-                self.viewArray.append(mainVC)
+                dataArray.append(mainVC)
+                print("dataArray의 개수는 \(dataArray.count)")
+                self.viewArray = dataArray
             }
             pageControl.numberOfPages = viewArray.count
             pageControl.currentPage = 0
