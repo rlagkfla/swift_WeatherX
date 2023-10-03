@@ -222,6 +222,8 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
+            weatherResponseArray.remove(at: indexPath.row)
+            forcastResponseArray.remove(at: indexPath.row)
             cities.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
