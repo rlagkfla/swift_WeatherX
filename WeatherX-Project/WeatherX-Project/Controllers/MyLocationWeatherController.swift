@@ -258,6 +258,10 @@ class MyLocationWeatherController: UIViewController {
     func weatherDataBiding(weatherResponse: WeatherResponse) {
         let topView = mainWeatherView.topView
         topView.weatherResponse = weatherResponse
+        
+        if let weatherIcon = weatherResponse.weather.first?.icon {
+            setWeatherIcon(weatherIcon: weatherIcon)
+        }
     }
     
     func forecastDataBidning(forecastResponse:ForecastResponse) {

@@ -183,24 +183,9 @@ class WeatherTopView: UIView {
         rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
         numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
         number2Label.text = String(weatherResponse.main.humidity)
-        loadImage()
-    }
-    
-    private func loadImage() {
-        guard let weatherResponse = weatherResponse else { return }
         
-        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(weatherResponse.weather[0].icon)@2x.png")
-        guard  let url = imageUrl else { return }
-        DispatchQueue.global().async {
-            
-            guard let data = try? Data(contentsOf: url) else { return }
-            
-            DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: data)
-                
-            }
-        }
     }
+
     
     
     override init(frame: CGRect) {
