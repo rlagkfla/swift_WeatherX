@@ -144,7 +144,7 @@ class WeatherTableViewCell: UITableViewCell {
         }
         dayStackView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
-            $0.leading.equalToSuperview().offset(5)
+            $0.leading.equalToSuperview().offset(15)
             $0.bottom.equalToSuperview().offset(-10)
         }
         
@@ -160,9 +160,11 @@ class WeatherTableViewCell: UITableViewCell {
         }
         
         weatherContainView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.leading.equalTo(dayStackView.snp.trailing).offset(60)
-            $0.bottom.equalToSuperview().offset(-10)
+//            $0.top.equalToSuperview().offset(10)
+//            $0.leading.equalTo(dayStackView.snp.trailing).offset(60)
+//            $0.bottom.equalToSuperview().offset(-10)
+            $0.centerX.equalToSuperview().offset(-50)
+            $0.centerY.equalToSuperview()
         }
         
         lowTemperImageView.snp.makeConstraints {
