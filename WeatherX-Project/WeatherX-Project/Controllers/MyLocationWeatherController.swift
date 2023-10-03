@@ -10,9 +10,6 @@ import SnapKit
 import Then
 import CoreLocation
 
-protocol myLocationViewBinding: AnyObject {
-    func myLocationAppend(vc: MainWeatherViewController)
-}
 
 class MyLocationWeatherController: UIViewController {
     
@@ -26,13 +23,17 @@ class MyLocationWeatherController: UIViewController {
     var main: Main?
     var name: String?
     //    var city:
+    
     var forecastResponse: ForecastResponse?
-    private let mainWeatherView = MainWeatherViewController()
- 
-    
+    private var mainWeatherView = MainWeatherViewController()
+
     // 뷰컨 배열 모음 MainWeatherViewController
-    lazy var viewArray: [MainWeatherViewController] = [mainWeatherView]
+    lazy var viewArray: [MainWeatherViewController] = []
     
+    var weatherResponseArray: [WeatherResponse] = []
+ 
+    var forcastResponseArray: [ForecastResponse] = [] 
+
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
     
@@ -50,6 +51,7 @@ class MyLocationWeatherController: UIViewController {
     }
     
     private let pageControl = UIPageControl()
+  
     
     lazy var menuViewButton = UIButton(type: .custom).then {
         $0.frame.size.height = 40
@@ -61,8 +63,8 @@ class MyLocationWeatherController: UIViewController {
     lazy var stackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [mapViewButton, pageControl, menuViewButton])
         sv.axis = .horizontal
-        sv.distribution = .fillEqually
-        sv.alignment = .fill
+        sv.distribution = .fill
+        sv.alignment = .center
         sv.spacing = 30
         return sv
     }()
@@ -71,16 +73,30 @@ class MyLocationWeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.viewArray.append(mainWeatherView)
         networkingWeather()
         pageControllerSetup()
         setLayout()
         setupLocationManager()
-        mainWeatherView.myLocationView = self
+        pageControlAction()
+        if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
+            self.weatherResponseArray = data
+        }
+       if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
+            self.forcastResponseArray = data
+        }
+        makeViewArray()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        print(viewArray.count)
+        print(viewArray)
+        print(weatherResponseArray.count)
+        print(weatherResponseArray)
+       
+        print(viewArray.count)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,11 +108,10 @@ class MyLocationWeatherController: UIViewController {
     
     private func setLayout() {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-        guard let mainWeatherView = mainWeatherView.view else { return }
-        view.addSubview(mainWeatherView)
+        view.addSubview(viewArray[pageControl.currentPage].view)
         view.addSubview(bottomView)
         
-        mainWeatherView.snp.makeConstraints {
+        viewArray[pageControl.currentPage].view.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
@@ -116,6 +131,21 @@ class MyLocationWeatherController: UIViewController {
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+        mapViewButton.snp.makeConstraints {
+            $0.leading.equalTo(10)
+            $0.top.equalTo(bottomView.snp.top).offset(10)
+            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
+        }
+        
+        pageControl.snp.makeConstraints {
+            $0.centerX.centerY.equalTo(bottomView)
+        }
+        
+        menuViewButton.snp.makeConstraints {
+            $0.trailing.equalTo(-10)
+            $0.top.equalTo(bottomView.snp.top).offset(10)
+            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
+        }
     }
     
     private func pageControllerSetup() {
@@ -126,13 +156,40 @@ class MyLocationWeatherController: UIViewController {
         pageControl.setIndicatorImage(locationImage, forPage: 0)
     }
     
+    private func pageControlAction(){
+        self.pageControl.addTarget(self, action: #selector(changPageView), for: .valueChanged)
+    }
+    
+    @objc func changPageView() {
+        changePage(to: pageControl.currentPage)
+    }
+    
+    private func changePage(to index: Int) {
+        guard index >= 0 && index < viewArray.count else {
+            return
+        }
+        let viewControllerToShow = viewArray[index]
+        print(viewControllerToShow.topView.talkLabel)
+        viewArray[pageControl.currentPage].view.removeFromSuperview()
+        viewArray[pageControl.currentPage].removeFromParent()
+        addChild(viewControllerToShow)
+        view.addSubview(viewControllerToShow.view)
+        viewControllerToShow.view.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
+            $0.bottom.equalTo(bottomView.snp.top)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+        }
+        // 뷰 컨트롤러 전환 로직 (예: UIPageViewController를 사용하거나, 커스텀 뷰 전환)
+        pageControl.currentPage = index
+    }
+    
     private func networkingWeather() {
         // data fetch
         networking.getWeather { result in
             switch result {
             case .success(let weatherResponse):
                 DispatchQueue.main.async {
-                    self.weatherResponse = weatherResponse
                     self.weather = weatherResponse.weather.first
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
@@ -148,7 +205,6 @@ class MyLocationWeatherController: UIViewController {
             switch result {
             case .success(let forecastResponse):
                 DispatchQueue.main.async {
-                    self.forecastResponse = forecastResponse
                     self.forecastDataBidning(forecastResponse: forecastResponse)
                     print(forecastResponse)
                 }
@@ -163,6 +219,21 @@ class MyLocationWeatherController: UIViewController {
         locationManager.delegate = self
     }
     
+    private func makeViewArray() {
+        if weatherResponseArray.count > 0 {
+            for i in 0..<weatherResponseArray.count {
+                let mainVC = MainWeatherViewController()
+                mainVC.topView.weatherResponse = weatherResponseArray[i]
+                mainVC.middleView.forecastResponse = forcastResponseArray[i]
+                mainVC.bottomView.forecastResponse = forcastResponseArray[i]
+                self.viewArray.append(mainVC)
+            }
+            pageControl.numberOfPages = viewArray.count
+            pageControl.currentPage = 0
+        }
+      
+    }
+    
    
    
     // MARK: - Actions
@@ -175,6 +246,9 @@ class MyLocationWeatherController: UIViewController {
     
     @objc func menuViewItemTapped() {
         let listVC = WeatherListViewController()
+//        UserDefaults.standard.removeObject(forKey: "weather")
+//        UserDefaults.standard.removeObject(forKey: "forcast")
+//        UserDefaults.standard.removeObject(forKey: "city")
         navigationController?.pushViewController(listVC, animated: true)
     }
     
@@ -233,8 +307,4 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
     }
 }
 
-extension MyLocationWeatherController: myLocationViewBinding {
-    func myLocationAppend(vc: MainWeatherViewController) {
-        self.viewArray.append(vc)
-    }
-}
+
