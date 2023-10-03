@@ -201,7 +201,6 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         let weatherInfo = weatherData[indexPath.row]
         cell.cityLabel.text = cities[indexPath.row]
         guard let data = weatherInfo.topView.weatherResponse else { return cell }
-
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
         } else {
