@@ -18,6 +18,7 @@ struct WeatherResponse: Codable {
     let clouds: Clouds
     let rain: Rain?
     let dt: Int // unix time
+    let timezone: Int
 }
 
 struct Main: Codable {

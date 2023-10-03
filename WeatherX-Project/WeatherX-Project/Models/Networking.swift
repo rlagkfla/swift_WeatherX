@@ -80,10 +80,3 @@ final class Networking {
         }.resume() // 이 dataTask 시작
     }
 }
-
-extension Networking: LocationSelectionDelegate {
-    func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
-        lat = coordinate.latitude
-        lon = coordinate.longitude
-    }
-}

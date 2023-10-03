@@ -78,8 +78,8 @@ class WeatherBottomView: UIView {
         var groupedData: [(date: String, dayOfWeek: String, icon: String, maxTemp: Double, minTemp: Double, rainValue: Rainy?)] = []
         var currentDate = ""
         var currentDayOfWeek = ""
-        var maxTempOfDay = -100.0
-        var minTempOfDay = 100.0
+        let maxTempOfDay = -100.0
+        let minTempOfDay = 100.0
         
         for data in response.list {
             guard let dateText = convertDateString(data.dtTxt, to: "dd") else { return }

@@ -8,48 +8,111 @@
 import UIKit
 import SnapKit
 
-class MainWeatherViewController: UIViewController {
-    
+enum DependingLoaction {
+    case myLocation
+    case addLocation
+}
+
+
+class MainWeatherViewController: UIViewController{
+   
+ 
     let topView = WeatherTopView()
     let middleView = WeatherMiddleView()
     let bottomView = WeatherBottomView()
-        
+
+    var dependingLocation: DependingLoaction = .myLocation
+    
+
     private var scrollView = UIScrollView().then {
         $0.isDirectionalLockEnabled = true
         $0.alwaysBounceHorizontal = false
         $0.alwaysBounceVertical = true
         $0.backgroundColor = .clear
     }
-
+    
+    let cancelButton: UIButton = {
+            let button = UIButton(type: .custom)
+            button.setTitle("취소", for: .normal)
+            button.setTitleColor(.black, for: .normal)
+            button.frame.size.height = 30
+            return button
+        }()
+    
+    let addButton: UIButton = {
+            let button = UIButton(type: .custom)
+            button.setTitle("추가", for: .normal)
+            button.setTitleColor(.black, for: .normal)
+            button.frame.size.height = 30
+            return button
+        }()
+    
+    lazy var stackView: UIStackView = {
+            let sv = UIStackView(arrangedSubviews: [cancelButton, addButton])
+            sv.axis = .horizontal
+            sv.distribution  = .fillEqually
+            sv.alignment = .fill
+            sv.spacing = 250
+        sv.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
+            return sv
+        }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         snpLayout()
+        cancelButtonTapped()
+        addButtonTapped()
     }
     
     private func setup() {
-            view.addSubview(scrollView)
-            view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-            scrollView.addSubviews(topView, middleView, bottomView)
-            scrollView.delegate = self
-            scrollView.isDirectionalLockEnabled = true
-            scrollView.alwaysBounceHorizontal = false
-            scrollView.alwaysBounceVertical = true
-            scrollView.backgroundColor = .clear
-            bottomView.clipsToBounds = true
-            bottomView.layer.cornerRadius = 20
-            
-        }
+        self.view.addSubview(stackView)
+        view.addSubview(scrollView)
+        scrollView.addSubviews(topView, middleView, bottomView)
+        scrollView.delegate = self
+        scrollView.isDirectionalLockEnabled = true
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.alwaysBounceVertical = true
+        scrollView.backgroundColor = .clear
+        view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
+        bottomView.clipsToBounds = true
+        bottomView.layer.cornerRadius = 20
+        
+    }
     
     
     private func snpLayout() {
-        scrollView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalToSuperview()
-            $0.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
-            $0.width.equalToSuperview()
+        
+        if dependingLocation == .addLocation {
+            stackView.isHidden = false
+            stackView.snp.makeConstraints {
+                $0.top.equalToSuperview()
+                $0.leading.equalToSuperview()
+                $0.trailing.equalToSuperview()
+                $0.bottom.equalTo(scrollView.snp.top)
+                $0.height.equalTo(50)
+            }
+            
+            
+            scrollView.snp.makeConstraints {
+    //            $0.top.equalToSuperview()
+                $0.leading.equalToSuperview()
+                $0.trailing.equalToSuperview()
+                $0.bottom.equalToSuperview()
+                $0.width.equalToSuperview()
+            }
+        } else {
+            stackView.isHidden = true
+            scrollView.snp.makeConstraints {
+                $0.top.equalToSuperview()
+                $0.leading.equalToSuperview()
+                $0.trailing.equalToSuperview()
+                $0.bottom.equalToSuperview()
+                $0.width.equalToSuperview()
+            }
         }
+        
+      
         
         topView.snp.makeConstraints {
             $0.top.equalTo(scrollView.snp.top)
@@ -79,6 +142,28 @@ class MainWeatherViewController: UIViewController {
 
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2000)
     }
+    
+    private func cancelButtonTapped() {
+        cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
+    }
+    
+    private func addButtonTapped() {
+        addButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
+    }
+    
+    
+    
+    @objc func cancelButtonAction() {
+        self.dismiss(animated: true)
+    }
+    
+    var weatherListView: weatherListViewBinding?
+    
+    @objc func addButtonAction() {
+        weatherListView?.weatherListAppend(vc: self)
+        self.dismiss(animated: true)
+    }
+    deinit {print("해제")}
 }
 
 

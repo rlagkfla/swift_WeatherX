@@ -10,6 +10,11 @@ import SnapKit
 
 class WeatherTopView: UIView {
 
+    var weatherResponse: WeatherResponse? {
+        didSet {
+            configureUI()
+        }
+    }
     
     // 날씨 안내 멘트
     let talkLabel: UILabel = {
@@ -169,6 +174,35 @@ class WeatherTopView: UIView {
         return stackView
     }()
     
+    private func configureUI() {
+        guard let weatherResponse = weatherResponse else { return }
+        talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
+        dateLabel.text = DateFormat.dateString
+        locateLabel.text = weatherResponse.name
+        temperLabel.text = weatherResponse.main.temp.makeRounded() + "º"
+        rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
+        numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
+        number2Label.text = String(weatherResponse.main.humidity)
+        loadImage()
+    }
+    
+    private func loadImage() {
+        guard let weatherResponse = weatherResponse else { return }
+        
+        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(weatherResponse.weather[0].icon)@2x.png")
+        guard  let url = imageUrl else { return }
+        DispatchQueue.global().async {
+            
+            guard let data = try? Data(contentsOf: url) else { return }
+            
+            DispatchQueue.main.async {
+                self.imageView.image = UIImage(data: data)
+                
+            }
+        }
+    }
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(talkLabel)
@@ -182,6 +216,7 @@ class WeatherTopView: UIView {
         addSubview(numberLabel)
         addSubview(aqLabel)
         addSubview(number2Label)
+  
         
         // 날씨 안내 멘트
         talkLabel.snp.makeConstraints { make in
