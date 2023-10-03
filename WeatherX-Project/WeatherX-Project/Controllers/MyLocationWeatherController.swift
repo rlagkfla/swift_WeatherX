@@ -138,8 +138,6 @@ class MyLocationWeatherController: UIViewController {
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
                     self.weatherDataBiding(weatherResponse: weatherResponse)
-                    self.loadImage(weatherResponse: weatherResponse)
-                    
                 }
             case .failure:
                 print("weatherResponse error")
@@ -192,6 +190,10 @@ class MyLocationWeatherController: UIViewController {
         topView.rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
         topView.numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
         topView.number2Label.text = String(main.humidity)
+        
+        if let weatherIcon = weatherResponse.weather.first?.icon {
+            setWeatherIcon(weatherIcon: weatherIcon)
+        }
     }
     
     func forecastDataBidning(forecastResponse:ForecastResponse) {
@@ -205,19 +207,38 @@ class MyLocationWeatherController: UIViewController {
         bottomView.tableView.reloadData()
     }
     
-    func loadImage(weatherResponse: WeatherResponse) {
+    func setWeatherIcon(weatherIcon: String) {
+        var imageName: String
+
         let topView = mainWeatherView.topView
-        guard let weather = weatherResponse.weather.first else { return }
-        let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(weather.icon)@2x.png")
-        guard  let url = imageUrl else { return }
-        DispatchQueue.global().async {
-            
-            guard let data = try? Data(contentsOf: url) else { return }
-            
-            DispatchQueue.main.async {
-                topView.imageView.image = UIImage(data: data)
-                
-            }
+        
+        switch weatherIcon {
+        case "01n.png":
+            imageName = "sunny"
+        case "02n.png":
+            imageName = "darkcloud"
+        case "03n.png":
+            imageName = "darkcloud"
+        case "04n.png":
+            imageName = "darkcloud"
+        case "09n.png":
+            imageName = "rain"
+        case "10n.png":
+            imageName = "sunshower"
+        case "11n.png":
+            imageName = "thunder"
+        case "13n.png":
+            imageName = "snow"
+        case "50n.png":
+            imageName = "wind"
+        default:
+            imageName = "unknown"
+        }
+
+        if let image = UIImage(named: imageName) {
+            topView.imageView.image = image
+        } else {
+            topView.imageView.image = UIImage(named: "default")
         }
     }
     
