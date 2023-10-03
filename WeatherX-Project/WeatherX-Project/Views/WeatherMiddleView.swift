@@ -33,7 +33,7 @@ class WeatherMiddleView: UIView {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        collectionView.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
+        collectionView.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8).cgColor
         collectionView.layer.cornerRadius = 10
         collectionView.isScrollEnabled = true
         layout.minimumLineSpacing = 10

@@ -204,7 +204,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
         } else {
-            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º" // "\(Int(temperature * 9 / 5 + 32))°"
+            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º"
         }
 
         cell.weatherDescriptionLabel.text = data.weather[0].description
@@ -222,6 +222,8 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
+            weatherResponseArray.remove(at: indexPath.row)
+            forcastResponseArray.remove(at: indexPath.row)
             cities.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
