@@ -14,8 +14,9 @@ enum DependingLoaction {
 }
 
 
-class MainWeatherViewController: UIViewController {
-    
+class MainWeatherViewController: UIViewController{
+   
+ 
     let topView = WeatherTopView()
     let middleView = WeatherMiddleView()
     let bottomView = WeatherBottomView()
@@ -153,11 +154,9 @@ class MainWeatherViewController: UIViewController {
         self.dismiss(animated: true)
     }
     
-    var myLocationView: myLocationViewBinding?
     var weatherListView: weatherListViewBinding?
     
     @objc func addButtonAction() {
-        myLocationView?.myLocationAppend(vc: self)
         weatherListView?.weatherListAppend(vc: self)
         self.dismiss(animated: true)
     }

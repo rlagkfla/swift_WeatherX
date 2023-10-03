@@ -23,7 +23,26 @@ class WeatherListViewController: UIViewController {
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
     var weatherData: [MainWeatherViewController] = []
-    var cities: [String] = []
+    var weatherResponseArray: [WeatherResponse] = [] {
+        didSet {
+            UserDefaults.standard.setJSON(weatherResponseArray, forKey: "weather")
+        }
+    }
+    var forcastResponseArray: [ForecastResponse] = [] {
+        didSet {
+            UserDefaults.standard.setJSON(forcastResponseArray, forKey: "forcast")
+            makeViewArray()
+        }
+    }
+    
+    var weatherResponse: WeatherResponse?
+    var forcastResponse: ForecastResponse?
+    
+    var cities: [String] = [] {
+        didSet {
+            UserDefaults.standard.setJSON(cities, forKey: "city")
+        }
+    }
 
     let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
         $0.backgroundColor = .white
@@ -37,10 +56,20 @@ class WeatherListViewController: UIViewController {
         super.viewDidLoad()
         configureNav()
         configureUI()
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         print(weatherData.count)
+        if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
+            self.weatherResponseArray = data
+        }
+       if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
+            self.forcastResponseArray = data
+        }
+        if let data = UserDefaults.standard.getJSON([String].self, forKey: "city") {
+            self.cities = data
+        }
     }
     // MARK: - Helpers
 
@@ -137,6 +166,27 @@ class WeatherListViewController: UIViewController {
         let navController = UINavigationController(rootViewController: weatherUnitViewController)
         present(navController, animated: true, completion: nil)
     }
+    
+    //저장된 api데이터를 mainView에 저장
+    private func makeViewArray() {
+//        if let weatherData = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
+//            self.weatherResponseArray = weatherData
+//        }
+//       if let forcastData = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
+//            self.forcastResponseArray = forcastData
+//        }
+        if weatherResponseArray.count > 0 {
+            for i in 0..<weatherResponseArray.count {
+                let mainVC = MainWeatherViewController()
+                mainVC.topView.weatherResponse = weatherResponseArray[i]
+                mainVC.middleView.forecastResponse = forcastResponseArray[i]
+                mainVC.bottomView.forecastResponse = forcastResponseArray[i]
+                self.weatherData.append(mainVC)
+            }
+        }
+      
+    }
+    
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -149,7 +199,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
-        cell.cityLabel.text = cities[indexPath.row]
+//        cell.cityLabel.text = cities[indexPath.row]
         let temperature = weatherInfo.topView.temperLabel
         guard let data = weatherInfo.topView.weatherResponse else { return cell }
 
@@ -199,6 +249,7 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                     let topView = mainWeatherVC.topView
                     topView.weatherResponse = weatherResponse
                     mainWeatherVC.dependingLocation = .addLocation
+                    self.weatherResponse = weatherResponse
                 }
             case .failure(let error):
                 print(error)
@@ -213,6 +264,7 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                     middleView.forecastResponse = weatherResponse
                     bottomView.forecastResponse = weatherResponse
                     mainWeatherVC.dependingLocation = .addLocation
+                    self.forcastResponse = weatherResponse
                     self.present(mainWeatherVC, animated: true)
                 }
             case .failure(let error):
@@ -225,8 +277,12 @@ extension WeatherListViewController: SearchViewControllerDelegate {
 
 extension WeatherListViewController: weatherListViewBinding {
     func weatherListAppend(vc: MainWeatherViewController) {
-        self.weatherData.append(vc)
+        guard let weatherResponse = weatherResponse else { return }
+        guard let forcastResponse = forcastResponse else { return }
+        self.weatherResponseArray.append(weatherResponse)
+        self.forcastResponseArray.append(forcastResponse)
         weatherListTableView.reloadData()
+        self.dismiss(animated: true)
     }
     
     
