@@ -35,7 +35,7 @@ class WeatherTableViewCell: UITableViewCell {
     
     let percentTextLabel: UILabel = {
         let label = UILabel()
-        label.text = "💧7%"
+        label.text = "💧"
         label.font = UIFont.boldSystemFont(ofSize: 15)
         return label
     }()
