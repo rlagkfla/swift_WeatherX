@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class WeatherCollectionViewCell: UICollectionViewCell {
+final class WeatherCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "cell"
     

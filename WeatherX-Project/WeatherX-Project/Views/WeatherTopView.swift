@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-class WeatherTopView: UIView {
+final class WeatherTopView: UIView {
 
     var weatherResponse: WeatherResponse? {
         didSet {

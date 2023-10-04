@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-class WeatherListCell: UITableViewCell {
+final class WeatherListCell: UITableViewCell {
     
     // MARK: - Properties
     

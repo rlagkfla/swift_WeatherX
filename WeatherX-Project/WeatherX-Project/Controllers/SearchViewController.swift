@@ -14,7 +14,7 @@ protocol SearchViewControllerDelegate: AnyObject {
     func didAddCity(_ city: String, coordinate: CLLocationCoordinate2D)
 }
 
-class SearchViewController: UISearchController {
+final class SearchViewController: UISearchController {
     
     // MARK: - Properties
     
@@ -38,7 +38,7 @@ class SearchViewController: UISearchController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        obscuresBackgroundDuringPresentation = false
+        obscuresBackgroundDuringPresentation = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,6 +124,7 @@ extension SearchViewController: MKLocalSearchCompleterDelegate {
             if !title.contains(",") || result.title.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
                 return false
             }
+            
             
             return true
         }

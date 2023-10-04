@@ -11,7 +11,7 @@ import Then
 import CoreLocation
 
 
-class MyLocationWeatherController: UIViewController {
+final class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
     var networking = Networking.shared

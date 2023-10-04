@@ -15,7 +15,7 @@ protocol weatherListViewBinding: AnyObject {
     func weatherListAppend(vc: MainWeatherViewController)
 }
 
-class WeatherListViewController: UIViewController {
+final class WeatherListViewController: UIViewController {
 
     // MARK: - Properties
 

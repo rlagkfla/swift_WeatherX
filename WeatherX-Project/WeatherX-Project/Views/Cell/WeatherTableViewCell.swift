@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class WeatherTableViewCell: UITableViewCell {
+final class WeatherTableViewCell: UITableViewCell {
     
     let dateNumberLabel: UILabel = {
         let label = UILabel()

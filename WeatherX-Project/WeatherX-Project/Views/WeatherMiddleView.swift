@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-class WeatherMiddleView: UIView {
+final class WeatherMiddleView: UIView {
     
     var forecastResponse: ForecastResponse?
     

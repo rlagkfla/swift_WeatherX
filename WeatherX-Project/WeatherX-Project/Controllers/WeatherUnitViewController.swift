@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-class WeatherUnitViewController: UIViewController {
+final class WeatherUnitViewController: UIViewController {
     
     // MARK: - Properties
     
