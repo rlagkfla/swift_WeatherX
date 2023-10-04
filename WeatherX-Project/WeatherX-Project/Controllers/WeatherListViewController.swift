@@ -211,7 +211,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         
         cell.weatherImageView.image = weatherInfo.topView.imageView.image
         
-        cell.timeLabel.text = DateFormat.dateString
+        cell.timeLabel.text = Date().getCountryTime(byTimeZone: data.timezone)
         return cell
     }
     
