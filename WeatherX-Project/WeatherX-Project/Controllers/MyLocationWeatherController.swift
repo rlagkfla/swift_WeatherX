@@ -16,6 +16,11 @@ class MyLocationWeatherController: UIViewController {
     // MARK: - Properties
     var networking = Networking.shared
     private let locationManager: CLLocationManager = CLLocationManager()
+    private var isAuthorized: Bool = false {
+        didSet {
+            UserDefaults.standard.setJSON(isAuthorized, forKey: "isAuthorized")
+        }
+    }
     
     // 받아온 데이터를 저장 할 프로퍼티
     var weatherResponse: WeatherResponse?
@@ -91,6 +96,13 @@ class MyLocationWeatherController: UIViewController {
         }
         makeViewArray()
         changePage(to: pageControl.currentPage)
+        
+        if let isAuthorized = UserDefaults.standard.getJSON(Bool.self, forKey: "isAuthorized") {
+            self.isAuthorized = isAuthorized
+        }
+        if isAuthorized {
+            locationManager.startUpdatingLocation()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -274,8 +286,10 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             manager.startUpdatingLocation()
+            isAuthorized = true
         case .denied:
             print("status is denied")
+            isAuthorized = false
             break
         case .notDetermined:
             print("status is not determined")
