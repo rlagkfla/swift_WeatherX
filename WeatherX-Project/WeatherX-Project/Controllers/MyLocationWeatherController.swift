@@ -243,7 +243,7 @@ class MyLocationWeatherController: UIViewController {
     
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
-        mapVC.weatherResponse = self.weatherResponse
+        mapVC.weatherList = self.weatherResponseArray
         navigationController?.pushViewController(mapVC, animated: true)
     }
     
