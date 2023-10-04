@@ -42,7 +42,8 @@ class WeatherListCell: UITableViewCell {
     }
     
     let timeLabel = UILabel().then {
-        $0.font = UIFont.systemFont(ofSize: 12)
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        $0.textColor = .white
         $0.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
         $0.layer.shadowOffset = CGSize(width: 2, height: 1)
         $0.layer.shadowOpacity = 1
@@ -73,7 +74,7 @@ class WeatherListCell: UITableViewCell {
     // MARK: - Helpers
     
     private func configureUI() {
-        contentView.addSubviews(cityLabel, weatherDescriptionLabel, temperatureLabel, timeLabel, weatherImageView)
+        contentView.addSubviews(weatherImageView, cityLabel, weatherDescriptionLabel, temperatureLabel, timeLabel)
         contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
         
@@ -88,25 +89,25 @@ class WeatherListCell: UITableViewCell {
         }
         
         temperatureLabel.snp.makeConstraints {
-            $0.trailing.equalTo(weatherImageView.snp.leading).offset(-8)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.top.equalToSuperview().offset(16)
         }
         
         timeLabel.snp.makeConstraints {
-            $0.trailing.equalTo(weatherImageView.snp.leading).offset(-8)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.bottom.equalToSuperview().offset(-16)
         }
         
         weatherImageView.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.trailing.equalToSuperview()
             $0.centerY.equalToSuperview()
-            $0.width.equalTo(40)
-            $0.height.equalTo(40)
+            $0.width.equalTo(110)
+            $0.height.equalTo(110)
         }
 
         gradientLayer.colors = [
             UIColor(red: 0.859, green: 0.953, blue: 1, alpha: 1).cgColor,
-            UIColor(red: 0.808, green: 0.91, blue: 1, alpha: 1).cgColor
+            UIColor(red: 0.663, green: 0.842, blue: 1, alpha: 1).cgColor
         ]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
