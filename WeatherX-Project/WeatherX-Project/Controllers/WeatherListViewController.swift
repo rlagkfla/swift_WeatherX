@@ -60,7 +60,6 @@ class WeatherListViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        print(weatherData.count)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
             self.weatherResponseArray = data
         }
@@ -195,7 +194,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return weatherResponseArray.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
@@ -206,19 +205,19 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
         } else {
             cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º"
         }
-
+        
         cell.weatherDescriptionLabel.text = data.weather[0].description
-
+        
         cell.weatherImageView.image = weatherInfo.topView.imageView.image
-
+        
         cell.timeLabel.text = DateFormat.dateString
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 95
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
@@ -228,9 +227,13 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return false
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let myVC = navigationController?.viewControllers.first(where: { $0 is MyLocationWeatherController }) as? MyLocationWeatherController {
+            myVC.pageControl.currentPage = indexPath.row + 1
+            
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 

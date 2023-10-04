@@ -163,7 +163,7 @@ class MainWeatherViewController: UIViewController{
         weatherListView?.weatherListAppend(vc: self)
         self.dismiss(animated: true)
     }
-    deinit {print("해제")}
+
 }
 
 
