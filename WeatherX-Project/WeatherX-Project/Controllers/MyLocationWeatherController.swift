@@ -195,6 +195,7 @@ class MyLocationWeatherController: UIViewController {
             switch result {
             case .success(let weatherResponse):
                 DispatchQueue.main.async {
+                    self.weatherResponse = weatherResponse
                     self.weather = weatherResponse.weather.first
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
@@ -248,6 +249,7 @@ class MyLocationWeatherController: UIViewController {
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
         mapVC.weatherList = self.weatherResponseArray
+        mapVC.weatherResponse = self.weatherResponse
         navigationController?.pushViewController(mapVC, animated: true)
     }
     

@@ -18,6 +18,7 @@ class MapViewController: UIViewController {
     private var selectedAction: String = "기온" // 기본값
     private var rightBarButton: UIBarButtonItem!
     
+    var weatherResponse: WeatherResponse?
     var weatherList: [WeatherResponse] = []
     
     override func viewDidLoad() {
@@ -37,6 +38,21 @@ private extension MapViewController {
     }
     
     func updateUserLocation() {
+        if let lat = self.weatherResponse?.coord.lat, let lon = self.weatherResponse?.coord.lon {
+            let userLocation = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = userLocation
+            annotation.title = self.weatherResponse?.name
+            mapView.addAnnotation(annotation)
+            
+            mapView.setCenter(userLocation, animated: true)
+        } else {
+            print("coord가 nil입니다.")
+        }
+        
+        guard let weatherResponse else { return }
+        weatherList.append(weatherResponse)
+        
         for weather in weatherList {
             let latitude = weather.coord.lat
             let longitude = weather.coord.lon
