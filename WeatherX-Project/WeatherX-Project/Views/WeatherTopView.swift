@@ -49,7 +49,15 @@ class WeatherTopView: UIView {
     // 날씨 일러스트
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage() // 이미지 이름에 따라 수정
+        imageView.image = UIImage()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    // 태양 날씨 일러스트
+    let sunImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -183,9 +191,6 @@ class WeatherTopView: UIView {
         rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0) + "mm"
         numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 ) + "m/s"
         number2Label.text = String(weatherResponse.main.humidity) + "%"
-        rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
-        numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
-        number2Label.text = String(weatherResponse.main.humidity)
         self.imageView.image = UIImage(named: setWeatherIcon(weatherIcon: weatherResponse.weather[0].icon))
     }
     
@@ -242,6 +247,7 @@ class WeatherTopView: UIView {
         addSubview(talkLabel)
         addSubview(dateLabel)
         addSubview(imageView)
+        addSubview(sunImageView)
         addSubview(locateLabel)
         addSubview(temperLabel)
         addSubview(rainLabel)
@@ -269,11 +275,13 @@ class WeatherTopView: UIView {
         }
         
         // 날씨 일러스트
+        imageView.contentMode = .scaleAspectFit
+        
         imageView.snp.makeConstraints { make in
-            make.width.equalTo(210)
-            make.height.equalTo(190)
-            make.trailing.equalToSuperview().offset(50)
-            make.top.equalToSuperview().offset(40)
+            make.width.equalTo(300)
+            make.height.equalTo(250)
+            make.trailing.equalToSuperview().offset(100)
+            make.top.equalToSuperview().offset(20)
         }
         
         // 위치
