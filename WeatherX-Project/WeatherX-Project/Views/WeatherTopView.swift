@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Then
 import SnapKit
 
 class WeatherTopView: UIView {
@@ -17,170 +18,137 @@ class WeatherTopView: UIView {
     }
     
     // 날씨 안내 멘트
-    let talkLabel: UILabel = {
-        let label = UILabel()
-        label.text = "오늘은\n날씨가\n추워요"
-        label.textColor = UIColor(red: 0.224, green: 0.631, blue: 1, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 26, weight: .bold)
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
+    let talkLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0.224, green: 0.631, blue: 1, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byWordWrapping
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.83
-        label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "오늘은\n날씨가\n추워요", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        $0.textAlignment = .center
+        $0.attributedText = NSMutableAttributedString(string: "오늘은\n날씨가\n추워요", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // 날짜
-    let dateLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Sep 25 08:30 AM"
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 14)
+    let dateLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 14)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.42
-        label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "Sep 25 08:30 AM", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        $0.textAlignment = .center
+        $0.attributedText = NSMutableAttributedString(string: "Sep 25 08:30 AM", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // 날씨 일러스트
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    let imageView = UIImageView().then {
+        $0.image = UIImage()
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // 태양 날씨 일러스트
-    let sunImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    let sunImageView = UIImageView().then {
+        $0.image = UIImage()
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // 위치
-    let locateLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        label.numberOfLines = 1 // 여러 줄이 아닌 한 줄에 표시
+    let locateLabel = UILabel().then {
+        $0.text = ""
+        $0.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        $0.numberOfLines = 1 // 여러 줄이 아닌 한 줄에 표시
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.9
-        label.textAlignment = .left
-        label.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        $0.textAlignment = .left
+        $0.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // 온도
-    let temperLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 80, weight: .thin)
+    let temperLabel = UILabel().then {
+        $0.text = ""
+        $0.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 80, weight: .thin)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.75
-        label.textAlignment = .center
-        label.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        $0.textAlignment = .center
+        $0.attributedText = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
         
     // 습도 라벨
-    let rainLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "강수량"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let rainLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        $0.text = "강수량"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
 
     // 습도 %
-    let rain2Label: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.text = "58%"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let rain2Label = UILabel().then {
+        $0.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16)
+        $0.textAlignment = .center
+        $0.text = "58%"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // uv 라벨
-    let uvLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "풍속"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let uvLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        $0.text = "풍속"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // uv 숫자
-    let numberLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.text = "4"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let numberLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16)
+        $0.textAlignment = .center
+        $0.text = "4"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // aq 라벨
-    let aqLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.text = "습도"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let aqLabel = UILabel().then {
+        $0.textColor = UIColor(red: 0.225, green: 0.63, blue: 1, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        $0.text = "습도"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // aq 숫자
-    let number2Label: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.text = "22"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let number2Label = UILabel().then {
+        $0.textColor = UIColor(red: 0.421, green: 0.421, blue: 0.421, alpha: 1)
+        $0.font = UIFont.systemFont(ofSize: 16)
+        $0.textAlignment = .center
+        $0.text = "22"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
-    let rainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
-        stackView.alignment = .center
-
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
+    let rainStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
+        $0.alignment = .center
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
-    let uvStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.alignment = .center
-        return stackView
-    }()
+    let uvStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.alignment = .center
+    }
     
-    let aqStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 4 // 각 레이블 사이의 간격 조정
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
+    let aqStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
+        $0.alignment = .center
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     private func configureUI() {
         guard let weatherResponse = weatherResponse else { return }
@@ -244,89 +212,76 @@ class WeatherTopView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(talkLabel)
-        addSubview(dateLabel)
-        addSubview(imageView)
-        addSubview(sunImageView)
-        addSubview(locateLabel)
-        addSubview(temperLabel)
-        addSubview(rainLabel)
-        addSubview(rain2Label)
-        addSubview(uvLabel)
-        addSubview(numberLabel)
-        addSubview(aqLabel)
-        addSubview(number2Label)
+        addSubviews(talkLabel, dateLabel, imageView, sunImageView, locateLabel, temperLabel, rainLabel, rain2Label, uvLabel, numberLabel, aqLabel, number2Label)
   
-        
         // 날씨 안내 멘트
-        talkLabel.snp.makeConstraints { make in
-            make.width.equalTo(177)
-            make.height.equalTo(86)
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(54)
+        talkLabel.snp.makeConstraints {
+            $0.width.equalTo(177)
+            $0.height.equalTo(86)
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(54)
         }
         
         // 날짜
-        dateLabel.snp.makeConstraints { make in
-            make.width.equalTo(114)
-            make.height.equalTo(24)
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(124)
+        dateLabel.snp.makeConstraints {
+            $0.width.equalTo(114)
+            $0.height.equalTo(24)
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalTo(talkLabel.snp.bottom).offset(5)
         }
         
         // 날씨 일러스트
         imageView.contentMode = .scaleAspectFit
         
-        imageView.snp.makeConstraints { make in
-            make.width.equalTo(300)
-            make.height.equalTo(250)
-            make.trailing.equalToSuperview().offset(100)
-            make.top.equalToSuperview().offset(20)
+        imageView.snp.makeConstraints {
+            $0.width.equalTo(300)
+            $0.height.equalTo(250)
+            $0.trailing.equalToSuperview().offset(100)
+            $0.top.equalToSuperview().offset(20)
         }
         
         // 위치
-        locateLabel.snp.makeConstraints { make in
-            make.height.equalTo(24)
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(250)
+        locateLabel.snp.makeConstraints {
+            $0.height.equalTo(30)
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(250)
         }
         
         // 온도
-        temperLabel.snp.makeConstraints { make in
-            make.width.equalTo(150)
-            make.height.equalTo(60)
-            make.trailing.equalToSuperview().offset(26)
-            make.top.equalToSuperview().offset(278)
+        temperLabel.snp.makeConstraints {
+            $0.width.equalTo(150)
+            $0.height.equalTo(60)
+            $0.trailing.equalToSuperview().offset(26)
+            $0.top.equalToSuperview().offset(278)
         }
         
         // 강수량 라벨
-        rainLabel.snp.makeConstraints { make in
-            make.height.equalTo(18)
+        rainLabel.snp.makeConstraints {
+            $0.height.equalTo(18)
         }
 
         // 강수량
-        rain2Label.snp.makeConstraints { make in
-            make.height.equalTo(23)
+        rain2Label.snp.makeConstraints {
+            $0.height.equalTo(23)
         }
         
-        rainStackView.addArrangedSubview(rainLabel)
-        rainStackView.addArrangedSubview(rain2Label)
+        rainStackView.addArrangedSubviews(rainLabel, rain2Label)
 
         self.addSubview(rainStackView)
 
-        rainStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalToSuperview().offset(297)
+        rainStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(297)
         }
         
         // 풍속 라벨
-        uvLabel.snp.makeConstraints { make in
-            make.height.equalTo(18)
+        uvLabel.snp.makeConstraints {
+            $0.height.equalTo(18)
         }
 
         // 풍속
-        numberLabel.snp.makeConstraints { make in
-            make.height.equalTo(23)
+        numberLabel.snp.makeConstraints {
+            $0.height.equalTo(23)
         }
         
         uvStackView.addArrangedSubview(uvLabel)
@@ -334,29 +289,28 @@ class WeatherTopView: UIView {
 
         self.addSubview(uvStackView)
 
-        uvStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(96)
-            make.top.equalToSuperview().offset(297)
+        uvStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(96)
+            $0.top.equalToSuperview().offset(297)
         }
         
         // 습도 라벨
-        aqLabel.snp.makeConstraints { make in
-            make.height.equalTo(18)
+        aqLabel.snp.makeConstraints {
+            $0.height.equalTo(18)
         }
         
         // 습도
-        number2Label.snp.makeConstraints { make in
-            make.height.equalTo(23)
+        number2Label.snp.makeConstraints {
+            $0.height.equalTo(23)
         }
         
-        aqStackView.addArrangedSubview(aqLabel)
-        aqStackView.addArrangedSubview(number2Label)
+        aqStackView.addArrangedSubviews(aqLabel, number2Label)
 
         self.addSubview(aqStackView)
 
-        aqStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(180)
-            make.top.equalToSuperview().offset(297)
+        aqStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(180)
+            $0.top.equalToSuperview().offset(297)
         }
     }
     
