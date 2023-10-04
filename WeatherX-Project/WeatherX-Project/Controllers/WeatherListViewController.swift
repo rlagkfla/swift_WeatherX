@@ -44,7 +44,7 @@ class WeatherListViewController: UIViewController {
         }
     }
 
-    let weatherListTableView = UITableView(frame: .zero, style: .insetGrouped).then {
+    let weatherListTableView = UITableView().then {
         $0.backgroundColor = .white
         $0.separatorStyle = .none
         $0.register(WeatherListCell.self, forCellReuseIdentifier: "WeatherListCell")
@@ -215,7 +215,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 95
+        return 110
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
