@@ -49,7 +49,7 @@ class MyLocationWeatherController: UIViewController {
         $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
     }
     
-    private let pageControl = UIPageControl()
+     let pageControl = UIPageControl()
   
     
     lazy var menuViewButton = UIButton(type: .custom).then {
@@ -90,13 +90,7 @@ class MyLocationWeatherController: UIViewController {
             self.forcastResponseArray = data
         }
         makeViewArray()
-        print(viewArray.count)
-        print(viewArray)
-        print(weatherResponseArray.count)
-        print(weatherResponseArray)
-       
-        print(viewArray.count)
-        
+        changePage(to: pageControl.currentPage)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -164,12 +158,11 @@ class MyLocationWeatherController: UIViewController {
         changePage(to: pageControl.currentPage)
     }
     
-    private func changePage(to index: Int) {
+    func changePage(to index: Int) {
         guard index >= 0 && index < viewArray.count else {
             return
         }
         let viewControllerToShow = viewArray[index]
-        print(viewControllerToShow.topView.talkLabel)
         viewArray[pageControl.currentPage].view.removeFromSuperview()
         viewArray[pageControl.currentPage].removeFromParent()
         addChild(viewControllerToShow)
@@ -228,11 +221,10 @@ class MyLocationWeatherController: UIViewController {
                 mainVC.middleView.forecastResponse = forcastResponseArray[i]
                 mainVC.bottomView.forecastResponse = forcastResponseArray[i]
                 dataArray.append(mainVC)
-                print("dataArray의 개수는 \(dataArray.count)")
                 self.viewArray = dataArray
             }
             pageControl.numberOfPages = viewArray.count
-            pageControl.currentPage = 0
+//            pageControl.currentPage = 0
         }
       
     }
