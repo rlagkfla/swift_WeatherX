@@ -180,10 +180,9 @@ class WeatherTopView: UIView {
         dateLabel.text = DateFormat.dateString
         locateLabel.text = weatherResponse.name
         temperLabel.text = weatherResponse.main.temp.makeRounded() + "º"
-        rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
-        numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
-        number2Label.text = String(weatherResponse.main.humidity)
-        
+        rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0) + "mm"
+        numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 ) + "m/s"
+        number2Label.text = String(weatherResponse.main.humidity) + "%"
     }
 
     
@@ -221,9 +220,9 @@ class WeatherTopView: UIView {
         
         // 날씨 일러스트
         imageView.snp.makeConstraints { make in
-            make.width.equalTo(170)
-            make.height.equalTo(170)
-            make.trailing.equalToSuperview().offset(40)
+            make.width.equalTo(210)
+            make.height.equalTo(190)
+            make.trailing.equalToSuperview().offset(50)
             make.top.equalToSuperview().offset(40)
         }
         
@@ -298,7 +297,7 @@ class WeatherTopView: UIView {
         self.addSubview(aqStackView)
 
         aqStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(168)
+            make.leading.equalToSuperview().offset(180)
             make.top.equalToSuperview().offset(297)
         }
     }
