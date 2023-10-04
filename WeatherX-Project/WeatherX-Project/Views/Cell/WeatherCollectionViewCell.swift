@@ -62,7 +62,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         self.addSubview(stackView)
 
         imageView.snp.makeConstraints {
-            $0.height.equalTo(48)
+            $0.height.width.equalTo(48)
         }
 
         stackView.snp.makeConstraints {

@@ -193,20 +193,18 @@ class WeatherListViewController: UIViewController {
 
 extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weatherData.count
+        return weatherResponseArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         let weatherInfo = weatherData[indexPath.row]
-//        cell.cityLabel.text = cities[indexPath.row]
-        let temperature = weatherInfo.topView.temperLabel
+        cell.cityLabel.text = cities[indexPath.row]
         guard let data = weatherInfo.topView.weatherResponse else { return cell }
-
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
         } else {
-            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º" // "\(Int(temperature * 9 / 5 + 32))°"
+            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º"
         }
 
         cell.weatherDescriptionLabel.text = data.weather[0].description
@@ -224,6 +222,8 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherData.remove(at: indexPath.row)
+            weatherResponseArray.remove(at: indexPath.row)
+            forcastResponseArray.remove(at: indexPath.row)
             cities.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }

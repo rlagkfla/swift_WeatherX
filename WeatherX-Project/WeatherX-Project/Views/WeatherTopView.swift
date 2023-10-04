@@ -183,6 +183,56 @@ class WeatherTopView: UIView {
         rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0) + "mm"
         numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 ) + "m/s"
         number2Label.text = String(weatherResponse.main.humidity) + "%"
+        rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0)
+        numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 )
+        number2Label.text = String(weatherResponse.main.humidity)
+        self.imageView.image = UIImage(named: setWeatherIcon(weatherIcon: weatherResponse.weather[0].icon))
+    }
+    
+    func setWeatherIcon(weatherIcon: String) -> String {
+        var imageName: String
+        
+        switch weatherIcon {
+        case "01d":
+            imageName = "sunny"
+        case "02d":
+            imageName = "darkcloud"
+        case "03d":
+            imageName = "darkcloud"
+        case "04d":
+            imageName = "darkcloud"
+        case "09d":
+            imageName = "rain"
+        case "10d":
+            imageName = "sunshower"
+        case "11d":
+            imageName = "thunder"
+        case "13d":
+            imageName = "snow"
+        case "50d":
+            imageName = "wind"
+        case "01n":
+            imageName = "sunny"
+        case "02n":
+            imageName = "darkcloud"
+        case "03n":
+            imageName = "darkcloud"
+        case "04n":
+            imageName = "darkcloud"
+        case "09n":
+            imageName = "rain"
+        case "10n":
+            imageName = "sunshower"
+        case "11n":
+            imageName = "thunder"
+        case "13n":
+            imageName = "snow"
+        case "50n":
+            imageName = "wind"
+        default:
+            imageName = "unknown"
+        }
+        return imageName
     }
 
     

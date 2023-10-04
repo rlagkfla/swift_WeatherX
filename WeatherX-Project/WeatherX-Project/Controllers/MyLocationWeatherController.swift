@@ -78,6 +78,11 @@ class MyLocationWeatherController: UIViewController {
         setLayout()
         setupLocationManager()
         pageControlAction()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
             self.weatherResponseArray = data
         }
@@ -85,17 +90,13 @@ class MyLocationWeatherController: UIViewController {
             self.forcastResponseArray = data
         }
         makeViewArray()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
         print(viewArray.count)
         print(viewArray)
         print(weatherResponseArray.count)
         print(weatherResponseArray)
        
         print(viewArray.count)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -219,13 +220,16 @@ class MyLocationWeatherController: UIViewController {
     }
     
     private func makeViewArray() {
+        var dataArray:[MainWeatherViewController] = [viewArray[0]]
         if weatherResponseArray.count > 0 {
             for i in 0..<weatherResponseArray.count {
                 let mainVC = MainWeatherViewController()
                 mainVC.topView.weatherResponse = weatherResponseArray[i]
                 mainVC.middleView.forecastResponse = forcastResponseArray[i]
                 mainVC.bottomView.forecastResponse = forcastResponseArray[i]
-                self.viewArray.append(mainVC)
+                dataArray.append(mainVC)
+                print("dataArray의 개수는 \(dataArray.count)")
+                self.viewArray = dataArray
             }
             pageControl.numberOfPages = viewArray.count
             pageControl.currentPage = 0
@@ -258,10 +262,6 @@ class MyLocationWeatherController: UIViewController {
     func weatherDataBiding(weatherResponse: WeatherResponse) {
         let topView = mainWeatherView.topView
         topView.weatherResponse = weatherResponse
-        
-        if let weatherIcon = weatherResponse.weather.first?.icon {
-            setWeatherIcon(weatherIcon: weatherIcon)
-        }
     }
     
     func forecastDataBidning(forecastResponse:ForecastResponse) {
@@ -273,59 +273,6 @@ class MyLocationWeatherController: UIViewController {
         let bottomView = mainWeatherView.bottomView
         bottomView.forecastResponse = forecastResponse
         bottomView.tableView.reloadData()
-    }
-
-    func setWeatherIcon(weatherIcon: String) {
-        var imageName: String
-
-        let topView = mainWeatherView.topView
-        
-        switch weatherIcon {
-        case "01d":
-            imageName = "sunny"
-        case "02d":
-            imageName = "darkcloud"
-        case "03d":
-            imageName = "darkcloud"
-        case "04d":
-            imageName = "darkcloud"
-        case "09d":
-            imageName = "rain"
-        case "10d":
-            imageName = "sunshower"
-        case "11d":
-            imageName = "thunder"
-        case "13d":
-            imageName = "snow"
-        case "50d":
-            imageName = "wind"
-        case "01n":
-            imageName = "sunny"
-        case "02n":
-            imageName = "darkcloud"
-        case "03n":
-            imageName = "darkcloud"
-        case "04n":
-            imageName = "darkcloud"
-        case "09n":
-            imageName = "rain"
-        case "10n":
-            imageName = "sunshower"
-        case "11n":
-            imageName = "thunder"
-        case "13n":
-            imageName = "snow"
-        case "50n":
-            imageName = "wind"
-        default:
-            imageName = "unknown"
-        }
-        print("Setting icon with value: \(weatherIcon)")
-        if let image = UIImage(named: imageName) {
-            topView.imageView.image = image
-        } else {
-            topView.imageView.image = UIImage(named: "default")
-        }
     }
     
 }
@@ -362,3 +309,15 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
 }
 
 
+extension WeatherResponse: Equatable {
+    static func == (lhs: WeatherResponse, rhs: WeatherResponse) -> Bool {
+        return lhs.name == rhs.name
+    }
+}
+
+extension ForecastResponse: Equatable {
+    static func == (lhs: ForecastResponse, rhs: ForecastResponse) -> Bool {
+ 
+        return lhs.city.id == rhs.city.id
+    }
+}
