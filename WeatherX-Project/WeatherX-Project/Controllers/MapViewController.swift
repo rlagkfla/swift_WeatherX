@@ -18,7 +18,7 @@ class MapViewController: UIViewController {
     private var selectedAction: String = "기온" // 기본값
     private var rightBarButton: UIBarButtonItem!
     
-    var weatherResponse: WeatherResponse?
+    var weatherList: [WeatherResponse] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,16 +37,16 @@ private extension MapViewController {
     }
     
     func updateUserLocation() {
-        if let latitude = self.weatherResponse?.coord.lat, let longitude = self.weatherResponse?.coord.lon {
+        for weather in weatherList {
+            let latitude = weather.coord.lat
+            let longitude = weather.coord.lon
             let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
             let annotation = MKPointAnnotation()
             annotation.coordinate = userLocation
-            annotation.title = self.weatherResponse?.name
+            annotation.title = weather.name
             mapView.addAnnotation(annotation)
             
             mapView.setCenter(userLocation, animated: true)
-        } else {
-            print("coord가 nil입니다.")
         }
     }
     
@@ -127,17 +127,19 @@ extension MapViewController: MKMapViewDelegate {
         
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "CustomMarker")
         
+        guard let annotationTitle = annotation.title, let weather = weatherList.first(where: { $0.name == annotationTitle }) else {
+            return annotationView
+        }
         switch selectedAction {
         case "기온":
-            if let temp = self.weatherResponse?.main.temp {
-                annotationView.glyphText = "\(temp)°"
-            }
+            let temp = weather.main.temp
+            annotationView.glyphText = "\(temp)°"
         case "바람":
-            if let windSpeed = self.weatherResponse?.wind.speed {
+            if let windSpeed = weather.wind.speed {
                 annotationView.glyphText = "\(windSpeed) m/s"
             }
         case "강수량":
-            if let icon = self.weatherResponse?.weather.first?.icon,
+            if let icon = weather.weather.first?.icon,
                let iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png") {
                 downloadImage(fromURL: iconURL) { image in
                     DispatchQueue.main.async {
@@ -149,7 +151,6 @@ extension MapViewController: MKMapViewDelegate {
         default:
             break
         }
-        
         return annotationView
     }
 }
