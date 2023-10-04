@@ -151,7 +151,7 @@ class WeatherTableViewCell: UITableViewCell {
         weatherImageView.snp.makeConstraints {
             $0.centerX.equalTo(weatherContainView)
             $0.centerY.equalTo(weatherContainView)
-            $0.height.width.equalTo(75)
+            $0.height.width.equalTo(70)
         }
         
         percentTextLabel.snp.makeConstraints {
