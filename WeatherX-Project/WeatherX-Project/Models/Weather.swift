@@ -26,7 +26,6 @@ struct Main: Codable {
     let temp_min: Double // 최저 기온
     let temp_max: Double // 최고 기온
     let humidity: Double // 습도, %
-    
 }
 
 struct Weather: Codable {
@@ -59,7 +58,6 @@ struct Coord: Codable {
     let lon: Double // 경도
 }
 
-
 // MARK: - 날짜 포맷
 
 struct DateFormat {
@@ -67,7 +65,7 @@ struct DateFormat {
     static var dateString: String {
         let myFormatter = DateFormatter()
         myFormatter.dateFormat = "MMM dd hh:mm a"
-        
+
         // 로케일을 영어(미국)로 설정
         myFormatter.locale = Locale(identifier: "en_US")
 

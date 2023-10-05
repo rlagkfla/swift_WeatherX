@@ -23,6 +23,7 @@ struct ForecastResponse: Codable {
 }
 
 // MARK: - City
+
 struct City: Codable {
     let id: Int
     let name: String
@@ -30,11 +31,13 @@ struct City: Codable {
 }
 
 // MARK: - Coord
+
 struct Coordi: Codable {
     let lat, lon: Double // 위도, 경도
 }
 
 // MARK: - List
+
 struct Lists: Codable {
     let weather: [Forecast]
     let dt: Int // unix time
@@ -42,15 +45,15 @@ struct Lists: Codable {
     let main: MainClass
     let pop: Double // 강수 확률, %
     let rain: Rainy?
-    
+
     enum CodingKeys: String, CodingKey {
         case dt, main, weather, pop, rain
         case dtTxt = "dt_txt"
     }
 }
 
-
 // MARK: - MainClass
+
 struct MainClass: Codable {
     let temp, tempMin, tempMax: Double
     let humidity: Int
@@ -64,6 +67,7 @@ struct MainClass: Codable {
 }
 
 // MARK: - Rain
+
 struct Rainy: Codable {
     let the3H: Double // 강수량, mm
 
@@ -73,17 +77,9 @@ struct Rainy: Codable {
 }
 
 // MARK: - Weather
+
 struct Forecast: Codable {
     let id: Int
 //    let main: MainEnum
     let icon: String // 날씨 아이콘 ID
-    
 }
-
-//enum MainEnum: String, Codable {
-//    case clear = "Clear"
-//    case clouds = "Clouds"
-//    case rain = "Rain"
-//}
-
-

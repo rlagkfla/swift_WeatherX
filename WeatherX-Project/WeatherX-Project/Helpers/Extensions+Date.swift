@@ -18,14 +18,14 @@ extension Date {
             return "GMT\(compare)\(timeZone)"
         }
     }
-    
+
     func getCountryTime(byTimeZone time: Int) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "a h:mm"
         formatter.amSymbol = "오전"
         formatter.pmSymbol = "오후"
         formatter.timeZone = TimeZone(abbreviation: calcuateGMT(time: time))
-        
+
         return formatter.string(from: self)
     }
 }

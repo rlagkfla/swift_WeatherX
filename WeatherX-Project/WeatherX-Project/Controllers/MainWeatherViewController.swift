@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Then
 import SnapKit
 
 enum DependingLoaction {
@@ -13,18 +14,15 @@ enum DependingLoaction {
     case addLocation
 }
 
-
-final class MainWeatherViewController: UIViewController{
+final class MainWeatherViewController: UIViewController {
    
- 
     let topView = WeatherTopView()
     let middleView = WeatherMiddleView()
     let bottomView = WeatherBottomView()
 
     var dependingLocation: DependingLoaction = .myLocation
     
-
-    private var scrollView = UIScrollView().then {
+    var scrollView = UIScrollView().then {
         $0.isDirectionalLockEnabled = true
         $0.alwaysBounceHorizontal = false
         $0.alwaysBounceVertical = true
@@ -32,30 +30,32 @@ final class MainWeatherViewController: UIViewController{
     }
     
     let cancelButton: UIButton = {
-            let button = UIButton(type: .custom)
-            button.setTitle("취소", for: .normal)
-            button.setTitleColor(.black, for: .normal)
-            button.frame.size.height = 30
-            return button
-        }()
+        let button = UIButton(type: .custom)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.frame.size.height = 30
+        return button
+    }()
     
     let addButton: UIButton = {
-            let button = UIButton(type: .custom)
-            button.setTitle("추가", for: .normal)
-            button.setTitleColor(.black, for: .normal)
-            button.frame.size.height = 30
-            return button
-        }()
+        let button = UIButton(type: .custom)
+        button.setTitle("추가", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.frame.size.height = 30
+        return button
+    }()
     
     lazy var stackView: UIStackView = {
-            let sv = UIStackView(arrangedSubviews: [cancelButton, addButton])
-            sv.axis = .horizontal
-            sv.distribution  = .fillEqually
-            sv.alignment = .fill
-            sv.spacing = 250
+        let sv = UIStackView(arrangedSubviews: [cancelButton, addButton])
+        sv.axis = .horizontal
+        sv.distribution = .fillEqually
+        sv.alignment = .fill
+        sv.spacing = 250
         sv.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-            return sv
-        }()
+        return sv
+    }()
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,8 +65,10 @@ final class MainWeatherViewController: UIViewController{
         addButtonTapped()
     }
     
+    // MARK: - Helpers
+    
     private func setup() {
-        self.view.addSubview(stackView)
+        view.addSubview(stackView)
         view.addSubview(scrollView)
         scrollView.addSubviews(topView, middleView, bottomView)
         scrollView.delegate = self
@@ -77,12 +79,9 @@ final class MainWeatherViewController: UIViewController{
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
         bottomView.clipsToBounds = true
         bottomView.layer.cornerRadius = 20
-        
     }
     
-    
     private func snpLayout() {
-        
         if dependingLocation == .addLocation {
             stackView.isHidden = false
             stackView.snp.makeConstraints {
@@ -93,9 +92,7 @@ final class MainWeatherViewController: UIViewController{
                 $0.height.equalTo(50)
             }
             
-            
             scrollView.snp.makeConstraints {
-    //            $0.top.equalToSuperview()
                 $0.leading.equalToSuperview()
                 $0.trailing.equalToSuperview()
                 $0.bottom.equalToSuperview()
@@ -111,8 +108,6 @@ final class MainWeatherViewController: UIViewController{
                 $0.width.equalToSuperview()
             }
         }
-        
-      
         
         topView.snp.makeConstraints {
             $0.top.equalTo(scrollView.snp.top)
@@ -151,24 +146,20 @@ final class MainWeatherViewController: UIViewController{
         addButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
     }
     
-    
-    
     @objc func cancelButtonAction() {
         self.dismiss(animated: true)
     }
     
-    var weatherListView: weatherListViewBinding?
+    var weatherListView: WeatherListViewBinding?
     
     @objc func addButtonAction() {
         weatherListView?.weatherListAppend()
         self.dismiss(animated: true)
     }
-
 }
 
+// MARK: - UIScrollViewDelegate
 
-
-    // MARK: - UIScrollViewDelegate
 extension MainWeatherViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.x != 0 {

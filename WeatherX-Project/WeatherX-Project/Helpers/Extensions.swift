@@ -37,7 +37,7 @@ extension UserDefaults {
             print("Error encoding JSON:", error)
         }
     }
-    
+
     func getJSON<T: Decodable>(_ type: T.Type, forKey key: String) -> T? {
         guard let jsonData = data(forKey: key) else { return nil }
         do {

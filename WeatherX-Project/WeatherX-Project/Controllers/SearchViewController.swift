@@ -97,6 +97,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - UISearchBarDelegate
+
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let searchText = searchBar.text,
@@ -109,6 +111,8 @@ extension SearchViewController: UISearchBarDelegate {
         searchCompleter.queryFragment = searchText
     }
 }
+
+// MARK: - MKLocalSearchCompleterDelegate
 
 extension SearchViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
