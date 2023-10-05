@@ -1,5 +1,6 @@
 # ☀️ WeatherX
-![WeatherX_banner](https://github.com/Insuuu24/weatherX/assets/117909631/c85fcb86-c8d1-4c85-8f8b-bcc91f0dedd5)
+![WeatherX_Banner](https://github.com/Insuuu24/weatherX/assets/117909631/2b3f4750-d4f3-404c-98cb-94ffe0ba923f)
+
 
 <br>
 
@@ -49,3 +50,37 @@
 <br>
 
 ## ☔️ File Structures
+```bash
+├── WeatherX-Project
+│   ├── Base.lproj
+│   │   └── LaunchScreen.storyboard
+│   ├── Controllers
+│   │   ├── MainWeatherViewController.swift
+│   │   ├── MapViewController.swift
+│   │   ├── MyLocationWeatherController.swift
+│   │   ├── SearchViewController.swift
+│   │   ├── WeatherListViewController.swift
+│   │   └── WeatherUnitViewController.swift
+│   ├── Helpers
+│   │   ├── APIString.swift
+│   │   ├── AppDelegate.swift
+│   │   ├── Extensions+Date.swift
+│   │   ├── Extensions+Double.swift
+│   │   ├── Extensions.swift
+│   │   └── SceneDelegate.swift
+│   ├── Info.plist
+│   ├── Models
+│   │   ├── Forecast5days.swift
+│   │   ├── Networking.swift
+│   │   └── Weather.swift
+│   ├── Resources
+│   │   └── Assets.xcassets
+│   └── Views
+│       ├── Cell
+│       │   ├── SearchListCell.swift
+│       │   ├── WeatherCollectionViewCell.swift
+│       │   ├── WeatherListCell.swift
+│       │   └── WeatherTableViewCell.swift
+│       ├── WeatherBottomView.swift
+│       ├── WeatherMiddleView.swift
+│       └── WeatherTopView.swift
