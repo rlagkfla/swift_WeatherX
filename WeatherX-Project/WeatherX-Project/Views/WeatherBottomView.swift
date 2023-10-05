@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class WeatherBottomView: UIView {
+final class WeatherBottomView: UIView {
     
     let tableView = UITableView()
     

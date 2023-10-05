@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 import SnapKit
 
-class SearchListTableViewCell: UITableViewCell {
+final class SearchListTableViewCell: UITableViewCell {
     
     private var nameLabel: UILabel = UILabel()
     

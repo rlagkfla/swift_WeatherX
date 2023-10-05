@@ -14,7 +14,7 @@ enum DependingLoaction {
 }
 
 
-class MainWeatherViewController: UIViewController{
+final class MainWeatherViewController: UIViewController{
    
  
     let topView = WeatherTopView()

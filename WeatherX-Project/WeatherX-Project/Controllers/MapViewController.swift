@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 import Then
 
-class MapViewController: UIViewController {
+final class MapViewController: UIViewController {
     
     private var mapView: MKMapView!
     private var coord: Coord?
