@@ -52,15 +52,10 @@
 ## ☔️ File Structures
 ```bash
 ├── WeatherX-Project
-│   ├── Base.lproj
-│   │   └── LaunchScreen.storyboard
-│   ├── Controllers
-│   │   ├── MainWeatherViewController.swift
-│   │   ├── MapViewController.swift
-│   │   ├── MyLocationWeatherController.swift
-│   │   ├── SearchViewController.swift
-│   │   ├── WeatherListViewController.swift
-│   │   └── WeatherUnitViewController.swift
+│   ├── LaunchScreen.storyboard
+│   ├── Info.plist
+│   ├── Resources
+│   │   └── Assets.xcassets
 │   ├── Helpers
 │   │   ├── APIString.swift
 │   │   ├── AppDelegate.swift
@@ -68,19 +63,29 @@
 │   │   ├── Extensions+Double.swift
 │   │   ├── Extensions.swift
 │   │   └── SceneDelegate.swift
-│   ├── Info.plist
 │   ├── Models
 │   │   ├── Forecast5days.swift
 │   │   ├── Networking.swift
 │   │   └── Weather.swift
-│   ├── Resources
-│   │   └── Assets.xcassets
 │   └── Views
-│       ├── Cell
-│       │   ├── SearchListCell.swift
-│       │   ├── WeatherCollectionViewCell.swift
-│       │   ├── WeatherListCell.swift
-│       │   └── WeatherTableViewCell.swift
-│       ├── WeatherBottomView.swift
-│       ├── WeatherMiddleView.swift
-│       └── WeatherTopView.swift
+│   │   ├── Cell
+│   │   │   ├── SearchListCell.swift
+│   │   │   ├── WeatherCollectionViewCell.swift
+│   │   │   ├── WeatherListCell.swift
+│   │   │   └── WeatherTableViewCell.swift
+│   │   ├── WeatherBottomView.swift
+│   │   ├── WeatherMiddleView.swift
+│   │   └── WeatherTopView.swift
+│   ├── Controllers
+│   │   ├── MainWeatherViewController.swift
+│   │   ├── MapViewController.swift
+│   │   ├── MyLocationWeatherController.swift
+│   │   ├── SearchViewController.swift
+│   │   ├── WeatherListViewController.swift
+│   │   └── WeatherUnitViewController.swift
+```
+
+<br>
+
+## Team Notion 🔗
+[팀 노션 바로가기](https://insu2405.notion.site/17-WeatherX-682080f27dfc4eceaa545ec9227e1842?pvs=4)
