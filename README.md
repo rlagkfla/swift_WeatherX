@@ -43,4 +43,9 @@
 
 <br>
 
-## 
+## ☃️ WeatherX ProjectDiagram
+![WeatherProjectDiagram2](https://github.com/Insuuu24/weatherX/assets/117909631/c7403e1f-eb99-4406-84e0-72b89e9aa32b)
+
+<br>
+
+## ☔️ File Structures
