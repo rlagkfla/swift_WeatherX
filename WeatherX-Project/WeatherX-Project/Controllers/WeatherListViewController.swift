@@ -12,7 +12,7 @@ import Kingfisher
 import CoreLocation
 
 protocol weatherListViewBinding: AnyObject {
-    func weatherListAppend(vc: MainWeatherViewController)
+    func weatherListAppend()
 }
 
 final class WeatherListViewController: UIViewController {
@@ -22,7 +22,6 @@ final class WeatherListViewController: UIViewController {
     private var temperatureUnit = "섭씨"
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
-    var weatherData: [MainWeatherViewController] = []
     var weatherResponseArray: [WeatherResponse] = [] {
         didSet {
             UserDefaults.standard.setJSON(weatherResponseArray, forKey: "weather")
@@ -31,7 +30,6 @@ final class WeatherListViewController: UIViewController {
     var forcastResponseArray: [ForecastResponse] = [] {
         didSet {
             UserDefaults.standard.setJSON(forcastResponseArray, forKey: "forcast")
-            makeViewArray()
         }
     }
     
@@ -166,24 +164,51 @@ final class WeatherListViewController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    //저장된 api데이터를 mainView에 저장
-    private func makeViewArray() {
-//        if let weatherData = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
-//            self.weatherResponseArray = weatherData
-//        }
-//       if let forcastData = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
-//            self.forcastResponseArray = forcastData
-//        }
-        if weatherResponseArray.count > 0 {
-            for i in 0..<weatherResponseArray.count {
-                let mainVC = MainWeatherViewController()
-                mainVC.topView.weatherResponse = weatherResponseArray[i]
-                mainVC.middleView.forecastResponse = forcastResponseArray[i]
-                mainVC.bottomView.forecastResponse = forcastResponseArray[i]
-                self.weatherData.append(mainVC)
-            }
+    
+    func setWeatherIcon(weatherIcon: String) -> String {
+        var imageName: String
+        
+        switch weatherIcon {
+        case "01d":
+            imageName = "sunny"
+        case "02d":
+            imageName = "darkcloud"
+        case "03d":
+            imageName = "darkcloud"
+        case "04d":
+            imageName = "darkcloud"
+        case "09d":
+            imageName = "rain"
+        case "10d":
+            imageName = "sunshower"
+        case "11d":
+            imageName = "thunder"
+        case "13d":
+            imageName = "snow"
+        case "50d":
+            imageName = "wind"
+        case "01n":
+            imageName = "sunny"
+        case "02n":
+            imageName = "darkcloud"
+        case "03n":
+            imageName = "darkcloud"
+        case "04n":
+            imageName = "darkcloud"
+        case "09n":
+            imageName = "rain"
+        case "10n":
+            imageName = "sunshower"
+        case "11n":
+            imageName = "thunder"
+        case "13n":
+            imageName = "snow"
+        case "50n":
+            imageName = "wind"
+        default:
+            imageName = "unknown"
         }
-      
+        return imageName
     }
     
 }
@@ -198,20 +223,21 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         cell.selectionStyle = .none
-        let weatherInfo = weatherData[indexPath.row]
+        let iconID = weatherResponseArray[indexPath.row].weather[0].icon 
         cell.cityLabel.text = cities[indexPath.row]
-        guard let data = weatherInfo.topView.weatherResponse else { return cell }
+        let weatherData = weatherResponseArray[indexPath.row]
+        let forcastData = forcastResponseArray[indexPath.row]
         if temperatureUnit == "섭씨" {
-            cell.temperatureLabel.text = data.main.temp.makeRounded() + "º"
+            cell.temperatureLabel.text = weatherData.main.temp.makeRounded() + "º"
         } else {
-            cell.temperatureLabel.text = data.main.temp.makeFahrenheit() + "º"
+            cell.temperatureLabel.text = weatherData.main.temp.makeFahrenheit() + "º"
         }
         
-        cell.weatherDescriptionLabel.text = data.weather[0].description
+        cell.weatherDescriptionLabel.text = weatherData.weather[0].description
+       
+        cell.weatherImageView.image = UIImage(named: setWeatherIcon(weatherIcon: iconID))
         
-        cell.weatherImageView.image = weatherInfo.topView.imageView.image
-        
-        cell.timeLabel.text = Date().getCountryTime(byTimeZone: data.timezone)
+        cell.timeLabel.text = Date().getCountryTime(byTimeZone: weatherData.timezone)
         return cell
     }
     
@@ -221,7 +247,6 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            weatherData.remove(at: indexPath.row)
             weatherResponseArray.remove(at: indexPath.row)
             forcastResponseArray.remove(at: indexPath.row)
             cities.remove(at: indexPath.row)
@@ -281,7 +306,7 @@ extension WeatherListViewController: SearchViewControllerDelegate {
 }
 
 extension WeatherListViewController: weatherListViewBinding {
-    func weatherListAppend(vc: MainWeatherViewController) {
+    func weatherListAppend() {
         guard let weatherResponse = weatherResponse else { return }
         guard let forcastResponse = forcastResponse else { return }
         self.weatherResponseArray.append(weatherResponse)

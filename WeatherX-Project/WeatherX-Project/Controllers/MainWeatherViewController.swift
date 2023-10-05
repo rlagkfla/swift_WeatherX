@@ -160,7 +160,7 @@ final class MainWeatherViewController: UIViewController{
     var weatherListView: weatherListViewBinding?
     
     @objc func addButtonAction() {
-        weatherListView?.weatherListAppend(vc: self)
+        weatherListView?.weatherListAppend()
         self.dismiss(animated: true)
     }
 

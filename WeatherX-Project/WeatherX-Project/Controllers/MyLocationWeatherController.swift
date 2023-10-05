@@ -316,16 +316,3 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
     }
 }
 
-
-extension WeatherResponse: Equatable {
-    static func == (lhs: WeatherResponse, rhs: WeatherResponse) -> Bool {
-        return lhs.name == rhs.name
-    }
-}
-
-extension ForecastResponse: Equatable {
-    static func == (lhs: ForecastResponse, rhs: ForecastResponse) -> Bool {
- 
-        return lhs.city.id == rhs.city.id
-    }
-}
