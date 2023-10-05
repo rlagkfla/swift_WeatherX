@@ -12,9 +12,6 @@ import Then
 final class MapViewController: UIViewController {
     
     private var mapView: MKMapView!
-    private var coord: Coord?
-    private var main: Main?
-    private var name: String?
     private var selectedAction: String = "기온" // 기본값
     private var rightBarButton: UIBarButtonItem!
     
