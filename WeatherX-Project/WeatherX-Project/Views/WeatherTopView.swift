@@ -17,6 +17,12 @@ final class WeatherTopView: UIView {
         }
     }
     
+    var city: String? {
+        didSet {
+            configureUI()
+        }
+    }
+    
     // 날씨 안내 멘트
     let talkLabel = UILabel().then {
         $0.textColor = UIColor(red: 0.224, green: 0.631, blue: 1, alpha: 1)
@@ -152,9 +158,14 @@ final class WeatherTopView: UIView {
     
     private func configureUI() {
         guard let weatherResponse = weatherResponse else { return }
-        talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
-        dateLabel.text = DateFormat.dateString
-        locateLabel.text = weatherResponse.name
+        if let city {
+            talkLabel.text = "\(city) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
+            locateLabel.text = city
+        } else {
+            talkLabel.text = "\(weatherResponse.name) 의 날씨는 \(weatherResponse.weather[0].description) 입니다."
+            locateLabel.text = weatherResponse.name
+        }
+        dateLabel.text = Date().getCountryTime(byTimeZone: weatherResponse.timezone)
         temperLabel.text = weatherResponse.main.temp.makeRounded() + "º"
         rain2Label.text = String(weatherResponse.rain?.oneHour != nil ? (weatherResponse.rain?.oneHour)! : 0) + "mm"
         numberLabel.text = String(weatherResponse.wind.speed != nil ? (weatherResponse.wind.speed)! : 0 ) + "m/s"
