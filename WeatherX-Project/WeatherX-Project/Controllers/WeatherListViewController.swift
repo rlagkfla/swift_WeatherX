@@ -8,10 +8,9 @@
 import UIKit
 import Then
 import SnapKit
-import Kingfisher
 import CoreLocation
 
-protocol weatherListViewBinding: AnyObject {
+protocol WeatherListViewBinding: AnyObject {
     func weatherListAppend()
 }
 
@@ -27,15 +26,16 @@ final class WeatherListViewController: UIViewController {
             UserDefaults.standard.setJSON(weatherResponseArray, forKey: "weather")
         }
     }
+
     var forcastResponseArray: [ForecastResponse] = [] {
         didSet {
             UserDefaults.standard.setJSON(forcastResponseArray, forKey: "forcast")
         }
     }
-    
+
     var weatherResponse: WeatherResponse?
     var forcastResponse: ForecastResponse?
-    
+
     var cities: [String] = [] {
         didSet {
             UserDefaults.standard.setJSON(cities, forKey: "city")
@@ -54,20 +54,20 @@ final class WeatherListViewController: UIViewController {
         super.viewDidLoad()
         configureNav()
         configureUI()
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
             self.weatherResponseArray = data
         }
-       if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
+        if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
             self.forcastResponseArray = data
         }
         if let data = UserDefaults.standard.getJSON([String].self, forKey: "city") {
             self.cities = data
         }
     }
+
     // MARK: - Helpers
 
     private func configureNav() {
@@ -163,11 +163,10 @@ final class WeatherListViewController: UIViewController {
         let navController = UINavigationController(rootViewController: weatherUnitViewController)
         present(navController, animated: true, completion: nil)
     }
-    
-    
+
     func setWeatherIcon(weatherIcon: String) -> String {
         var imageName: String
-        
+
         switch weatherIcon {
         case "01d":
             imageName = "sunny"
@@ -210,7 +209,6 @@ final class WeatherListViewController: UIViewController {
         }
         return imageName
     }
-    
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -219,32 +217,31 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return weatherResponseArray.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         cell.selectionStyle = .none
         let iconID = weatherResponseArray[indexPath.row].weather[0].icon 
         cell.cityLabel.text = cities[indexPath.row]
         let weatherData = weatherResponseArray[indexPath.row]
-        let forcastData = forcastResponseArray[indexPath.row]
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = weatherData.main.temp.makeRounded() + "º"
         } else {
             cell.temperatureLabel.text = weatherData.main.temp.makeFahrenheit() + "º"
         }
-        
+
         cell.weatherDescriptionLabel.text = weatherData.weather[0].description
-       
+
         cell.weatherImageView.image = UIImage(named: setWeatherIcon(weatherIcon: iconID))
-        
+
         cell.timeLabel.text = Date().getCountryTime(byTimeZone: weatherData.timezone)
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 110
     }
-    
+
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             weatherResponseArray.remove(at: indexPath.row)
@@ -253,12 +250,12 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let myVC = navigationController?.viewControllers.first(where: { $0 is MyLocationWeatherController }) as? MyLocationWeatherController {
             myVC.pageControl.currentPage = indexPath.row + 1
-            
-            self.navigationController?.popViewController(animated: true)
+
+            navigationController?.popViewController(animated: true)
         }
     }
 }
@@ -305,7 +302,9 @@ extension WeatherListViewController: SearchViewControllerDelegate {
     }
 }
 
-extension WeatherListViewController: weatherListViewBinding {
+// MARK: - weatherListViewBinding
+
+extension WeatherListViewController: WeatherListViewBinding {
     func weatherListAppend() {
         guard let weatherResponse = weatherResponse else { return }
         guard let forcastResponse = forcastResponse else { return }
@@ -314,6 +313,4 @@ extension WeatherListViewController: weatherListViewBinding {
         weatherListTableView.reloadData()
         self.dismiss(animated: true)
     }
-    
-    
 }

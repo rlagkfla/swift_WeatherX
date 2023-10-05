@@ -22,19 +22,18 @@ final class Networking {
     var lat: Double = 37.5683
     var lon: Double = 126.9778
     
-    private init(){}
+    private init() {}
     
     // 현재 날씨 api
     func getWeather(completion: @escaping (Result<WeatherResponse, NetworkError>) -> Void) {
         
         // API 호출을 위한 URL
-//        let url = URL(string: "\(API.weatherApiUrl)?\(API.location)&\(API.key)&\(API.unit)&\(API.lang)")
         let url = URL(string: "\(API.weatherApiUrl)?lat=\(lat)&lon=\(lon)&\(API.key)&\(API.unit)&\(API.lang)")
         guard let url = url else {
             return completion(.failure(.badUrl))
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else {
                 return completion(.failure(.noData))
             }
@@ -44,8 +43,6 @@ final class Networking {
 
             // 성공
             if let weatherResponse = weatherResponse {
-//                print("weather : \(weatherResponse)")
-//                print("date: \(DateFormat.dateString(dt: weatherResponse.dt))") 
                 completion(.success(weatherResponse)) // 성공한 데이터 저장
             } else {
                 completion(.failure(.decodingError))
@@ -62,7 +59,7 @@ final class Networking {
             return completion(.failure(.badUrl))
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else {
                 return completion(.failure(.noData))
             }
@@ -72,7 +69,6 @@ final class Networking {
 
             // 성공
             if let forecastResponse = forecastResponse {
-//                print("forecast : \(forecastResponse)")
                 completion(.success(forecastResponse)) // 성공한 데이터 저장
             } else {
                 completion(.failure(.decodingError))

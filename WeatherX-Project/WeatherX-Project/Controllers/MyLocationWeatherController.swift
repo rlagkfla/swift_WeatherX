@@ -10,12 +10,13 @@ import SnapKit
 import Then
 import CoreLocation
 
-
 final class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
+
     var networking = Networking.shared
-    private let locationManager: CLLocationManager = CLLocationManager()
+    private let locationManager: CLLocationManager = .init()
+    
     private var isAuthorized: Bool = false {
         didSet {
             UserDefaults.standard.setJSON(isAuthorized, forKey: "isAuthorized")
@@ -27,7 +28,6 @@ final class MyLocationWeatherController: UIViewController {
     var weather: Weather?
     var main: Main?
     var name: String?
-    //    var city:
     
     var forecastResponse: ForecastResponse?
     private var mainWeatherView = MainWeatherViewController()
@@ -54,9 +54,8 @@ final class MyLocationWeatherController: UIViewController {
         $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
     }
     
-     let pageControl = UIPageControl()
+    let pageControl = UIPageControl()
   
-    
     lazy var menuViewButton = UIButton(type: .custom).then {
         $0.frame.size.height = 40
         $0.tintColor = .black
@@ -73,11 +72,15 @@ final class MyLocationWeatherController: UIViewController {
         return sv
     }()
     
+    lazy var refreshControl = UIRefreshControl().then {
+        $0.addTarget(self, action: #selector(refreshWeatherData), for: .valueChanged)
+    }
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewArray.append(mainWeatherView)
+        viewArray.append(mainWeatherView)
         networkingWeather()
         pageControllerSetup()
         setLayout()
@@ -89,10 +92,10 @@ final class MyLocationWeatherController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
-            self.weatherResponseArray = data
+            weatherResponseArray = data
         }
-       if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
-            self.forcastResponseArray = data
+        if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
+            forcastResponseArray = data
         }
         makeViewArray()
         changePage(to: pageControl.currentPage)
@@ -116,6 +119,7 @@ final class MyLocationWeatherController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
         view.addSubview(viewArray[pageControl.currentPage].view)
         view.addSubview(bottomView)
+        mainWeatherView.scrollView.addSubview(refreshControl)
         
         viewArray[pageControl.currentPage].view.snp.makeConstraints {
             $0.leading.equalToSuperview()
@@ -200,7 +204,6 @@ final class MyLocationWeatherController: UIViewController {
                     self.main = weatherResponse.main
                     self.name = weatherResponse.name
                     self.weatherDataBiding(weatherResponse: weatherResponse)
-
                 }
             case .failure:
                 print("weatherResponse error")
@@ -226,30 +229,27 @@ final class MyLocationWeatherController: UIViewController {
     }
     
     private func makeViewArray() {
-        var dataArray:[MainWeatherViewController] = [viewArray[0]]
+        var dataArray: [MainWeatherViewController] = [viewArray[0]]
         if weatherResponseArray.count > 0 {
-            for i in 0..<weatherResponseArray.count {
+            for i in 0 ..< weatherResponseArray.count {
                 let mainVC = MainWeatherViewController()
                 mainVC.topView.weatherResponse = weatherResponseArray[i]
                 mainVC.middleView.forecastResponse = forcastResponseArray[i]
                 mainVC.bottomView.forecastResponse = forcastResponseArray[i]
                 dataArray.append(mainVC)
-                self.viewArray = dataArray
+                viewArray = dataArray
             }
             pageControl.numberOfPages = viewArray.count
 //            pageControl.currentPage = 0
         }
-      
     }
     
-   
-   
     // MARK: - Actions
     
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
-        mapVC.weatherList = self.weatherResponseArray
-        mapVC.weatherResponse = self.weatherResponse
+        mapVC.weatherList = weatherResponseArray
+        mapVC.weatherResponse = weatherResponse
         navigationController?.pushViewController(mapVC, animated: true)
     }
     
@@ -261,27 +261,29 @@ final class MyLocationWeatherController: UIViewController {
         navigationController?.pushViewController(listVC, animated: true)
     }
     
- 
- 
-    
-    //데이터 바인딩
+    // 데이터 바인딩
     func weatherDataBiding(weatherResponse: WeatherResponse) {
         let topView = mainWeatherView.topView
         topView.weatherResponse = weatherResponse
     }
     
-    func forecastDataBidning(forecastResponse:ForecastResponse) {
+    func forecastDataBidning(forecastResponse: ForecastResponse) {
         let middelView = mainWeatherView.middleView
         middelView.forecastResponse = forecastResponse
         middelView.collectionView.reloadData()
-        
         
         let bottomView = mainWeatherView.bottomView
         bottomView.forecastResponse = forecastResponse
         bottomView.tableView.reloadData()
     }
     
+    @objc private func refreshWeatherData(_ sender: Any) {
+        networkingWeather()
+        refreshControl.endRefreshing()
+    }
 }
+
+// MARK: - CLLocationManagerDelegate
 
 extension MyLocationWeatherController: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -292,11 +294,10 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
         case .denied:
             print("status is denied")
             isAuthorized = false
-            break
         case .notDetermined:
             print("status is not determined")
             manager.requestAlwaysAuthorization()
-        case . restricted:
+        case .restricted:
             print("status is restricted")
         default:
             break
@@ -315,4 +316,3 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
         print("location request failed")
     }
 }
-
