@@ -252,6 +252,7 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                 DispatchQueue.main.async {
                     let topView = mainWeatherVC.topView
                     topView.weatherResponse = weatherResponse
+                    topView.city = city
                     mainWeatherVC.dependingLocation = .addLocation
                     self.weatherResponse = weatherResponse
                 }
