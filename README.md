@@ -36,11 +36,11 @@
 <br>
 
 ## 🌦️ Ground Rule
-| 제목           | URL                                                                             |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 제목 | URL                                                                                          |
+| ---- | -------------------------------------------------------------------------------------------- |
 | Git Convention| https://insu2405.notion.site/Git-Convention-25d9f6c1c86841d28fdc411fa2a394f2?pvs=4 |
 | Wireframe | https://www.figma.com/file/zs4hvh5SSUhnkbxX2AwcxB/17%EC%A1%B0-WeatherX?type=design&node-id=0%3A1&mode=design&t=DaqgBlpBlZMJr8qm-1 |
-|Trouble Shooting||
+|Trouble Shooting| https://insu2405.notion.site/WeatherX-Trouble-Shooting-d745a76d6f7c47c7a1dcd179687059d7?pvs=4 |
 
 <br>
 
