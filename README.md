@@ -54,21 +54,21 @@
 ├── WeatherX-Project
 │   ├── LaunchScreen.storyboard
 │   ├── Info.plist
-│   ├── Resources
+│   ├──📁 Resources
 │   │   └── Assets.xcassets
-│   ├── Helpers
+│   ├──📁 Helpers
 │   │   ├── APIString.swift
 │   │   ├── AppDelegate.swift
 │   │   ├── Extensions+Date.swift
 │   │   ├── Extensions+Double.swift
 │   │   ├── Extensions.swift
 │   │   └── SceneDelegate.swift
-│   ├── Models
+│   ├──📁 Models
 │   │   ├── Forecast5days.swift
 │   │   ├── Networking.swift
 │   │   └── Weather.swift
-│   └── Views
-│   │   ├── Cell
+│   └──📁 Views
+│   │   ├──📁 Cell
 │   │   │   ├── SearchListCell.swift
 │   │   │   ├── WeatherCollectionViewCell.swift
 │   │   │   ├── WeatherListCell.swift
@@ -76,7 +76,7 @@
 │   │   ├── WeatherBottomView.swift
 │   │   ├── WeatherMiddleView.swift
 │   │   └── WeatherTopView.swift
-│   ├── Controllers
+│   ├──📁 Controllers
 │   │   ├── MainWeatherViewController.swift
 │   │   ├── MapViewController.swift
 │   │   ├── MyLocationWeatherController.swift
@@ -87,5 +87,5 @@
 
 <br>
 
-## Team Notion 🔗
+## 🌨️ Team Notion
 [팀 노션 바로가기](https://insu2405.notion.site/17-WeatherX-682080f27dfc4eceaa545ec9227e1842?pvs=4)
