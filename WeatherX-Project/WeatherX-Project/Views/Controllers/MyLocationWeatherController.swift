@@ -14,30 +14,32 @@ final class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
 
-    var networking = Networking.shared
-    private let locationManager: CLLocationManager = .init()
+    var viewModel: MyLocationWeatherViewModel?
     
-    private var isAuthorized: Bool = false {
-        didSet {
-            UserDefaults.standard.setJSON(isAuthorized, forKey: "isAuthorized")
-        }
-    }
+//    var networking = Networking.shared // a
+    private let locationManager: CLLocationManager = .init() //b
     
-    // 받아온 데이터를 저장 할 프로퍼티
-    var weatherResponse: WeatherResponse?
-    var weather: Weather?
-    var main: Main?
-    var name: String?
+//    private var isAuthorized: Bool = false { // a
+//        didSet {
+//            UserDefaults.standard.setJSON(isAuthorized, forKey: "isAuthorized")
+//        }
+//    }
     
-    var forecastResponse: ForecastResponse?
-    private var mainWeatherView = MainWeatherViewController()
+    // 받아온 데이터를 저장 할 프로퍼티 a
+//    var weatherResponse: WeatherResponse?
+//    var forecastResponse: ForecastResponse?
+//    var weather: Weather?
+//    var main: Main?
+//    var name: String?
+    
+//    private var mainWeatherView = MainWeatherViewController()
 
     // 뷰컨 배열 모음 MainWeatherViewController
     lazy var viewArray: [MainWeatherViewController] = []
     
-    var weatherResponseArray: [WeatherResponse] = []
+//    var weatherResponseArray: [WeatherResponse] = [] //a
  
-    var forcastResponseArray: [ForecastResponse] = [] 
+//    var forcastResponseArray: [ForecastResponse] = [] //a
 
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
@@ -80,7 +82,8 @@ final class MyLocationWeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewArray.append(mainWeatherView)
+        viewModel = MyLocationWeatherViewModel()
+        viewArray.append(viewModel?.mainWeatherView ?? MainWeatherViewController())
         networkingWeather()
         pageControllerSetup()
         setLayout()
@@ -92,18 +95,18 @@ final class MyLocationWeatherController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
-            weatherResponseArray = data
+            viewModel?.weatherResponseArray = data
         }
         if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
-            forcastResponseArray = data
+            viewModel?.forcastResponseArray = data
         }
         makeViewArray()
         changePage(to: pageControl.currentPage)
         
         if let isAuthorized = UserDefaults.standard.getJSON(Bool.self, forKey: "isAuthorized") {
-            self.isAuthorized = isAuthorized
+            viewModel?.isAuthorized = isAuthorized
         }
-        if isAuthorized {
+        if ((viewModel?.isAuthorized) != nil) {
             locationManager.startUpdatingLocation()
         }
     }
@@ -119,7 +122,7 @@ final class MyLocationWeatherController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
         view.addSubview(viewArray[pageControl.currentPage].view)
         view.addSubview(bottomView)
-        mainWeatherView.scrollView.addSubview(refreshControl)
+        viewModel?.mainWeatherView.scrollView.addSubview(refreshControl)
         
         viewArray[pageControl.currentPage].view.snp.makeConstraints {
             $0.leading.equalToSuperview()
@@ -193,34 +196,37 @@ final class MyLocationWeatherController: UIViewController {
         pageControl.currentPage = index
     }
     
-    private func networkingWeather() {
-        // data fetch
-        networking.getWeather { result in
-            switch result {
-            case .success(let weatherResponse):
-                DispatchQueue.main.async {
-                    self.weatherResponse = weatherResponse
-                    self.weather = weatherResponse.weather.first
-                    self.main = weatherResponse.main
-                    self.name = weatherResponse.name
-                    self.weatherDataBiding(weatherResponse: weatherResponse)
-                }
-            case .failure:
-                print("weatherResponse error")
-            }
-        }
+    private func networkingWeather() { // a
         
-        networking.getforecastWeather { result in
-            switch result {
-            case .success(let forecastResponse):
-                DispatchQueue.main.async {
-                    self.forecastDataBidning(forecastResponse: forecastResponse)
-                    print(forecastResponse)
-                }
-            case .failure:
-                print("forecastResponse error")
-            }
-        }
+        viewModel?.networkingWeather()
+        
+        // data fetch
+//        networking.getWeather { result in
+//            switch result {
+//            case .success(let weatherResponse):
+//                DispatchQueue.main.async {
+//                    self.weatherResponse = weatherResponse
+//                    self.weather = weatherResponse.weather.first
+//                    self.main = weatherResponse.main
+//                    self.name = weatherResponse.name
+//                    self.weatherDataBiding(weatherResponse: weatherResponse)
+//                }
+//            case .failure:
+//                print("weatherResponse error")
+//            }
+//        }
+//        
+//        networking.getforecastWeather { result in
+//            switch result {
+//            case .success(let forecastResponse):
+//                DispatchQueue.main.async {
+//                    self.forecastDataBidning(forecastResponse: forecastResponse)
+//                    print(forecastResponse)
+//                }
+//            case .failure:
+//                print("forecastResponse error")
+//            }
+//        }
     }
     
     private func setupLocationManager() {
@@ -230,12 +236,12 @@ final class MyLocationWeatherController: UIViewController {
     
     private func makeViewArray() {
         var dataArray: [MainWeatherViewController] = [viewArray[0]]
-        if weatherResponseArray.count > 0 {
-            for i in 0 ..< weatherResponseArray.count {
+        if viewModel?.weatherResponseArray.count ?? 1 > 0 {
+            for i in 0 ..< (viewModel?.weatherResponseArray.count ?? 1) {
                 let mainVC = MainWeatherViewController()
-                mainVC.topView.weatherResponse = weatherResponseArray[i]
-                mainVC.middleView.forecastResponse = forcastResponseArray[i]
-                mainVC.bottomView.forecastResponse = forcastResponseArray[i]
+                mainVC.topView.weatherResponse = viewModel?.weatherResponseArray[i]
+                mainVC.middleView.forecastResponse = viewModel?.forcastResponseArray[i]
+                mainVC.bottomView.forecastResponse = viewModel?.forcastResponseArray[i]
                 dataArray.append(mainVC)
                 viewArray = dataArray
             }
@@ -248,8 +254,8 @@ final class MyLocationWeatherController: UIViewController {
     
     @objc func mapViewItemTapped() {
         let mapVC = MapViewController()
-        mapVC.weatherList = weatherResponseArray
-        mapVC.weatherResponse = weatherResponse
+        mapVC.weatherList = viewModel?.weatherResponseArray ?? []
+        mapVC.weatherResponse = viewModel?.weatherResponse
         navigationController?.pushViewController(mapVC, animated: true)
     }
     
@@ -262,22 +268,22 @@ final class MyLocationWeatherController: UIViewController {
     }
     
     // 데이터 바인딩
-    func weatherDataBiding(weatherResponse: WeatherResponse) {
-        let topView = mainWeatherView.topView
-        topView.weatherResponse = weatherResponse
-    }
+//    func weatherDataBiding(weatherResponse: WeatherResponse) { // a
+//        let topView = mainWeatherView.topView
+//        topView.weatherResponse = weatherResponse
+//    }
+//    
+//    func forecastDataBidning(forecastResponse: ForecastResponse) { // a
+//        let middelView = mainWeatherView.middleView
+//        middelView.forecastResponse = forecastResponse
+//        middelView.collectionView.reloadData()
+//        
+//        let bottomView = mainWeatherView.bottomView
+//        bottomView.forecastResponse = forecastResponse
+//        bottomView.tableView.reloadData()
+//    }
     
-    func forecastDataBidning(forecastResponse: ForecastResponse) {
-        let middelView = mainWeatherView.middleView
-        middelView.forecastResponse = forecastResponse
-        middelView.collectionView.reloadData()
-        
-        let bottomView = mainWeatherView.bottomView
-        bottomView.forecastResponse = forecastResponse
-        bottomView.tableView.reloadData()
-    }
-    
-    @objc private func refreshWeatherData(_ sender: Any) {
+    @objc private func refreshWeatherData(_ sender: Any) { // b
         networkingWeather()
         refreshControl.endRefreshing()
     }
@@ -285,15 +291,15 @@ final class MyLocationWeatherController: UIViewController {
 
 // MARK: - CLLocationManagerDelegate
 
-extension MyLocationWeatherController: CLLocationManagerDelegate {
+extension MyLocationWeatherController: CLLocationManagerDelegate { // b
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             manager.startUpdatingLocation()
-            isAuthorized = true
+            viewModel?.isAuthorized = true
         case .denied:
             print("status is denied")
-            isAuthorized = false
+            viewModel?.isAuthorized = false
         case .notDetermined:
             print("status is not determined")
             manager.requestAlwaysAuthorization()
@@ -306,8 +312,8 @@ extension MyLocationWeatherController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
-            networking.lat = location.coordinate.latitude
-            networking.lon = location.coordinate.longitude
+            viewModel?.networking.lat = location.coordinate.latitude
+            viewModel?.networking.lon = location.coordinate.longitude
         }
         networkingWeather()
     }
