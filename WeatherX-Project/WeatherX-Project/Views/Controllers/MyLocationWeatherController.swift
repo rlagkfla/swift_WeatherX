@@ -37,42 +37,44 @@ final class MyLocationWeatherController: UIViewController {
     // 뷰컨 배열 모음 MainWeatherViewController
     lazy var viewArray: [MainWeatherViewController] = []
     
+    lazy var bottomView = BottomNavigationView()
+    
 //    var weatherResponseArray: [WeatherResponse] = [] //a
  
 //    var forcastResponseArray: [ForecastResponse] = [] //a
 
     let locationImage: UIImage = .init(systemName: "location.fill")!
     
-    lazy var bottomView = UIView().then {
-        $0.addSubview(stackView)
-        $0.backgroundColor = .white
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    lazy var mapViewButton = UIButton(type: .custom).then {
-        $0.frame.size.height = 40
-        $0.setImage(UIImage(systemName: "map"), for: .normal)
-        $0.tintColor = .black
-        $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
-    }
-    
-    let pageControl = UIPageControl()
-  
-    lazy var menuViewButton = UIButton(type: .custom).then {
-        $0.frame.size.height = 40
-        $0.tintColor = .black
-        $0.setImage(UIImage(systemName: "menucard"), for: .normal)
-        $0.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
-    }
-    
-    lazy var stackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [mapViewButton, pageControl, menuViewButton])
-        sv.axis = .horizontal
-        sv.distribution = .fill
-        sv.alignment = .center
-        sv.spacing = 30
-        return sv
-    }()
+//    lazy var bottomView = UIView().then {
+//        $0.addSubview(stackView)
+//        $0.backgroundColor = .white
+//        $0.translatesAutoresizingMaskIntoConstraints = false
+//    }
+//    
+//    lazy var mapViewButton = UIButton(type: .custom).then {
+//        $0.frame.size.height = 40
+//        $0.setImage(UIImage(systemName: "map"), for: .normal)
+//        $0.tintColor = .black
+//        $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
+//    }
+//    
+//    let pageControl = UIPageControl()
+//  
+//    lazy var menuViewButton = UIButton(type: .custom).then {
+//        $0.frame.size.height = 40
+//        $0.tintColor = .black
+//        $0.setImage(UIImage(systemName: "menucard"), for: .normal)
+//        $0.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
+//    }
+//    
+//    lazy var stackView: UIStackView = {
+//        let sv = UIStackView(arrangedSubviews: [mapViewButton, pageControl, menuViewButton])
+//        sv.axis = .horizontal
+//        sv.distribution = .fill
+//        sv.alignment = .center
+//        sv.spacing = 30
+//        return sv
+//    }()
     
     lazy var refreshControl = UIRefreshControl().then {
         $0.addTarget(self, action: #selector(refreshWeatherData), for: .valueChanged)
@@ -89,6 +91,7 @@ final class MyLocationWeatherController: UIViewController {
         setLayout()
         setupLocationManager()
         pageControlAction()
+        buttonTapAction()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,7 +104,7 @@ final class MyLocationWeatherController: UIViewController {
             viewModel?.forcastResponseArray = data
         }
         makeViewArray()
-        changePage(to: pageControl.currentPage)
+        changePage(to: bottomView.pageControl.currentPage)
         
         if let isAuthorized = UserDefaults.standard.getJSON(Bool.self, forKey: "isAuthorized") {
             viewModel?.isAuthorized = isAuthorized
@@ -120,11 +123,11 @@ final class MyLocationWeatherController: UIViewController {
     
     private func setLayout() {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
-        view.addSubview(viewArray[pageControl.currentPage].view)
+        view.addSubview(viewArray[bottomView.pageControl.currentPage].view)
         view.addSubview(bottomView)
         viewModel?.mainWeatherView.scrollView.addSubview(refreshControl)
         
-        viewArray[pageControl.currentPage].view.snp.makeConstraints {
+        viewArray[bottomView.pageControl.currentPage].view.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
@@ -138,43 +141,43 @@ final class MyLocationWeatherController: UIViewController {
             $0.height.equalTo(60)
         }
         
-        stackView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-            $0.trailing.equalToSuperview()
-            $0.top.equalToSuperview()
-            $0.bottom.equalToSuperview()
-        }
-        mapViewButton.snp.makeConstraints {
-            $0.leading.equalTo(10)
-            $0.top.equalTo(bottomView.snp.top).offset(10)
-            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
-        }
-        
-        pageControl.snp.makeConstraints {
-            $0.centerX.centerY.equalTo(bottomView)
-        }
-        
-        menuViewButton.snp.makeConstraints {
-            $0.trailing.equalTo(-10)
-            $0.top.equalTo(bottomView.snp.top).offset(10)
-            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
-        }
+//        stackView.snp.makeConstraints {
+//            $0.leading.equalToSuperview()
+//            $0.trailing.equalToSuperview()
+//            $0.top.equalToSuperview()
+//            $0.bottom.equalToSuperview()
+//        }
+//        mapViewButton.snp.makeConstraints {
+//            $0.leading.equalTo(10)
+//            $0.top.equalTo(bottomView.snp.top).offset(10)
+//            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
+//        }
+//        
+//        pageControl.snp.makeConstraints {
+//            $0.centerX.centerY.equalTo(bottomView)
+//        }
+//        
+//        menuViewButton.snp.makeConstraints {
+//            $0.trailing.equalTo(-10)
+//            $0.top.equalTo(bottomView.snp.top).offset(10)
+//            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
+//        }
     }
     
     private func pageControllerSetup() {
-        pageControl.numberOfPages = viewArray.count
-        pageControl.currentPage = 0
-        pageControl.pageIndicatorTintColor = UIColor.lightGray
-        pageControl.currentPageIndicatorTintColor = UIColor.black
-        pageControl.setIndicatorImage(locationImage, forPage: 0)
+        bottomView.pageControl.numberOfPages = viewArray.count
+        bottomView.pageControl.currentPage = 0
+        bottomView.pageControl.pageIndicatorTintColor = UIColor.lightGray
+        bottomView.pageControl.currentPageIndicatorTintColor = UIColor.black
+        bottomView.pageControl.setIndicatorImage(locationImage, forPage: 0)
     }
     
     private func pageControlAction(){
-        self.pageControl.addTarget(self, action: #selector(changPageView), for: .valueChanged)
+        bottomView.pageControl.addTarget(self, action: #selector(changPageView), for: .valueChanged)
     }
     
     @objc func changPageView() {
-        changePage(to: pageControl.currentPage)
+        changePage(to: bottomView.pageControl.currentPage)
     }
     
     func changePage(to index: Int) {
@@ -182,8 +185,8 @@ final class MyLocationWeatherController: UIViewController {
             return
         }
         let viewControllerToShow = viewArray[index]
-        viewArray[pageControl.currentPage].view.removeFromSuperview()
-        viewArray[pageControl.currentPage].removeFromParent()
+        viewArray[bottomView.pageControl.currentPage].view.removeFromSuperview()
+        viewArray[bottomView.pageControl.currentPage].removeFromParent()
         addChild(viewControllerToShow)
         view.addSubview(viewControllerToShow.view)
         viewControllerToShow.view.snp.makeConstraints {
@@ -193,7 +196,7 @@ final class MyLocationWeatherController: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
         // 뷰 컨트롤러 전환 로직 (예: UIPageViewController를 사용하거나, 커스텀 뷰 전환)
-        pageControl.currentPage = index
+        bottomView.pageControl.currentPage = index
     }
     
     private func networkingWeather() { // a
@@ -245,19 +248,29 @@ final class MyLocationWeatherController: UIViewController {
                 dataArray.append(mainVC)
                 viewArray = dataArray
             }
-            pageControl.numberOfPages = viewArray.count
+            bottomView.pageControl.numberOfPages = viewArray.count
 //            pageControl.currentPage = 0
         }
     }
     
     // MARK: - Actions
     
-    @objc func mapViewItemTapped() {
-        let mapVC = MapViewController()
-        mapVC.weatherList = viewModel?.weatherResponseArray ?? []
-        mapVC.weatherResponse = viewModel?.weatherResponse
-        navigationController?.pushViewController(mapVC, animated: true)
+    func buttonTapAction() {
+        bottomView.mapViewButtonAction = { [weak self] in
+            let mapVC = MapViewController()
+            mapVC.weatherList = self?.viewModel?.weatherResponseArray ?? []
+            mapVC.weatherResponse = self?.viewModel?.weatherResponse
+            self?.navigationController?.pushViewController(mapVC, animated: true)
+        }
+        
     }
+    
+//    @objc func mapViewItemTapped() {
+//        let mapVC = MapViewController()
+//        mapVC.weatherList = viewModel?.weatherResponseArray ?? []
+//        mapVC.weatherResponse = viewModel?.weatherResponse
+//        navigationController?.pushViewController(mapVC, animated: true)
+//    }
     
     @objc func menuViewItemTapped() {
         let listVC = WeatherListViewController()

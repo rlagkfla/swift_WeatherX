@@ -254,7 +254,7 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let myVC = navigationController?.viewControllers.first(where: { $0 is MyLocationWeatherController }) as? MyLocationWeatherController {
-            myVC.pageControl.currentPage = indexPath.row + 1
+            myVC.bottomView.pageControl.currentPage = indexPath.row + 1
 
             navigationController?.popViewController(animated: true)
         }
