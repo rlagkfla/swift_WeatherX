@@ -71,6 +71,7 @@ final class WeatherListViewController: UIViewController {
     // MARK: - Helpers
 
     private func configureNav() {
+        navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.title = "날씨"
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.searchController = searchController
