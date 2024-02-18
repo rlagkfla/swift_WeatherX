@@ -124,6 +124,8 @@ extension WeatherBottomView: UITableViewDataSource {
         
         if data.rainValue != 0 {
             cell.percentTextLabel.isHidden = false
+            // refresh 할 때마다 텍스트가 추가되는 에러 -> 다시 불러올때마다 텍스트를 한번 지우고 로드되게 수정
+            cell.percentTextLabel.text = ""
             cell.percentTextLabel.text = cell.percentTextLabel.text! + (data.rainValue! * 100).makeRounded() + "%"
         } else {
             cell.percentTextLabel.isHidden = true

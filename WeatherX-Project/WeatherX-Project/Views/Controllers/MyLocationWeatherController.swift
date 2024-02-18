@@ -16,65 +16,14 @@ final class MyLocationWeatherController: UIViewController {
 
     var viewModel: MyLocationWeatherViewModel?
     
-//    var networking = Networking.shared // a
     private let locationManager: CLLocationManager = .init() //b
-    
-//    private var isAuthorized: Bool = false { // a
-//        didSet {
-//            UserDefaults.standard.setJSON(isAuthorized, forKey: "isAuthorized")
-//        }
-//    }
-    
-    // 받아온 데이터를 저장 할 프로퍼티 a
-//    var weatherResponse: WeatherResponse?
-//    var forecastResponse: ForecastResponse?
-//    var weather: Weather?
-//    var main: Main?
-//    var name: String?
-    
-//    private var mainWeatherView = MainWeatherViewController()
 
     // 뷰컨 배열 모음 MainWeatherViewController
     lazy var viewArray: [MainWeatherViewController] = []
     
     lazy var bottomView = BottomNavigationView()
-    
-//    var weatherResponseArray: [WeatherResponse] = [] //a
- 
-//    var forcastResponseArray: [ForecastResponse] = [] //a
 
     let locationImage: UIImage = .init(systemName: "location.fill")!
-    
-//    lazy var bottomView = UIView().then {
-//        $0.addSubview(stackView)
-//        $0.backgroundColor = .white
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//    }
-//    
-//    lazy var mapViewButton = UIButton(type: .custom).then {
-//        $0.frame.size.height = 40
-//        $0.setImage(UIImage(systemName: "map"), for: .normal)
-//        $0.tintColor = .black
-//        $0.addTarget(self, action: #selector(mapViewItemTapped), for: .touchUpInside)
-//    }
-//    
-//    let pageControl = UIPageControl()
-//  
-//    lazy var menuViewButton = UIButton(type: .custom).then {
-//        $0.frame.size.height = 40
-//        $0.tintColor = .black
-//        $0.setImage(UIImage(systemName: "menucard"), for: .normal)
-//        $0.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
-//    }
-//    
-//    lazy var stackView: UIStackView = {
-//        let sv = UIStackView(arrangedSubviews: [mapViewButton, pageControl, menuViewButton])
-//        sv.axis = .horizontal
-//        sv.distribution = .fill
-//        sv.alignment = .center
-//        sv.spacing = 30
-//        return sv
-//    }()
     
     lazy var refreshControl = UIRefreshControl().then {
         $0.addTarget(self, action: #selector(refreshWeatherData), for: .valueChanged)
@@ -140,28 +89,7 @@ final class MyLocationWeatherController: UIViewController {
             $0.trailing.equalToSuperview()
             $0.height.equalTo(60)
         }
-        
-//        stackView.snp.makeConstraints {
-//            $0.leading.equalToSuperview()
-//            $0.trailing.equalToSuperview()
-//            $0.top.equalToSuperview()
-//            $0.bottom.equalToSuperview()
-//        }
-//        mapViewButton.snp.makeConstraints {
-//            $0.leading.equalTo(10)
-//            $0.top.equalTo(bottomView.snp.top).offset(10)
-//            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
-//        }
-//        
-//        pageControl.snp.makeConstraints {
-//            $0.centerX.centerY.equalTo(bottomView)
-//        }
-//        
-//        menuViewButton.snp.makeConstraints {
-//            $0.trailing.equalTo(-10)
-//            $0.top.equalTo(bottomView.snp.top).offset(10)
-//            $0.bottom.equalTo(bottomView.snp.bottom).offset(-10)
-//        }
+ 
     }
     
     private func pageControllerSetup() {
@@ -200,36 +128,7 @@ final class MyLocationWeatherController: UIViewController {
     }
     
     private func networkingWeather() { // a
-        
         viewModel?.networkingWeather()
-        
-        // data fetch
-//        networking.getWeather { result in
-//            switch result {
-//            case .success(let weatherResponse):
-//                DispatchQueue.main.async {
-//                    self.weatherResponse = weatherResponse
-//                    self.weather = weatherResponse.weather.first
-//                    self.main = weatherResponse.main
-//                    self.name = weatherResponse.name
-//                    self.weatherDataBiding(weatherResponse: weatherResponse)
-//                }
-//            case .failure:
-//                print("weatherResponse error")
-//            }
-//        }
-//        
-//        networking.getforecastWeather { result in
-//            switch result {
-//            case .success(let forecastResponse):
-//                DispatchQueue.main.async {
-//                    self.forecastDataBidning(forecastResponse: forecastResponse)
-//                    print(forecastResponse)
-//                }
-//            case .failure:
-//                print("forecastResponse error")
-//            }
-//        }
     }
     
     private func setupLocationManager() {
@@ -263,39 +162,17 @@ final class MyLocationWeatherController: UIViewController {
             self?.navigationController?.pushViewController(mapVC, animated: true)
         }
         
+        bottomView.menuViewButtonAction = { [weak self] in
+            let listVC = WeatherListViewController()
+            // 데이터 초기화 코드
+    //        UserDefaults.standard.removeObject(forKey: "weather")
+    //        UserDefaults.standard.removeObject(forKey: "forcast")
+    //        UserDefaults.standard.removeObject(forKey: "city")
+            self?.navigationController?.pushViewController(listVC, animated: true)
+        }
+        
     }
-    
-//    @objc func mapViewItemTapped() {
-//        let mapVC = MapViewController()
-//        mapVC.weatherList = viewModel?.weatherResponseArray ?? []
-//        mapVC.weatherResponse = viewModel?.weatherResponse
-//        navigationController?.pushViewController(mapVC, animated: true)
-//    }
-    
-    @objc func menuViewItemTapped() {
-        let listVC = WeatherListViewController()
-//        UserDefaults.standard.removeObject(forKey: "weather")
-//        UserDefaults.standard.removeObject(forKey: "forcast")
-//        UserDefaults.standard.removeObject(forKey: "city")
-        navigationController?.pushViewController(listVC, animated: true)
-    }
-    
-    // 데이터 바인딩
-//    func weatherDataBiding(weatherResponse: WeatherResponse) { // a
-//        let topView = mainWeatherView.topView
-//        topView.weatherResponse = weatherResponse
-//    }
-//    
-//    func forecastDataBidning(forecastResponse: ForecastResponse) { // a
-//        let middelView = mainWeatherView.middleView
-//        middelView.forecastResponse = forecastResponse
-//        middelView.collectionView.reloadData()
-//        
-//        let bottomView = mainWeatherView.bottomView
-//        bottomView.forecastResponse = forecastResponse
-//        bottomView.tableView.reloadData()
-//    }
-    
+
     @objc private func refreshWeatherData(_ sender: Any) { // b
         networkingWeather()
         refreshControl.endRefreshing()

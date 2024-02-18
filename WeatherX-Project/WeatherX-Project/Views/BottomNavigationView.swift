@@ -12,6 +12,7 @@ import Then
 final class BottomNavigationView: UIView {
 
     var mapViewButtonAction: (() -> Void)?
+    var menuViewButtonAction: (() -> Void)?
     
     let pageControl = UIPageControl()
     
@@ -26,7 +27,7 @@ final class BottomNavigationView: UIView {
         $0.frame.size.height = 40
         $0.tintColor = .black
         $0.setImage(UIImage(systemName: "menucard"), for: .normal)
-//        $0.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(menuViewItemTapped), for: .touchUpInside)
     }
     
     lazy var stackView: UIStackView = {
@@ -53,24 +54,16 @@ final class BottomNavigationView: UIView {
         mapViewButtonAction?()
     }
     
+    @objc private func menuViewItemTapped() {
+        menuViewButtonAction?()
+    }
+    
     private func setUpLayout(){
         addSubview(stackView)
         backgroundColor = .white
-//        stackView.addSubviews(mapViewButton, pageControl, menuViewButton)
-        
-//        self.snp.makeConstraints {
-//            $0.bottom.equalToSuperview()
-//            $0.leading.equalToSuperview()
-//            $0.trailing.equalToSuperview()
-//            $0.height.equalTo(60)
-//        }
         
         stackView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-//            $0.leading.equalToSuperview()
-//            $0.trailing.equalToSuperview()
-//            $0.top.equalToSuperview()
-//            $0.bottom.equalToSuperview()
         }
         mapViewButton.snp.makeConstraints {
             $0.leading.equalTo(10)
