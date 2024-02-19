@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 // 에러 정의
 enum NetworkError: Error {
@@ -74,5 +75,22 @@ final class Networking {
                 completion(.failure(.decodingError))
             }
         }.resume() // 이 dataTask 시작
+    }
+    
+    // 이미지 다운로드
+    func downloadImage(fromURL url: URL, completion: @escaping (UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                print("Error downloading image: \(error)")
+                completion(nil)
+                return
+            }
+            
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }.resume()
     }
 }

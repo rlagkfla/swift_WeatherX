@@ -14,7 +14,7 @@ final class MyLocationWeatherController: UIViewController {
     
     // MARK: - Properties
 
-    var viewModel: MyLocationWeatherViewModel?
+    lazy var viewModel = MyLocationWeatherViewModel()
     
     private let locationManager: CLLocationManager = .init() //b
 
@@ -33,8 +33,8 @@ final class MyLocationWeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = MyLocationWeatherViewModel()
-        viewArray.append(viewModel?.mainWeatherView ?? MainWeatherViewController())
+//        viewModel = MyLocationWeatherViewModel()
+        viewArray.append(viewModel.mainWeatherView)
         networkingWeather()
         pageControllerSetup()
         setLayout()
@@ -47,18 +47,18 @@ final class MyLocationWeatherController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
-            viewModel?.weatherResponseArray = data
+            viewModel.weatherResponseArray = data
         }
         if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
-            viewModel?.forcastResponseArray = data
+            viewModel.forcastResponseArray = data
         }
         makeViewArray()
         changePage(to: bottomView.pageControl.currentPage)
         
         if let isAuthorized = UserDefaults.standard.getJSON(Bool.self, forKey: "isAuthorized") {
-            viewModel?.isAuthorized = isAuthorized
+            viewModel.isAuthorized = isAuthorized
         }
-        if ((viewModel?.isAuthorized) != nil) {
+        if viewModel.isAuthorized {
             locationManager.startUpdatingLocation()
         }
     }
@@ -74,7 +74,7 @@ final class MyLocationWeatherController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9411764706, blue: 1, alpha: 1)
         view.addSubview(viewArray[bottomView.pageControl.currentPage].view)
         view.addSubview(bottomView)
-        viewModel?.mainWeatherView.scrollView.addSubview(refreshControl)
+        viewModel.mainWeatherView.scrollView.addSubview(refreshControl)
         
         viewArray[bottomView.pageControl.currentPage].view.snp.makeConstraints {
             $0.leading.equalToSuperview()
@@ -128,7 +128,7 @@ final class MyLocationWeatherController: UIViewController {
     }
     
     private func networkingWeather() { // a
-        viewModel?.networkingWeather()
+        viewModel.networkingWeather()
     }
     
     private func setupLocationManager() {
@@ -138,12 +138,12 @@ final class MyLocationWeatherController: UIViewController {
     
     private func makeViewArray() {
         var dataArray: [MainWeatherViewController] = [viewArray[0]]
-        if viewModel?.weatherResponseArray.count ?? 1 > 0 {
-            for i in 0 ..< (viewModel?.weatherResponseArray.count ?? 1) {
+        if viewModel.weatherResponseArray.count > 0 {
+            for i in 0 ..< (viewModel.weatherResponseArray.count ) {
                 let mainVC = MainWeatherViewController()
-                mainVC.topView.weatherResponse = viewModel?.weatherResponseArray[i]
-                mainVC.middleView.forecastResponse = viewModel?.forcastResponseArray[i]
-                mainVC.bottomView.forecastResponse = viewModel?.forcastResponseArray[i]
+                mainVC.topView.weatherResponse = viewModel.weatherResponseArray[i]
+                mainVC.middleView.forecastResponse = viewModel.forcastResponseArray[i]
+                mainVC.bottomView.forecastResponse = viewModel.forcastResponseArray[i]
                 dataArray.append(mainVC)
                 viewArray = dataArray
             }
@@ -157,8 +157,8 @@ final class MyLocationWeatherController: UIViewController {
     func buttonTapAction() {
         bottomView.mapViewButtonAction = { [weak self] in
             let mapVC = MapViewController()
-            mapVC.weatherList = self?.viewModel?.weatherResponseArray ?? []
-            mapVC.weatherResponse = self?.viewModel?.weatherResponse
+            mapVC.viewModel.weatherList = self?.viewModel.weatherResponseArray ?? []
+            mapVC.viewModel.weatherResponse = self?.viewModel.weatherResponse
             self?.navigationController?.pushViewController(mapVC, animated: true)
         }
         
@@ -186,10 +186,10 @@ extension MyLocationWeatherController: CLLocationManagerDelegate { // b
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             manager.startUpdatingLocation()
-            viewModel?.isAuthorized = true
+            viewModel.isAuthorized = true
         case .denied:
             print("status is denied")
-            viewModel?.isAuthorized = false
+            viewModel.isAuthorized = false
         case .notDetermined:
             print("status is not determined")
             manager.requestAlwaysAuthorization()
@@ -202,8 +202,8 @@ extension MyLocationWeatherController: CLLocationManagerDelegate { // b
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
-            viewModel?.networking.lat = location.coordinate.latitude
-            viewModel?.networking.lon = location.coordinate.longitude
+            viewModel.networking.lat = location.coordinate.latitude
+            viewModel.networking.lon = location.coordinate.longitude
         }
         networkingWeather()
     }

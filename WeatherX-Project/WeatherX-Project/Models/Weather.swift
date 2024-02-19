@@ -54,8 +54,8 @@ struct Rain: Codable {
 }
 
 struct Coord: Codable {
-    let lat: Double // 위도
-    let lon: Double // 경도
+    let lat: Double? // 위도
+    let lon: Double? // 경도
 }
 
 // MARK: - 날짜 포맷

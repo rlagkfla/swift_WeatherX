@@ -11,18 +11,18 @@ import Then
 
 final class MapViewController: UIViewController {
     
+    lazy var viewModel = MapViewModel()
+    
     private var mapView: MKMapView!
     private var selectedAction: String = "기온" // 기본값
     private var rightBarButton: UIBarButtonItem!
-    
-    var weatherResponse: WeatherResponse?
-    var weatherList: [WeatherResponse] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()
         configureNav()
         updateUserLocation()
+        updateMapView()
     }
 }
 
@@ -34,36 +34,27 @@ private extension MapViewController {
         view.addSubview(mapView)
     }
     
-    func updateUserLocation() {
-        if let lat = self.weatherResponse?.coord.lat, let lon = self.weatherResponse?.coord.lon {
+    private func updateUserLocation() {
+        viewModel.updateUserLocation()
+    }
+    
+    private func updateMapView() {
+        for weatherResponse in viewModel.weatherList {
+            guard let lat = weatherResponse.coord.lat, let lon = weatherResponse.coord.lon else {
+                print("WeatherResponse 또는 좌표가 nil입니다.")
+                return
+            }
+            
             let userLocation = CLLocationCoordinate2D(latitude: lat, longitude: lon)
             let annotation = MKPointAnnotation()
             annotation.coordinate = userLocation
-            annotation.title = self.weatherResponse?.name
-            mapView.addAnnotation(annotation)
-            
-            mapView.setCenter(userLocation, animated: true)
-        } else {
-            print("coord가 nil입니다.")
-        }
-        
-        guard let weatherResponse else { return }
-        weatherList.append(weatherResponse)
-        
-        for weather in weatherList {
-            let latitude = weather.coord.lat
-            let longitude = weather.coord.lon
-            let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = userLocation
-            annotation.title = weather.name
-            mapView.addAnnotation(annotation)
-            
+            annotation.title = weatherResponse.name
+            mapView.addAnnotation(annotation) // 지도에 어노테이션 추가
             mapView.setCenter(userLocation, animated: true)
         }
     }
     
-    func configureNav() {
+    private func configureNav() {
         let doneButton = UIBarButtonItem(title: "완료",
                                          style: .plain,
                                          target: self,
@@ -82,7 +73,7 @@ private extension MapViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    func createMenu() -> UIMenu {
+    private func createMenu() -> UIMenu {
         let tempAction = UIAction(title: "기온",
                                   image: UIImage(systemName: "thermometer.medium"),
                                   state: selectedAction == "기온" ? .on : .off,
@@ -128,6 +119,7 @@ private extension MapViewController {
     func updateAnnotationViews() {
         mapView.removeAnnotations(mapView.annotations)
         updateUserLocation()
+        updateMapView()
         mapView.setNeedsDisplay()
     }
 }
@@ -140,7 +132,7 @@ extension MapViewController: MKMapViewDelegate {
         
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "CustomMarker")
         
-        guard let annotationTitle = annotation.title, let weather = weatherList.first(where: { $0.name == annotationTitle }) else {
+        guard let annotationTitle = annotation.title, let weather = viewModel.weatherList.first(where: { $0.name == annotationTitle }) else {
             return annotationView
         }
         switch selectedAction {
@@ -154,7 +146,7 @@ extension MapViewController: MKMapViewDelegate {
         case "강수량":
             if let icon = weather.weather.first?.icon,
                let iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png") {
-                downloadImage(fromURL: iconURL) { image in
+                viewModel.networking.downloadImage(fromURL: iconURL) { image in
                     DispatchQueue.main.async {
                         annotationView.glyphImage = image
                     }
@@ -168,21 +160,4 @@ extension MapViewController: MKMapViewDelegate {
     }
 }
 
-// 이미지 다운로드
-private extension MapViewController {
-    func downloadImage(fromURL url: URL, completion: @escaping (UIImage?) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                print("Error downloading image: \(error)")
-                completion(nil)
-                return
-            }
-            
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            } else {
-                completion(nil)
-            }
-        }.resume()
-    }
-}
+
