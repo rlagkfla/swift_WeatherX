@@ -18,29 +18,31 @@ final class WeatherListViewController: UIViewController {
 
     // MARK: - Properties
 
+    lazy var viewModel = WeatherListViewModel()
+    
     private var temperatureUnit = "섭씨"
     private var rightBarButton: UIBarButtonItem!
     private let searchController = SearchViewController(searchResultsController: nil)
-    var weatherResponseArray: [WeatherResponse] = [] {
-        didSet {
-            UserDefaults.standard.setJSON(weatherResponseArray, forKey: "weather")
-        }
-    }
-
-    var forcastResponseArray: [ForecastResponse] = [] {
-        didSet {
-            UserDefaults.standard.setJSON(forcastResponseArray, forKey: "forcast")
-        }
-    }
-
-    var weatherResponse: WeatherResponse?
-    var forcastResponse: ForecastResponse?
-
-    var cities: [String] = [] {
-        didSet {
-            UserDefaults.standard.setJSON(cities, forKey: "city")
-        }
-    }
+//    var weatherResponseArray: [WeatherResponse] = [] {
+//        didSet {
+//            UserDefaults.standard.setJSON(weatherResponseArray, forKey: "weather")
+//        }
+//    }
+//
+//    var forcastResponseArray: [ForecastResponse] = [] {
+//        didSet {
+//            UserDefaults.standard.setJSON(forcastResponseArray, forKey: "forcast")
+//        }
+//    }
+//
+//    var weatherResponse: WeatherResponse?
+//    var forcastResponse: ForecastResponse?
+//
+//    var cities: [String] = [] {
+//        didSet {
+//            UserDefaults.standard.setJSON(cities, forKey: "city")
+//        }
+//    }
 
     let weatherListTableView = UITableView().then {
         $0.backgroundColor = .white
@@ -58,13 +60,13 @@ final class WeatherListViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         if let data = UserDefaults.standard.getJSON([WeatherResponse].self, forKey: "weather") {
-            self.weatherResponseArray = data
+            viewModel.weatherResponseArray = data
         }
         if let data = UserDefaults.standard.getJSON([ForecastResponse].self, forKey: "forcast") {
-            self.forcastResponseArray = data
+            viewModel.forcastResponseArray = data
         }
         if let data = UserDefaults.standard.getJSON([String].self, forKey: "city") {
-            self.cities = data
+            viewModel.cities = data
         }
     }
 
@@ -216,15 +218,15 @@ final class WeatherListViewController: UIViewController {
 
 extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weatherResponseArray.count
+        return viewModel.weatherResponseArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherListCell", for: indexPath) as! WeatherListCell
         cell.selectionStyle = .none
-        let iconID = weatherResponseArray[indexPath.row].weather[0].icon 
-        cell.cityLabel.text = cities[indexPath.row]
-        let weatherData = weatherResponseArray[indexPath.row]
+        let iconID = viewModel.weatherResponseArray[indexPath.row].weather[0].icon
+        cell.cityLabel.text = viewModel.cities[indexPath.row]
+        let weatherData = viewModel.weatherResponseArray[indexPath.row]
         if temperatureUnit == "섭씨" {
             cell.temperatureLabel.text = weatherData.main.temp.makeRounded() + "º"
         } else {
@@ -245,9 +247,9 @@ extension WeatherListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            weatherResponseArray.remove(at: indexPath.row)
-            forcastResponseArray.remove(at: indexPath.row)
-            cities.remove(at: indexPath.row)
+            viewModel.weatherResponseArray.remove(at: indexPath.row)
+            viewModel.forcastResponseArray.remove(at: indexPath.row)
+            viewModel.cities.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -277,7 +279,7 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                     topView.weatherResponse = weatherResponse
                     topView.city = city
                     mainWeatherVC.dependingLocation = .addLocation
-                    self.weatherResponse = weatherResponse
+                    self.viewModel.weatherResponse = weatherResponse
                 }
             case .failure(let error):
                 print(error)
@@ -292,14 +294,14 @@ extension WeatherListViewController: SearchViewControllerDelegate {
                     middleView.forecastResponse = weatherResponse
                     bottomView.forecastResponse = weatherResponse
                     mainWeatherVC.dependingLocation = .addLocation
-                    self.forcastResponse = weatherResponse
+                    self.viewModel.forcastResponse = weatherResponse
                     self.present(mainWeatherVC, animated: true)
                 }
             case .failure(let error):
                 print(error)
             }
         }
-        cities.append(city)
+        viewModel.cities.append(city)
     }
 }
 
@@ -307,10 +309,10 @@ extension WeatherListViewController: SearchViewControllerDelegate {
 
 extension WeatherListViewController: WeatherListViewBinding {
     func weatherListAppend() {
-        guard let weatherResponse = weatherResponse else { return }
-        guard let forcastResponse = forcastResponse else { return }
-        self.weatherResponseArray.append(weatherResponse)
-        self.forcastResponseArray.append(forcastResponse)
+        guard let weatherResponse = viewModel.weatherResponse else { return }
+        guard let forcastResponse = viewModel.forcastResponse else { return }
+        self.viewModel.weatherResponseArray.append(weatherResponse)
+        self.viewModel.forcastResponseArray.append(forcastResponse)
         weatherListTableView.reloadData()
         self.dismiss(animated: true)
     }
