@@ -129,6 +129,38 @@ final class MyLocationWeatherController: UIViewController {
     
     private func networkingWeather() { // a
         viewModel.networkingWeather()
+        
+//        let viewModel = self.viewModel // 단일 뷰모델 사용
+//
+//        for viewController in viewArray {
+//            let lat = viewController.getLat()
+//            let lon = viewController.getLon()
+//
+//            await viewModel.networking.getWeather(lat: lat, lon: lon) { result in
+//                switch result {
+//                case .success(let weatherResponse):
+//                    viewModel.weatherResponse = weatherResponse
+//                    viewModel.weather = weatherResponse.weather.first
+//                    viewModel.main = weatherResponse.main
+//                    viewModel.name = weatherResponse.name
+//                    // 필요한 경우 viewController.reloadData() 호출
+//                case .failure:
+//                    print("weatherResponse error")
+//                }
+//            }
+//
+//            await viewModel.networking.getforecastWeather(lat: lat, lon: lon) { result in
+//                switch result {
+//                case .success(let forecastResponse):
+//                    viewModel.forecastResponse = forecastResponse
+//                    // 필요한 경우 viewController.reloadData() 호출
+//                case .failure:
+//                    print("forecastResponse error")
+//                }
+//            }
+//        }
+        
+        
     }
     
     private func setupLocationManager() {
