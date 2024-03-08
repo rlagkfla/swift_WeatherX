@@ -51,7 +51,7 @@ class MyLocationWeatherViewModel {
             case .success(let forecastResponse):
                 DispatchQueue.main.async {
                     self.forecastDataBidning(forecastResponse: forecastResponse)
-                    print(forecastResponse)
+//                    print(forecastResponse)
                 }
             case .failure:
                 print("forecastResponse error")
@@ -59,12 +59,12 @@ class MyLocationWeatherViewModel {
         }
     }
     
-    func weatherDataBiding(weatherResponse: WeatherResponse) { // a
+    func weatherDataBiding(weatherResponse: WeatherResponse) {
         let topView = mainWeatherView.topView
         topView.weatherResponse = weatherResponse
     }
     
-    func forecastDataBidning(forecastResponse: ForecastResponse) { // a
+    func forecastDataBidning(forecastResponse: ForecastResponse) {
         let middelView = mainWeatherView.middleView
         middelView.forecastResponse = forecastResponse
         middelView.collectionView.reloadData()
